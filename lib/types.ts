@@ -108,3 +108,50 @@ export type MilestoneType =
   | "started_vuggestue"
   | "started_bornehave"
   | "custom";
+
+export type FamilyRole = "owner" | "parent" | "family" | "caregiver";
+
+export type FamilyInviteStatus = "pending" | "accepted" | "revoked" | "expired";
+
+export type FamilyProfile = {
+  userId: string;
+  displayName: string | null;
+  pronouns: string | null;
+  bio: string | null;
+  avatarUrl: string | null;
+  preferredRole: FamilyRole;
+  preferredLocale: string;
+};
+
+export type Family = {
+  id: string;
+  name: string;
+  description: string | null;
+  coverUrl: string | null;
+  createdBy: string;
+  createdAt: string;
+};
+
+export type FamilyMember = {
+  id: string;
+  familyId: string;
+  userId: string;
+  role: FamilyRole;
+  displayName: string | null;
+  joinedAt: string;
+  profile?: FamilyProfile | null;
+};
+
+export type FamilyInvite = {
+  id: string;
+  familyId: string;
+  invitedEmail: string | null;
+  invitedName: string | null;
+  invitedBy: string;
+  role: FamilyRole;
+  message: string | null;
+  token: string;
+  status: FamilyInviteStatus;
+  expiresAt: string;
+  createdAt: string;
+};

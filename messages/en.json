@@ -35,15 +35,40 @@
   },
   "profile": {
     "title": "Profile",
-    "connectedAccounts": "Connected accounts",
-    "settings": "Settings",
-    "logout": "Log out"
+    "personal": "Your profile",
+    "family": "Family",
+    "members": "Members",
+    "invite": "Invite",
+    "save": "Save profile",
+    "saved": "Saved",
+    "displayName": "Display name",
+    "pronouns": "Pronouns",
+    "bio": "Short description",
+    "avatar": "Profile picture",
+    "role": "Role",
+    "language": "Language",
+    "settings": "Account & settings",
+    "logout": "Log out",
+    "leaveFamily": "Leave family"
   },
   "auth": {
+    "eyebrow": "Welcome",
+    "title": "A calm space for the whole family",
+    "body": "Lille Liv gathers milestones, everyday moments and outings for you and the people who share your days.",
     "email": "Email",
+    "name": "Your name",
     "sendMagicLink": "Send magic link",
     "checkInbox": "Check your inbox",
-    "notConfigured": "Supabase environment variables are missing."
+    "notConfigured": "Supabase environment variables are missing.",
+    "inviteSubtitle": "You're invited to a family",
+    "inviteAccept": "Join the family"
+  },
+  "family": {
+    "ownerBadge": "Owner",
+    "addMembers": "Add grandparents, caregivers, or the rest of your family",
+    "shareInvite": "Share the link",
+    "expiresIn": "Expires in {days} days",
+    "pending": "Awaiting reply"
   },
   "aula": {
     "title": "Aula",
