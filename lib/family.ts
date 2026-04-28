@@ -1,13 +1,42 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { categories } from "@/lib/data/taxonomy";
 import type {
   Family,
   FamilyInvite,
   FamilyMember,
   FamilyProfile,
-  FamilyRole
+  FamilyRole,
+  IndoorPreference,
+  Neighbourhood,
+  VenueCategory
 } from "@/lib/types";
+import { neighbourhoods as neighbourhoodList } from "@/lib/data/taxonomy";
 
 type Row = Record<string, unknown>;
+
+const PROFILE_COLUMNS =
+  "user_id,display_name,pronouns,bio,avatar_url,preferred_role,preferred_locale,interests,neighbourhoods,indoor_preference,child_age_min_months,child_age_max_months,notify_email";
+
+const validCategories = new Set<string>(categories);
+const validNeighbourhoods = new Set<string>(neighbourhoodList);
+
+function toIndoorPreference(value: unknown): IndoorPreference {
+  return value === "indoor" || value === "outdoor" ? value : "any";
+}
+
+function toCategoryArray(value: unknown): VenueCategory[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter((item): item is VenueCategory =>
+    typeof item === "string" && validCategories.has(item)
+  );
+}
+
+function toNeighbourhoodArray(value: unknown): Neighbourhood[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter((item): item is Neighbourhood =>
+    typeof item === "string" && validNeighbourhoods.has(item)
+  );
+}
 
 function mapProfile(row: Row | null | undefined): FamilyProfile | null {
   if (!row) return null;
@@ -18,7 +47,15 @@ function mapProfile(row: Row | null | undefined): FamilyProfile | null {
     bio: (row.bio as string | null) ?? null,
     avatarUrl: (row.avatar_url as string | null) ?? null,
     preferredRole: ((row.preferred_role as FamilyRole) ?? "parent") as FamilyRole,
-    preferredLocale: (row.preferred_locale as string) ?? "da"
+    preferredLocale: (row.preferred_locale as string) ?? "da",
+    interests: toCategoryArray(row.interests),
+    neighbourhoods: toNeighbourhoodArray(row.neighbourhoods),
+    indoorPreference: toIndoorPreference(row.indoor_preference),
+    childAgeMinMonths:
+      typeof row.child_age_min_months === "number" ? (row.child_age_min_months as number) : null,
+    childAgeMaxMonths:
+      typeof row.child_age_max_months === "number" ? (row.child_age_max_months as number) : null,
+    notifyEmail: row.notify_email === false ? false : true
   };
 }
 
@@ -66,12 +103,12 @@ function mapInvite(row: Row): FamilyInvite {
 export async function loadOwnProfile(supabase: SupabaseClient, userId: string) {
   const { data, error } = await supabase
     .from("family_profiles")
-    .select("user_id,display_name,pronouns,bio,avatar_url,preferred_role,preferred_locale")
+    .select(PROFILE_COLUMNS)
     .eq("user_id", userId)
     .maybeSingle();
 
   if (error) throw error;
-  return mapProfile(data ?? null);
+  return mapProfile((data as Row | null) ?? null);
 }
 
 export async function upsertOwnProfile(
@@ -89,15 +126,21 @@ export async function upsertOwnProfile(
         bio: patch.bio ?? null,
         avatar_url: patch.avatarUrl ?? null,
         preferred_role: patch.preferredRole ?? "parent",
-        preferred_locale: patch.preferredLocale ?? "da"
+        preferred_locale: patch.preferredLocale ?? "da",
+        interests: patch.interests ?? [],
+        neighbourhoods: patch.neighbourhoods ?? [],
+        indoor_preference: patch.indoorPreference ?? "any",
+        child_age_min_months: patch.childAgeMinMonths ?? null,
+        child_age_max_months: patch.childAgeMaxMonths ?? null,
+        notify_email: patch.notifyEmail ?? true
       },
       { onConflict: "user_id" }
     )
-    .select("user_id,display_name,pronouns,bio,avatar_url,preferred_role,preferred_locale")
+    .select(PROFILE_COLUMNS)
     .single();
 
   if (error) throw error;
-  return mapProfile(data) as FamilyProfile;
+  return mapProfile(data as Row) as FamilyProfile;
 }
 
 export async function loadFamiliesForUser(supabase: SupabaseClient, userId: string) {
@@ -124,7 +167,7 @@ export async function loadFamilyMembers(supabase: SupabaseClient, familyId: stri
   const { data, error } = await supabase
     .from("family_members")
     .select(
-      "id, family_id, user_id, role, display_name, joined_at, family_profiles(user_id,display_name,pronouns,bio,avatar_url,preferred_role,preferred_locale)"
+      `id, family_id, user_id, role, display_name, joined_at, family_profiles(${PROFILE_COLUMNS})`
     )
     .eq("family_id", familyId)
     .order("joined_at", { ascending: true });

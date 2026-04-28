@@ -113,6 +113,8 @@ export type FamilyRole = "owner" | "parent" | "family" | "caregiver";
 
 export type FamilyInviteStatus = "pending" | "accepted" | "revoked" | "expired";
 
+export type IndoorPreference = "indoor" | "outdoor" | "any";
+
 export type FamilyProfile = {
   userId: string;
   displayName: string | null;
@@ -121,6 +123,12 @@ export type FamilyProfile = {
   avatarUrl: string | null;
   preferredRole: FamilyRole;
   preferredLocale: string;
+  interests: VenueCategory[];
+  neighbourhoods: Neighbourhood[];
+  indoorPreference: IndoorPreference;
+  childAgeMinMonths: number | null;
+  childAgeMaxMonths: number | null;
+  notifyEmail: boolean;
 };
 
 export type Family = {

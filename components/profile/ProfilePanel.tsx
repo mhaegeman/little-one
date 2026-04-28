@@ -3,17 +3,24 @@
 import {
   CheckCircle2,
   Compass,
+  Heart,
   KeyRound,
+  LayoutGrid,
   Loader2,
   LogOut,
+  Settings2,
   ShieldCheck,
-  Sparkles
+  Sparkles,
+  Users
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { FamilyCard } from "@/components/profile/FamilyCard";
-import { PersonalProfileCard } from "@/components/profile/PersonalProfileCard";
+import { ProfileHeader } from "@/components/profile/ProfileHeader";
+import { ProfileOverview } from "@/components/profile/ProfileOverview";
+import { ProfilePreferences } from "@/components/profile/ProfilePreferences";
+import { ProfileRecommendations } from "@/components/profile/ProfileRecommendations";
 import { Button } from "@/components/ui/Button";
 import {
   createFamilyInvite,
@@ -26,6 +33,7 @@ import {
   upsertOwnProfile
 } from "@/lib/family";
 import { createClient } from "@/lib/supabase/client";
+import { cn } from "@/lib/utils";
 import type { Family, FamilyInvite, FamilyMember, FamilyProfile } from "@/lib/types";
 
 type FamilyView = {
@@ -40,6 +48,15 @@ type SessionUser = {
   email: string | null;
 };
 
+type Tab = "overview" | "recommendations" | "preferences" | "family";
+
+const TABS: { id: Tab; label: string; icon: typeof LayoutGrid }[] = [
+  { id: "overview", label: "Oversigt", icon: LayoutGrid },
+  { id: "recommendations", label: "Anbefalinger", icon: Sparkles },
+  { id: "preferences", label: "Indstillinger", icon: Settings2 },
+  { id: "family", label: "Familie", icon: Users }
+];
+
 export function ProfilePanel() {
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
@@ -50,10 +67,12 @@ export function ProfilePanel() {
   const [familyViews, setFamilyViews] = useState<FamilyView[]>([]);
   const [logoutMessage, setLogoutMessage] = useState("");
   const [banner, setBanner] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [tab, setTab] = useState<Tab>("overview");
 
   useEffect(() => {
     if (searchParams.get("invite_accepted") === "1") {
       setBanner({ type: "success", text: "Du er nu med i familien." });
+      setTab("family");
     } else if (searchParams.get("invite_error")) {
       setBanner({
         type: "error",
@@ -168,7 +187,8 @@ export function ProfilePanel() {
 
     if (input.invitedEmail) {
       const inviter = profile?.displayName ?? user.email ?? "Et familiemedlem";
-      const familyName = familyViews.find((view) => view.family.id === familyId)?.family.name ?? "din familie";
+      const familyName =
+        familyViews.find((view) => view.family.id === familyId)?.family.name ?? "din familie";
       const origin = window.location.origin;
       await supabase.auth.signInWithOtp({
         email: input.invitedEmail,
@@ -215,6 +235,15 @@ export function ProfilePanel() {
     );
   }
 
+  const allMembers = useMemo(
+    () => familyViews.flatMap((view) => view.members),
+    [familyViews]
+  );
+  const ownerCount = useMemo(
+    () => familyViews.filter((view) => view.isOwner).length,
+    [familyViews]
+  );
+
   if (loading) {
     return (
       <div className="px-4 pt-24 sm:px-6 lg:px-8 lg:pt-8">
@@ -233,16 +262,17 @@ export function ProfilePanel() {
           <section className="rounded-card bg-white p-6 shadow-soft ring-1 ring-oat">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-rust">Profil</p>
             <h1 className="mt-2 font-display text-4xl font-semibold leading-tight text-ink">
-              Lille Liv samler familiens hverdag
+              En personlig plads til familien
             </h1>
             <p className="mt-3 max-w-xl text-base leading-7 text-ink/70">
-              Log ind med et magisk link, og åbn en privat plads til dig, dit barn og dem du deler hverdagen med.
+              Log ind med et magisk link og åbn en privat hub: profil, præferencer, anbefalinger
+              og en delt familieplads.
             </p>
             <ul className="mt-4 grid gap-3 sm:grid-cols-2">
               <FeaturePoint
                 icon={<Sparkles size={17} className="text-rust" aria-hidden="true" />}
-                title="Privat journal"
-                body="Milepæle, hverdagsglimt og fotos — kun for jer."
+                title="Skræddersyet feed"
+                body="Anbefalinger der lytter til interesser, bydele og barnets alder."
               />
               <FeaturePoint
                 icon={<Compass size={17} className="text-rust" aria-hidden="true" />}
@@ -288,42 +318,105 @@ export function ProfilePanel() {
           </div>
         ) : null}
 
-        <PersonalProfileCard
+        <ProfileHeader
           email={user?.email ?? null}
           profile={profile}
-          onSave={handleProfileSave}
+          familyCount={familyViews.length}
+          ownerCount={ownerCount}
+          onEdit={() => setTab("preferences")}
         />
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          {familyViews.map((view) => (
-            <FamilyCard
-              key={view.family.id}
-              family={view.family}
-              members={view.members}
-              invites={view.invites}
-              isOwner={view.isOwner}
-              onUpdateFamily={(patch) => handleFamilyUpdate(view.family.id, patch)}
-              onCreateInvite={(input) => handleCreateInvite(view.family.id, input)}
-              onRevokeInvite={(inviteId) => handleRevokeInvite(view.family.id, inviteId)}
-            />
-          ))}
-        </div>
+        <nav
+          aria-label="Profilsektioner"
+          className="sticky top-16 z-20 -mx-4 overflow-x-auto bg-linen/95 px-4 py-3 backdrop-blur lg:top-0 lg:mx-0 lg:rounded-card lg:bg-white lg:px-3 lg:shadow-soft lg:ring-1 lg:ring-oat"
+        >
+          <div className="flex items-center gap-2">
+            {TABS.map((entry) => {
+              const Icon = entry.icon;
+              const active = tab === entry.id;
+              return (
+                <button
+                  key={entry.id}
+                  type="button"
+                  onClick={() => setTab(entry.id)}
+                  aria-pressed={active}
+                  className={cn(
+                    "focus-ring inline-flex h-11 shrink-0 items-center gap-2 rounded-full px-4 text-sm font-bold transition",
+                    active
+                      ? "bg-moss text-white"
+                      : "bg-white text-ink/72 ring-1 ring-oat hover:bg-[#FFFDF8]"
+                  )}
+                >
+                  <Icon size={16} aria-hidden="true" />
+                  {entry.label}
+                </button>
+              );
+            })}
+          </div>
+        </nav>
 
-        {familyViews.length === 0 ? (
-          <section className="rounded-card bg-white p-6 shadow-soft ring-1 ring-oat">
-            <h2 className="font-display text-2xl font-semibold">Ingen familie endnu</h2>
-            <p className="mt-2 text-sm leading-6 text-ink/70">
-              Når du logger ind næste gang, opretter vi automatisk en familie til dig. Du kan altid invitere flere ind.
-            </p>
-          </section>
+        {tab === "overview" ? (
+          <ProfileOverview
+            profile={profile}
+            members={allMembers}
+            onJumpTo={(target) => setTab(target)}
+          />
+        ) : null}
+
+        {tab === "recommendations" ? (
+          <ProfileRecommendations
+            profile={profile}
+            onTunePreferences={() => setTab("preferences")}
+          />
+        ) : null}
+
+        {tab === "preferences" ? (
+          <ProfilePreferences profile={profile} onSave={handleProfileSave} />
+        ) : null}
+
+        {tab === "family" ? (
+          <div className="space-y-5">
+            {familyViews.length === 0 ? (
+              <section className="rounded-card bg-white p-6 shadow-soft ring-1 ring-oat">
+                <h2 className="font-display text-2xl font-semibold">Ingen familie endnu</h2>
+                <p className="mt-2 text-sm leading-6 text-ink/70">
+                  Næste gang du logger ind, opretter vi automatisk en familie til dig. Du kan altid
+                  invitere flere ind.
+                </p>
+              </section>
+            ) : (
+              <div className="grid gap-6 lg:grid-cols-2">
+                {familyViews.map((view) => (
+                  <FamilyCard
+                    key={view.family.id}
+                    family={view.family}
+                    members={view.members}
+                    invites={view.invites}
+                    isOwner={view.isOwner}
+                    onUpdateFamily={(patch) => handleFamilyUpdate(view.family.id, patch)}
+                    onCreateInvite={(input) => handleCreateInvite(view.family.id, input)}
+                    onRevokeInvite={(inviteId) => handleRevokeInvite(view.family.id, inviteId)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         ) : null}
 
         <section className="rounded-card bg-white p-6 shadow-soft ring-1 ring-oat">
-          <h2 className="font-display text-2xl font-semibold">Konto og indstillinger</h2>
+          <div className="flex items-start gap-2 text-rust">
+            <ShieldCheck size={18} aria-hidden="true" />
+            <h2 className="font-display text-2xl font-semibold text-ink">Konto og privatliv</h2>
+          </div>
           <p className="mt-2 text-sm leading-6 text-ink/70">
-            Dansk er standardsprog. Data gemmes i Supabase i EU-region med RLS-politikker, så hver familie kun ser sin egen.
+            Data gemmes i Supabase i EU-region med RLS-politikker, så hver familie kun ser sin
+            egen. Du kan logge ud her — alle dine præferencer ligger sikkert klar igen næste gang.
           </p>
-          <div className="mt-4 flex gap-3">
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Button variant="secondary" onClick={() => setTab("preferences")}>
+              <Heart size={16} aria-hidden="true" />
+              Mine præferencer
+            </Button>
             <Button variant="danger" onClick={logout}>
               <LogOut size={16} aria-hidden="true" />
               Log ud

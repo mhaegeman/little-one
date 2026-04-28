@@ -76,15 +76,21 @@ enum FamilyInviteStatus {
 }
 
 model FamilyProfile {
-  userId          String     @id @map("user_id") @db.Uuid
-  displayName     String?    @map("display_name")
-  pronouns        String?
-  bio             String?
-  avatarUrl       String?    @map("avatar_url")
-  preferredRole   FamilyRole @default(parent) @map("preferred_role")
-  preferredLocale String     @default("da") @map("preferred_locale")
-  createdAt       DateTime   @default(now()) @map("created_at")
-  updatedAt       DateTime   @updatedAt @map("updated_at")
+  userId             String     @id @map("user_id") @db.Uuid
+  displayName        String?    @map("display_name")
+  pronouns           String?
+  bio                String?
+  avatarUrl          String?    @map("avatar_url")
+  preferredRole      FamilyRole @default(parent) @map("preferred_role")
+  preferredLocale    String     @default("da") @map("preferred_locale")
+  interests          String[]   @default([])
+  neighbourhoods     String[]   @default([])
+  indoorPreference   String     @default("any") @map("indoor_preference")
+  childAgeMinMonths  Int?       @map("child_age_min_months")
+  childAgeMaxMonths  Int?       @map("child_age_max_months")
+  notifyEmail        Boolean    @default(true) @map("notify_email")
+  createdAt          DateTime   @default(now()) @map("created_at")
+  updatedAt          DateTime   @updatedAt @map("updated_at")
 
   @@map("family_profiles")
 }
