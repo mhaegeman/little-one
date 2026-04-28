@@ -3,6 +3,7 @@
 -- the per-family membership rows, and time-limited invitation tokens.
 
 create extension if not exists "pgcrypto";
+create extension if not exists "citext";
 
 do $$ begin
   create type family_role as enum ('owner', 'parent', 'family', 'caregiver');
@@ -66,11 +67,6 @@ create table if not exists public.family_invites (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
-
--- citext is required so invite emails match case-insensitively.
-create extension if not exists "citext";
-alter table public.family_invites
-  alter column invited_email type citext using invited_email::citext;
 
 -- Indices
 create index if not exists family_members_family_id_idx on public.family_members(family_id);
