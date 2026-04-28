@@ -1,11 +1,11 @@
-import { Baby, MapPin, Star } from "lucide-react";
+import { Baby, MapPin, Navigation, Star } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 import { categoryColors, categoryLabels } from "@/lib/data/taxonomy";
 import type { Venue } from "@/lib/types";
-import { monthRangeLabel } from "@/lib/utils";
+import { formatDistance, monthRangeLabel } from "@/lib/utils";
 
-export function VenueCard({ venue }: { venue: Venue }) {
+export function VenueCard({ venue, distanceKm }: { venue: Venue; distanceKm?: number }) {
   return (
     <Link
       href={`/venues/${venue.id}`}
@@ -28,6 +28,12 @@ export function VenueCard({ venue }: { venue: Venue }) {
             <p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-ink/62">
               <MapPin size={15} aria-hidden="true" />
               {venue.neighbourhood}
+              {typeof distanceKm === "number" ? (
+                <span className="ml-1 inline-flex items-center gap-1 rounded-full bg-moss/10 px-2 py-0.5 text-xs font-bold text-mossDark">
+                  <Navigation size={11} aria-hidden="true" />
+                  {formatDistance(distanceKm)}
+                </span>
+              ) : null}
             </p>
           </div>
           <span className="flex shrink-0 items-center gap-1 rounded-full bg-linen px-2.5 py-1 text-xs font-bold text-mossDark">

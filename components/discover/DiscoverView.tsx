@@ -4,11 +4,12 @@ import { Filter, ListFilter, MapPinned, Search, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { DiscoverMap } from "@/components/discover/DiscoverMap";
 import { EventList } from "@/components/discover/EventList";
+import { LocationControl, type UserLocation } from "@/components/discover/LocationControl";
 import { VenueCard } from "@/components/discover/VenueCard";
 import { Button } from "@/components/ui/Button";
 import { categories, categoryLabels, neighbourhoods } from "@/lib/data/taxonomy";
 import type { FamilyEvent, IndoorOutdoor, Neighbourhood, Venue, VenueCategory } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { cn, haversineKm } from "@/lib/utils";
 
 type DiscoverViewProps = {
   venues: Venue[];
@@ -24,9 +25,10 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
   const [ageMax, setAgeMax] = useState(72);
   const [query, setQuery] = useState("");
   const [selectedVenueId, setSelectedVenueId] = useState<string | undefined>(venues[0]?.id);
+  const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
 
   const filteredVenues = useMemo(() => {
-    return venues.filter((venue) => {
+    const filtered = venues.filter((venue) => {
       const matchesCategory =
         selectedCategories.length === 0 || selectedCategories.includes(venue.category);
       const matchesNeighbourhood =
@@ -49,7 +51,36 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
         matchesQuery
       );
     });
-  }, [ageMax, ageMin, indoorOutdoor, neighbourhood, openNow, query, selectedCategories, venues]);
+
+    if (!userLocation) {
+      return filtered;
+    }
+
+    return [...filtered].sort(
+      (a, b) =>
+        haversineKm(userLocation.lat, userLocation.lng, a.lat, a.lng) -
+        haversineKm(userLocation.lat, userLocation.lng, b.lat, b.lng)
+    );
+  }, [
+    ageMax,
+    ageMin,
+    indoorOutdoor,
+    neighbourhood,
+    openNow,
+    query,
+    selectedCategories,
+    userLocation,
+    venues
+  ]);
+
+  const distances = useMemo(() => {
+    if (!userLocation) return new Map<string, number>();
+    const map = new Map<string, number>();
+    for (const venue of venues) {
+      map.set(venue.id, haversineKm(userLocation.lat, userLocation.lng, venue.lat, venue.lng));
+    }
+    return map;
+  }, [userLocation, venues]);
 
   const selectedVenueStillVisible = filteredVenues.some((venue) => venue.id === selectedVenueId);
   const mapSelection = selectedVenueStillVisible ? selectedVenueId : filteredVenues[0]?.id;
@@ -70,6 +101,7 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
     setAgeMin(0);
     setAgeMax(72);
     setQuery("");
+    setUserLocation(null);
   }
 
   return (
@@ -109,12 +141,15 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
               query={query}
               setQuery={setQuery}
               resetFilters={resetFilters}
+              userLocation={userLocation}
+              setUserLocation={setUserLocation}
             />
             <div className="min-h-[420px]">
               <DiscoverMap
                 venues={filteredVenues}
                 selectedVenueId={mapSelection}
                 onSelect={setSelectedVenueId}
+                userLocation={userLocation}
               />
             </div>
           </div>
@@ -128,7 +163,7 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
             </div>
             <div className="grid gap-4 xl:grid-cols-2">
               {filteredVenues.map((venue) => (
-                <VenueCard key={venue.id} venue={venue} />
+                <VenueCard key={venue.id} venue={venue} distanceKm={distances.get(venue.id)} />
               ))}
             </div>
           </div>
@@ -176,6 +211,8 @@ type FilterPanelProps = {
   query: string;
   setQuery: (value: string) => void;
   resetFilters: () => void;
+  userLocation: UserLocation | null;
+  setUserLocation: (location: UserLocation | null) => void;
 };
 
 function FilterPanel({
@@ -193,7 +230,9 @@ function FilterPanel({
   setAgeMax,
   query,
   setQuery,
-  resetFilters
+  resetFilters,
+  userLocation,
+  setUserLocation
 }: FilterPanelProps) {
   return (
     <div className="rounded-card bg-linen p-4 ring-1 ring-oat">
@@ -314,6 +353,10 @@ function FilterPanel({
           className="h-5 w-5 accent-moss"
         />
       </label>
+
+      <div className="mt-5">
+        <LocationControl userLocation={userLocation} onChange={setUserLocation} />
+      </div>
     </div>
   );
 }
