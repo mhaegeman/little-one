@@ -55,14 +55,16 @@ export function JournalClient() {
   const [usingDemo, setUsingDemo] = useState(false);
 
   useEffect(() => {
-    const supabase = createClient();
+    const client = createClient();
 
-    if (!supabase) {
+    if (!client) {
       setChildren([demoChild]);
       setUsingDemo(true);
       setLoading(false);
       return;
     }
+
+    const supabase = client;
 
     async function loadSession() {
       const {
