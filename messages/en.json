@@ -1,0 +1,53 @@
+{
+  "app": {
+    "name": "Lille Liv",
+    "tagline": "Copenhagen family life, gently organized."
+  },
+  "nav": {
+    "discover": "Discover",
+    "journal": "Journal",
+    "profile": "Profile"
+  },
+  "discover": {
+    "title": "Discover",
+    "subtitle": "Find places, pauses, and small outings for children aged 0-6 in Copenhagen.",
+    "map": "Map",
+    "list": "List",
+    "events": "Upcoming experiences",
+    "age": "Age",
+    "category": "Category",
+    "neighbourhood": "Neighbourhood",
+    "openNow": "Open now",
+    "all": "All",
+    "months": "{count} mo.",
+    "years": "{count} yrs",
+    "addToLog": "Add to journal",
+    "requiresLogin": "Log in to save"
+  },
+  "journal": {
+    "title": "Journal",
+    "subtitle": "Milestones, outings, and daily highlights for each child.",
+    "timeline": "Timeline",
+    "addMilestone": "Add milestone",
+    "addActivity": "Add activity",
+    "aulaBadgeNursery": "From nursery",
+    "aulaBadgeKindergarten": "From kindergarten"
+  },
+  "profile": {
+    "title": "Profile",
+    "connectedAccounts": "Connected accounts",
+    "settings": "Settings",
+    "logout": "Log out"
+  },
+  "auth": {
+    "email": "Email",
+    "sendMagicLink": "Send magic link",
+    "checkInbox": "Check your inbox",
+    "notConfigured": "Supabase environment variables are missing."
+  },
+  "aula": {
+    "title": "Aula",
+    "comingSoon": "Aula connection coming soon",
+    "body": "We are preparing a secure MitID-based connection. Until then, Lille Liv does not store Aula passwords."
+  }
+}

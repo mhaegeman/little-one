@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "Lille Liv",
+    "slug": "lille-liv",
+    "scheme": "lilleliv",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#F5F0E8"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "dk.lilleliv.app"
+    },
+    "android": {
+      "package": "dk.lilleliv.app"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "local-mvp-placeholder"
+      }
+    }
+  }
+}

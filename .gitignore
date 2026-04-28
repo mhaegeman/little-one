@@ -1,0 +1,10 @@
+.next/
+node_modules/
+.env
+.env*.local
+dist/
+coverage/
+prisma/migrations/*/migration_lock.toml
+mobile/node_modules/
+mobile/.expo/
+*.log

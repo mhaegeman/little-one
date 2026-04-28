@@ -1,0 +1,53 @@
+{
+  "app": {
+    "name": "Lille Liv",
+    "tagline": "Familieliv i København, samlet og roligt."
+  },
+  "nav": {
+    "discover": "Opdag",
+    "journal": "Journal",
+    "profile": "Profil"
+  },
+  "discover": {
+    "title": "Opdag",
+    "subtitle": "Find steder, pauser og små udflugter for børn 0-6 år i København.",
+    "map": "Kort",
+    "list": "Liste",
+    "events": "Kommende oplevelser",
+    "age": "Alder",
+    "category": "Kategori",
+    "neighbourhood": "Bydel",
+    "openNow": "Åbent nu",
+    "all": "Alle",
+    "months": "{count} mdr.",
+    "years": "{count} år",
+    "addToLog": "Tilføj til journal",
+    "requiresLogin": "Log ind for at gemme"
+  },
+  "journal": {
+    "title": "Journal",
+    "subtitle": "Milepæle, ture og hverdagsglimt samlet for hvert barn.",
+    "timeline": "Tidslinje",
+    "addMilestone": "Tilføj milepæl",
+    "addActivity": "Tilføj tur",
+    "aulaBadgeNursery": "Fra vuggestuen",
+    "aulaBadgeKindergarten": "Fra børnehaven"
+  },
+  "profile": {
+    "title": "Profil",
+    "connectedAccounts": "Forbundne konti",
+    "settings": "Indstillinger",
+    "logout": "Log ud"
+  },
+  "auth": {
+    "email": "E-mail",
+    "sendMagicLink": "Send magisk link",
+    "checkInbox": "Tjek din indbakke",
+    "notConfigured": "Supabase mangler miljøvariabler."
+  },
+  "aula": {
+    "title": "Aula",
+    "comingSoon": "Aula-forbindelse kommer snart",
+    "body": "Vi forbereder en sikker MitID-baseret forbindelse. Indtil da gemmer Lille Liv ingen Aula-adgangskoder."
+  }
+}
