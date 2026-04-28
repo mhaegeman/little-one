@@ -1,23 +1,169 @@
-import type { FamilyEvent, Venue } from "@/lib/types";
+import type { FamilyEvent, Venue, VenueCategory } from "@/lib/types";
+
+function unsplash(id: string, w = 1200) {
+  return `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=80`;
+}
 
 const photos = {
-  cafe:
-    "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1200&q=80",
-  playground:
-    "https://images.unsplash.com/photo-1596997000103-e5976ca50f9e?auto=format&fit=crop&w=1200&q=80",
-  indoor:
-    "https://images.unsplash.com/photo-1535572290543-960a8046f5af?auto=format&fit=crop&w=1200&q=80",
-  library:
-    "https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=1200&q=80",
-  swimming:
-    "https://images.unsplash.com/photo-1530549387789-4c1017266635?auto=format&fit=crop&w=1200&q=80",
-  theatre:
-    "https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=1200&q=80",
-  event:
-    "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=1200&q=80"
+  cafe: unsplash("1509042239860-f550ce710b93"),
+  playground: unsplash("1596997000103-e5976ca50f9e"),
+  indoor: unsplash("1535572290543-960a8046f5af"),
+  library: unsplash("1519682337058-a94d519337bc"),
+  swimming: unsplash("1530549387789-4c1017266635"),
+  theatre: unsplash("1503095396549-807759245b35"),
+  event: unsplash("1513151233558-d860c5398176")
 };
 
-export const venues: Venue[] = [
+const photoBanks: Record<VenueCategory, string[]> = {
+  cafe: [
+    unsplash("1509042239860-f550ce710b93"),
+    unsplash("1453614512568-c4024d13c247"),
+    unsplash("1559925393-8be0ec4767c8"),
+    unsplash("1481833761820-0509d3217039")
+  ],
+  playground: [
+    unsplash("1596997000103-e5976ca50f9e"),
+    unsplash("1502086223501-7ea6ecd79368"),
+    unsplash("1485981137693-acdb7416fac0"),
+    unsplash("1543248939-ff40856f65d4")
+  ],
+  indoor_play: [
+    unsplash("1535572290543-960a8046f5af"),
+    unsplash("1503676260728-1c00da094a0b"),
+    unsplash("1601758174039-bcdc9d6cca80")
+  ],
+  library: [
+    unsplash("1519682337058-a94d519337bc"),
+    unsplash("1521587760476-6c12a4b040da"),
+    unsplash("1481627834876-b7833e8f5570"),
+    unsplash("1568667256549-094345857637")
+  ],
+  swimming: [
+    unsplash("1530549387789-4c1017266635"),
+    unsplash("1576013551627-0cc20b96c2a7"),
+    unsplash("1530841344095-fe8b6ddc8a59"),
+    unsplash("1530538987395-032d1800fdd4")
+  ],
+  theatre: [
+    unsplash("1503095396549-807759245b35"),
+    unsplash("1507676184212-d03ab07a01bf"),
+    unsplash("1583146636691-78fbcfb2ca97")
+  ],
+  cinema: [
+    unsplash("1489599162878-83bee99e7c1c"),
+    unsplash("1574267432553-4b4628081c31"),
+    unsplash("1517604931442-7e0c8ed2963c")
+  ],
+  event: [
+    unsplash("1513151233558-d860c5398176"),
+    unsplash("1580974928064-f0aeef70895a"),
+    unsplash("1542038784456-1ea8e935640e"),
+    unsplash("1493225457124-a3eb161ffa5f")
+  ]
+};
+
+const photoOverrides: Record<string, string[]> = {
+  "amager-strandpark": [
+    unsplash("1507525428034-b723cf961d3e"),
+    unsplash("1518998053901-5348d3961a04")
+  ],
+  "havnegade-trampoliner": [
+    unsplash("1542315192-1f61a1792f33"),
+    unsplash("1502086223501-7ea6ecd79368")
+  ],
+  "konditaget-luders": [
+    unsplash("1564507592333-c60657eea523"),
+    unsplash("1543248939-ff40856f65d4")
+  ],
+  "tivoli-gardens": [
+    unsplash("1542038784456-1ea8e935640e"),
+    unsplash("1493225457124-a3eb161ffa5f")
+  ],
+  "copenhagen-zoo": [
+    unsplash("1580974928064-f0aeef70895a"),
+    unsplash("1564349683136-77e08dba1ef7")
+  ],
+  "den-blaa-planet": [
+    unsplash("1582967788606-a171c1080cb0"),
+    unsplash("1583212292454-1fe6229603b7")
+  ],
+  experimentarium: [
+    unsplash("1503676260728-1c00da094a0b"),
+    unsplash("1582921020076-2e5b2e1a09a3")
+  ],
+  superkilen: [
+    unsplash("1485981137693-acdb7416fac0"),
+    unsplash("1543248939-ff40856f65d4")
+  ],
+  "kongens-have-legeplads": [
+    unsplash("1502086223501-7ea6ecd79368"),
+    unsplash("1568012152284-92d76f4dafde")
+  ],
+  "valbyparken-naturlegeplads": [
+    unsplash("1469429954551-3eb88a02ab23"),
+    unsplash("1572053675669-e9f1b6f30d56")
+  ],
+  cinemateket: [
+    unsplash("1489599162878-83bee99e7c1c"),
+    unsplash("1517604931442-7e0c8ed2963c")
+  ],
+  "hovedbiblioteket-laes": [
+    unsplash("1521587760476-6c12a4b040da"),
+    unsplash("1568667256549-094345857637")
+  ],
+  "boernenes-museum": [
+    unsplash("1580130544577-456e1f6ed8ee"),
+    unsplash("1601758174039-bcdc9d6cca80")
+  ],
+  "copenhagen-contemporary": [
+    unsplash("1531913764164-f85c52e6e654"),
+    unsplash("1577083552431-6e5fd01988ec")
+  ],
+  "kongelige-teater-de-smaa-synger": [
+    unsplash("1507676184212-d03ab07a01bf"),
+    unsplash("1503095396549-807759245b35")
+  ],
+  "ku-be": [
+    unsplash("1601758174039-bcdc9d6cca80"),
+    unsplash("1503676260728-1c00da094a0b")
+  ],
+  remisen: [
+    unsplash("1535572290543-960a8046f5af"),
+    unsplash("1601758174039-bcdc9d6cca80")
+  ],
+  "absalon": [
+    unsplash("1559925393-8be0ec4767c8"),
+    unsplash("1453614512568-c4024d13c247")
+  ],
+  "the-living-room": [
+    unsplash("1481833761820-0509d3217039"),
+    unsplash("1453614512568-c4024d13c247")
+  ],
+  granola: [
+    unsplash("1559925393-8be0ec4767c8"),
+    unsplash("1559925393-8be0ec4767c8")
+  ]
+};
+
+function pickPhotos(category: VenueCategory, id: string): string[] {
+  const override = photoOverrides[id];
+  if (override && override.length > 0) {
+    return override;
+  }
+  const bank = photoBanks[category] ?? [];
+  if (bank.length === 0) {
+    return [];
+  }
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
+  }
+  const first = hash % bank.length;
+  const second = (hash + 1) % bank.length;
+  return [bank[first], bank[second]];
+}
+
+const baseVenues: Venue[] = [
   {
     id: "the-living-room",
     name: "The Living Room",
@@ -943,6 +1089,11 @@ export const venues: Venue[] = [
     sourceUrl: "https://copenhagencontemporary.org/"
   }
 ];
+
+export const venues: Venue[] = baseVenues.map((venue) => ({
+  ...venue,
+  photos: pickPhotos(venue.category, venue.id)
+}));
 
 export const events: FamilyEvent[] = [
   {
