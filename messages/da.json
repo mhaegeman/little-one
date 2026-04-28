@@ -35,15 +35,40 @@
   },
   "profile": {
     "title": "Profil",
-    "connectedAccounts": "Forbundne konti",
-    "settings": "Indstillinger",
-    "logout": "Log ud"
+    "personal": "Din profil",
+    "family": "Familie",
+    "members": "Medlemmer",
+    "invite": "Inviter",
+    "save": "Gem profil",
+    "saved": "Gemt",
+    "displayName": "Visningsnavn",
+    "pronouns": "Pronominer",
+    "bio": "Kort beskrivelse",
+    "avatar": "Profilbillede",
+    "role": "Rolle",
+    "language": "Sprog",
+    "settings": "Konto og indstillinger",
+    "logout": "Log ud",
+    "leaveFamily": "Forlad familien"
   },
   "auth": {
+    "eyebrow": "Velkommen",
+    "title": "Et roligt rum til hele familien",
+    "body": "Lille Liv samler milepæle, hverdagsglimt og udflugter for jer og dem, I deler hverdagen med.",
     "email": "E-mail",
+    "name": "Dit navn",
     "sendMagicLink": "Send magisk link",
     "checkInbox": "Tjek din indbakke",
-    "notConfigured": "Supabase mangler miljøvariabler."
+    "notConfigured": "Supabase mangler miljøvariabler.",
+    "inviteSubtitle": "Du er inviteret til en familie",
+    "inviteAccept": "Tilslut familien"
+  },
+  "family": {
+    "ownerBadge": "Ejer",
+    "addMembers": "Tilføj bedsteforældre, dagplejer eller resten af familien",
+    "shareInvite": "Del linket",
+    "expiresIn": "Udløber om {days} dage",
+    "pending": "Afventer svar"
   },
   "aula": {
     "title": "Aula",

@@ -7,7 +7,8 @@ Lille Liv is a Copenhagen family companion app for parents with children aged 0-
 - Next.js 14 App Router web app with TypeScript and Tailwind CSS
 - Danish-first UI with `next-intl` messages and English fallback messages
 - Discover tab with Copenhagen venue seed data, filters, map fallback, list cards, events, and venue detail pages
-- Supabase Auth magic-link UI and callback route
+- Supabase Auth magic-link UI and callback route, with branded email template, display-name capture, role + locale metadata, and invite-token deep links
+- Family workspace: per-user `family_profiles`, `families`, `family_members`, and `family_invites` with RLS so grandparents, caregivers, and co-parents can be invited into a shared journal
 - Prisma schema for the requested Supabase tables
 - Supabase SQL migration with RLS policies for private child/journal/Aula data
 - Basic Journal tab with child profile header, private-login gate, timeline, and add milestone form
@@ -36,7 +37,7 @@ Lille Liv is a Copenhagen family companion app for parents with children aged 0-
    - `DATABASE_URL`
    - `DIRECT_URL`
 
-4. Apply the Supabase migration in `supabase/migrations/0001_lille_liv.sql`.
+4. Apply the Supabase migrations in order: `supabase/migrations/0001_lille_liv.sql` and then `supabase/migrations/0002_family_profiles.sql`. Then paste `supabase/templates/magic-link.html` into Supabase Dashboard → Authentication → Email Templates → Magic Link (see `supabase/templates/README.md`).
 
 5. Generate Prisma and seed venues/events:
 
@@ -86,6 +87,13 @@ Lille Liv is a Next.js app with server-side API routes, Supabase Auth on cookies
 ### CI
 
 `.github/workflows/ci.yml` runs `npm ci`, `npm run lint`, `npm run typecheck`, and `npm run build` on every PR and on pushes to `main` so deploys are not the first place build breakage shows up.
+
+## Auth + Family flow
+
+- The login form (`components/auth/LoginForm.tsx`) collects an email, an optional display name, a role (parent / family / caregiver) and a locale, then calls `signInWithOtp` with that data so the values appear in `auth.users.raw_user_meta_data` and inside the email template via `{{ .Data.* }}`.
+- A Postgres trigger (`public.handle_new_user`) automatically creates a `family_profiles` row and, for non-invited signups, a starter family with the user as owner.
+- Owners can invite people from the profile page. Each invite creates a row in `family_invites` with a unique token. The invite link `/invite/<token>` renders a branded landing page and pre-fills the magic-link form.
+- After authenticating, the callback route (`app/auth/callback/route.ts`) calls the `accept_family_invite(token)` SQL function, which validates the email match, expiry, and status before adding the user to `family_members`.
 
 ## Aula Boundary
 

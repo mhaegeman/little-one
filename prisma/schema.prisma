@@ -57,6 +57,92 @@ enum MilestoneType {
   @@map("milestone_type")
 }
 
+enum FamilyRole {
+  owner
+  parent
+  family
+  caregiver
+
+  @@map("family_role")
+}
+
+enum FamilyInviteStatus {
+  pending
+  accepted
+  revoked
+  expired
+
+  @@map("family_invite_status")
+}
+
+model FamilyProfile {
+  userId          String     @id @map("user_id") @db.Uuid
+  displayName     String?    @map("display_name")
+  pronouns        String?
+  bio             String?
+  avatarUrl       String?    @map("avatar_url")
+  preferredRole   FamilyRole @default(parent) @map("preferred_role")
+  preferredLocale String     @default("da") @map("preferred_locale")
+  createdAt       DateTime   @default(now()) @map("created_at")
+  updatedAt       DateTime   @updatedAt @map("updated_at")
+
+  @@map("family_profiles")
+}
+
+model Family {
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  description String?
+  coverUrl    String?        @map("cover_url")
+  createdBy   String         @map("created_by") @db.Uuid
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+  members     FamilyMember[]
+  invites     FamilyInvite[]
+
+  @@map("families")
+}
+
+model FamilyMember {
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  familyId    String     @map("family_id") @db.Uuid
+  family      Family     @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  userId      String     @map("user_id") @db.Uuid
+  role        FamilyRole @default(parent)
+  displayName String?    @map("display_name")
+  joinedAt    DateTime   @default(now()) @map("joined_at")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  @@unique([familyId, userId])
+  @@index([familyId])
+  @@index([userId])
+  @@map("family_members")
+}
+
+model FamilyInvite {
+  id           String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  familyId     String             @map("family_id") @db.Uuid
+  family       Family             @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  invitedEmail String?            @map("invited_email")
+  invitedName  String?            @map("invited_name")
+  invitedBy    String             @map("invited_by") @db.Uuid
+  role         FamilyRole         @default(family)
+  message      String?
+  token        String             @unique
+  status       FamilyInviteStatus @default(pending)
+  expiresAt    DateTime           @map("expires_at")
+  acceptedBy   String?            @map("accepted_by") @db.Uuid
+  acceptedAt   DateTime?          @map("accepted_at")
+  createdAt    DateTime           @default(now()) @map("created_at")
+  updatedAt    DateTime           @updatedAt @map("updated_at")
+
+  @@index([familyId])
+  @@index([invitedEmail])
+  @@index([status])
+  @@map("family_invites")
+}
+
 model Child {
   id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId        String          @map("user_id") @db.Uuid
