@@ -9,25 +9,27 @@ import { getVenueById, venues } from "@/lib/data/venues";
 import { googleMapsUrl, monthRangeLabel } from "@/lib/utils";
 
 type VenuePageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export function generateStaticParams() {
   return venues.map((venue) => ({ id: venue.id }));
 }
 
-export function generateMetadata({ params }: VenuePageProps) {
-  const venue = getVenueById(params.id);
+export async function generateMetadata({ params }: VenuePageProps) {
+  const { id } = await params;
+  const venue = getVenueById(id);
 
   return {
     title: venue ? `${venue.name} · Lille Liv` : "Sted · Lille Liv"
   };
 }
 
-export default function VenuePage({ params }: VenuePageProps) {
-  const venue = getVenueById(params.id);
+export default async function VenuePage({ params }: VenuePageProps) {
+  const { id } = await params;
+  const venue = getVenueById(id);
 
   if (!venue) {
     notFound();
