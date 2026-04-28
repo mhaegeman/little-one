@@ -5,7 +5,7 @@ import maplibregl, { LngLatBounds, type Map as MapLibreMap, type Marker } from "
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { categoryColors, categoryLabels } from "@/lib/data/taxonomy";
-import type { Venue } from "@/lib/types";
+import type { Venue, VenueCategory } from "@/lib/types";
 import { cn, formatDistance, haversineKm } from "@/lib/utils";
 
 type DiscoverMapProps = {
@@ -13,6 +13,14 @@ type DiscoverMapProps = {
   selectedVenueId?: string;
   onSelect: (venueId: string) => void;
   userLocation?: { lat: number; lng: number } | null;
+};
+
+type HoverState = {
+  venue: Venue;
+  x: number;
+  y: number;
+  containerWidth: number;
+  containerHeight: number;
 };
 
 const COPENHAGEN: [number, number] = [12.5683, 55.6761];
@@ -47,11 +55,17 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
   const markersRef = useRef<Map<string, Marker>>(new Map());
   const userMarkerRef = useRef<Marker | null>(null);
   const onSelectRef = useRef(onSelect);
+  const selectedIdRef = useRef(selectedVenueId);
   const [ready, setReady] = useState(false);
+  const [hover, setHover] = useState<HoverState | null>(null);
 
   useEffect(() => {
     onSelectRef.current = onSelect;
   }, [onSelect]);
+
+  useEffect(() => {
+    selectedIdRef.current = selectedVenueId;
+  }, [selectedVenueId]);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) {
@@ -70,6 +84,7 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 
     map.on("load", () => setReady(true));
+    map.on("movestart", () => setHover(null));
 
     mapRef.current = map;
 
@@ -85,7 +100,8 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !ready) return;
+    const container = containerRef.current;
+    if (!map || !ready || !container) return;
 
     const seen = new Set<string>();
 
@@ -94,21 +110,30 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
       const existing = markersRef.current.get(venue.id);
       if (existing) {
         existing.setLngLat([venue.lng, venue.lat]);
-        const el = existing.getElement();
-        el.dataset.selected = selectedVenueId === venue.id ? "true" : "false";
-        applyMarkerStyle(el, venue, selectedVenueId === venue.id);
+        const inner = existing.getElement().firstElementChild as HTMLElement | null;
+        if (inner) {
+          updatePinStyle(inner, venue, selectedVenueId === venue.id);
+        }
         continue;
       }
 
-      const element = document.createElement("button");
-      element.type = "button";
-      element.setAttribute("aria-label", venue.name);
-      element.title = `${venue.name} · ${categoryLabels[venue.category]}`;
-      element.dataset.venueId = venue.id;
-      applyMarkerStyle(element, venue, selectedVenueId === venue.id);
-      element.addEventListener("click", (event) => {
-        event.stopPropagation();
-        onSelectRef.current(venue.id);
+      const element = createMarkerElement(venue, selectedVenueId === venue.id, {
+        onSelect: (id) => onSelectRef.current(id),
+        onHover: (event) => {
+          if (selectedIdRef.current === venue.id) {
+            setHover(null);
+            return;
+          }
+          const rect = container.getBoundingClientRect();
+          setHover({
+            venue,
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top,
+            containerWidth: rect.width,
+            containerHeight: rect.height
+          });
+        },
+        onLeave: () => setHover(null)
       });
 
       const marker = new maplibregl.Marker({ element, anchor: "bottom" })
@@ -136,13 +161,15 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
     }
 
     if (!userMarkerRef.current) {
-      const el = document.createElement("div");
-      el.className =
+      const wrapper = document.createElement("div");
+      wrapper.setAttribute("aria-label", "Din lokation");
+      const dot = document.createElement("span");
+      dot.className =
         "relative grid h-5 w-5 place-items-center rounded-full bg-rust ring-4 ring-rust/30 shadow-soft";
-      el.setAttribute("aria-label", "Din lokation");
-      el.innerHTML =
+      dot.innerHTML =
         '<span class="absolute inset-0 -z-10 animate-ping rounded-full bg-rust/40"></span>';
-      userMarkerRef.current = new maplibregl.Marker({ element: el, anchor: "center" })
+      wrapper.appendChild(dot);
+      userMarkerRef.current = new maplibregl.Marker({ element: wrapper, anchor: "center" })
         .setLngLat([userLocation.lng, userLocation.lat])
         .addTo(map);
     } else {
@@ -178,14 +205,70 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
   return (
     <div className="relative h-full min-h-[420px] w-full overflow-hidden rounded-card ring-1 ring-oat">
       <div ref={containerRef} className="h-full w-full" />
-      {selected ? (
-        <SelectedCard venue={selected} userLocation={userLocation} />
-      ) : null}
+      {hover ? <HoverCard hover={hover} /> : null}
+      {selected ? <SelectedCard venue={selected} userLocation={userLocation} /> : null}
     </div>
   );
 }
 
-function SelectedCard({ venue, userLocation }: { venue: Venue; userLocation?: { lat: number; lng: number } | null }) {
+function HoverCard({ hover }: { hover: HoverState }) {
+  const cardWidth = 220;
+  const cardHeight = 76;
+  const offset = 16;
+  const flipX = hover.x + offset + cardWidth > hover.containerWidth - 8;
+  const flipY = hover.y + offset + cardHeight > hover.containerHeight - 8;
+  const left = flipX ? hover.x - offset - cardWidth : hover.x + offset;
+  const top = flipY ? hover.y - offset - cardHeight : hover.y + offset;
+
+  return (
+    <div
+      className="pointer-events-none absolute z-20"
+      style={{
+        left: Math.max(8, left),
+        top: Math.max(8, top),
+        width: cardWidth
+      }}
+    >
+      <div className="flex items-center gap-2 rounded-card bg-white/96 p-2 shadow-soft ring-1 ring-oat backdrop-blur">
+        {hover.venue.photos[0] ? (
+          <img
+            src={hover.venue.photos[0]}
+            alt=""
+            className="h-14 w-14 shrink-0 rounded-xl object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <div className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-oat/60 text-ink/40">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <circle cx="9" cy="9" r="2" />
+              <path d="m21 15-5-5L5 21" />
+            </svg>
+          </div>
+        )}
+        <div className="min-w-0">
+          <p className="truncate text-[10px] font-bold uppercase tracking-wide text-ink/55">
+            {categoryLabels[hover.venue.category]}
+          </p>
+          <p className="truncate text-sm font-semibold leading-tight text-ink">
+            {hover.venue.name}
+          </p>
+          <p className="truncate text-[11px] font-medium text-ink/55">
+            {hover.venue.neighbourhood}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SelectedCard({
+  venue,
+  userLocation
+}: {
+  venue: Venue;
+  userLocation?: { lat: number; lng: number } | null;
+}) {
   const distance = userLocation
     ? haversineKm(userLocation.lat, userLocation.lng, venue.lat, venue.lng)
     : null;
@@ -224,39 +307,76 @@ function SelectedCard({ venue, userLocation }: { venue: Venue; userLocation?: { 
   );
 }
 
-function applyMarkerStyle(element: HTMLElement, venue: Venue, selected: boolean) {
-  element.className = cn(
-    "group relative flex translate-y-1 cursor-pointer items-center justify-center rounded-full text-white shadow-soft ring-2 ring-white transition-all",
-    selected ? "h-11 w-11 -translate-y-1" : "h-9 w-9 hover:scale-110",
-    categoryBg(venue.category)
-  );
-  element.innerHTML = markerSvg(selected ? 22 : 18);
+type MarkerHandlers = {
+  onSelect: (venueId: string) => void;
+  onHover: (event: MouseEvent) => void;
+  onLeave: () => void;
+};
+
+function createMarkerElement(venue: Venue, selected: boolean, handlers: MarkerHandlers) {
+  const wrapper = document.createElement("button");
+  wrapper.type = "button";
+  wrapper.setAttribute("aria-label", venue.name);
+  wrapper.dataset.venueId = venue.id;
+  // No transforms on this element — MapLibre owns its `transform` for positioning.
+  wrapper.style.cssText =
+    "background:transparent;border:0;padding:0;margin:0;cursor:pointer;display:block;line-height:0;";
+
+  const pin = document.createElement("span");
+  updatePinStyle(pin, venue, selected);
+  wrapper.appendChild(pin);
+
+  wrapper.addEventListener("click", (event) => {
+    event.stopPropagation();
+    handlers.onSelect(venue.id);
+  });
+  wrapper.addEventListener("mouseenter", handlers.onHover);
+  wrapper.addEventListener("mousemove", handlers.onHover);
+  wrapper.addEventListener("mouseleave", handlers.onLeave);
+
+  return wrapper;
 }
 
-function categoryBg(category: Venue["category"]) {
+function updatePinStyle(pin: HTMLElement, venue: Venue, selected: boolean) {
+  const size = selected ? 40 : 32;
+  pin.className = cn(
+    "block origin-bottom transition-transform duration-150 ease-out",
+    !selected && "hover:scale-110"
+  );
+  pin.style.width = `${size}px`;
+  pin.style.height = `${(size * 36) / 28}px`;
+  pin.innerHTML = pinSvg(venue.category, selected);
+}
+
+function pinSvg(category: VenueCategory, selected: boolean) {
+  const fill = categoryHex(category);
+  const ring = selected ? "#26312D" : "#FFFFFF";
+  const ringWidth = selected ? 2.5 : 2;
+  return `<svg viewBox="0 0 28 36" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" aria-hidden="true" style="display:block;filter:drop-shadow(0 4px 6px rgba(38,49,45,0.25));overflow:visible">
+    <path d="M14 0.75C6.68 0.75 0.75 6.68 0.75 14c0 4.79 2.96 9.78 6.05 13.7 1.55 1.97 3.11 3.61 4.28 4.78a4.13 4.13 0 0 0 5.84 0c1.17-1.17 2.73-2.81 4.28-4.78 3.09-3.92 6.05-8.91 6.05-13.7 0-7.32-5.93-13.25-13.25-13.25Z" fill="${fill}" stroke="${ring}" stroke-width="${ringWidth}"/>
+    <circle cx="14" cy="14" r="5" fill="#FFFFFF"/>
+  </svg>`;
+}
+
+function categoryHex(category: VenueCategory) {
   switch (category) {
     case "cafe":
-      return "bg-rust";
+      return "#C4623A";
     case "playground":
-      return "bg-moss";
+      return "#4A7C6F";
     case "indoor_play":
-      return "bg-[#B8901C]";
+      return "#B8901C";
     case "cinema":
-      return "bg-[#3F6F77]";
+      return "#3F6F77";
     case "library":
-      return "bg-[#8C6B40]";
+      return "#8C6B40";
     case "swimming":
-      return "bg-[#2D6670]";
+      return "#2D6670";
     case "theatre":
-      return "bg-[#B05A37]";
+      return "#B05A37";
     case "event":
-      return "bg-[#C4623A]";
+      return "#C4623A";
     default:
-      return "bg-mossDark";
+      return "#2F5149";
   }
 }
-
-function markerSvg(size: number) {
-  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`;
-}
-
