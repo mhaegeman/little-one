@@ -3,7 +3,7 @@ import { getCloudinary } from "@/lib/cloudinary";
 import { createClient } from "@/lib/supabase/server";
 
 export async function POST() {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   if (!supabase) {
     return NextResponse.json({ error: "Supabase is not configured" }, { status: 503 });
