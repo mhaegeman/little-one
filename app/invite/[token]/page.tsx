@@ -3,7 +3,7 @@ import { LoginForm } from "@/components/auth/LoginForm";
 import { createClient } from "@/lib/supabase/server";
 
 type InvitePageProps = {
-  params: { token: string };
+  params: Promise<{ token: string }>;
 };
 
 type LoadedInvite = {
@@ -17,7 +17,7 @@ type LoadedInvite = {
 };
 
 async function loadInvite(token: string): Promise<LoadedInvite | null> {
-  const supabase = createClient();
+  const supabase = await createClient();
   if (!supabase) return null;
 
   const { data } = await supabase
@@ -58,7 +58,8 @@ async function loadInvite(token: string): Promise<LoadedInvite | null> {
 }
 
 export default async function InvitePage({ params }: InvitePageProps) {
-  const invite = await loadInvite(params.token);
+  const { token } = await params;
+  const invite = await loadInvite(token);
 
   if (!invite) {
     return (
@@ -128,7 +129,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
 
         <LoginForm
           invite={{
-            token: params.token,
+            token,
             familyName: invite.familyName,
             invitedByName: invite.invitedByName,
             suggestedEmail: invite.invitedEmail,
