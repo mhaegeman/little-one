@@ -61,7 +61,7 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
   return (
     <div className="space-y-6">
       {groups.map((group) => (
-        <section key={group.key}>
+        <section key={group.key} id={`month-${group.key}`} className="scroll-mt-20">
           <div className="sticky top-14 z-[1] -mx-4 mb-2 flex items-center gap-2 bg-canvas/95 px-4 py-1.5 backdrop-blur lg:top-0 lg:mx-0 lg:px-0">
             <h3 className="font-display text-sm font-semibold uppercase tracking-[0.12em] text-muted">
               {group.label}
@@ -110,6 +110,15 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
                           <p className="mt-2 text-sm leading-6 text-muted">
                             {item.description}
                           </p>
+                        ) : null}
+                        {item.tags?.length ? (
+                          <div className="mt-2 flex flex-wrap gap-1">
+                            {item.tags.slice(0, 6).map((tag) => (
+                              <Badge key={tag} variant="neutral">
+                                {tag}
+                              </Badge>
+                            ))}
+                          </div>
                         ) : null}
                         {item.photos?.length ? (
                           <div className="mt-2.5 flex gap-1.5 overflow-x-auto thin-scroll">

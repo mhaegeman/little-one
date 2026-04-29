@@ -1,10 +1,11 @@
 "use client";
 
-import { Baby, Camera } from "@phosphor-icons/react/dist/ssr";
+import { Baby } from "@phosphor-icons/react/dist/ssr";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { PhotoUploader } from "@/components/ui/PhotoUploader";
 import { createClient } from "@/lib/supabase/client";
 
 type ChildProfileFormProps = {
@@ -14,9 +15,10 @@ type ChildProfileFormProps = {
 export function ChildProfileForm({ onCreated }: ChildProfileFormProps) {
   const [name, setName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
-  const [photoUrl, setPhotoUrl] = useState("");
+  const [photos, setPhotos] = useState<string[]>([]);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
+  const photoUrl = photos[0] ?? "";
 
   async function submitChild(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -73,7 +75,7 @@ export function ChildProfileForm({ onCreated }: ChildProfileFormProps) {
     });
     setName("");
     setDateOfBirth("");
-    setPhotoUrl("");
+    setPhotos([]);
     setMessage("Barnet er gemt.");
     setSaving(false);
   }
@@ -108,17 +110,9 @@ export function ChildProfileForm({ onCreated }: ChildProfileFormProps) {
           />
         </label>
       </div>
-      <label className="mt-3 block">
-        <span className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-          Foto URL
-        </span>
-        <Input
-          value={photoUrl}
-          onChange={(event) => setPhotoUrl(event.target.value)}
-          placeholder="https://res.cloudinary.com/…"
-          leadingIcon={<Camera size={14} weight="fill" aria-hidden="true" />}
-        />
-      </label>
+      <div className="mt-3">
+        <PhotoUploader value={photos} onChange={setPhotos} label="Profilbillede" />
+      </div>
       <Button type="submit" size="lg" className="mt-4 w-full" disabled={saving}>
         {saving ? "Gemmer…" : "Gem profil"}
       </Button>

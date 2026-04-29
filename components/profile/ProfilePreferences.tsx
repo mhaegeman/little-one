@@ -2,7 +2,6 @@
 
 import {
   BellRinging,
-  Camera,
   CheckCircle,
   CircleNotch,
   Heart,
@@ -15,6 +14,7 @@ import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { PhotoUploader } from "@/components/ui/PhotoUploader";
 import { Textarea } from "@/components/ui/Textarea";
 import { useToast } from "@/components/ui/Toaster";
 import { categories, categoryLabels, neighbourhoods } from "@/lib/data/taxonomy";
@@ -152,14 +152,11 @@ export function ProfilePreferences({ profile, onSave }: Props) {
           </Field>
         </div>
 
-        <Field label="Profilbillede (URL)">
-          <Input
-            value={avatarUrl}
-            onChange={(event) => setAvatarUrl(event.target.value)}
-            placeholder="https://res.cloudinary.com/…"
-            leadingIcon={<Camera size={14} weight="fill" aria-hidden="true" />}
-          />
-        </Field>
+        <PhotoUploader
+          value={avatarUrl ? [avatarUrl] : []}
+          onChange={(next) => setAvatarUrl(next[0] ?? "")}
+          label="Profilbillede"
+        />
 
         <Field label="Lille beskrivelse">
           <Textarea

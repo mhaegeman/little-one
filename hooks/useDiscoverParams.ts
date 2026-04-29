@@ -13,6 +13,7 @@ export type DiscoverState = {
   ageMax: number;
   query: string;
   view: "split" | "list" | "map";
+  savedOnly: boolean;
 };
 
 const DEFAULTS: DiscoverState = {
@@ -23,7 +24,8 @@ const DEFAULTS: DiscoverState = {
   ageMin: 0,
   ageMax: 72,
   query: "",
-  view: "split"
+  view: "split",
+  savedOnly: false
 };
 
 function parseInt(value: string | null, fallback: number) {
@@ -48,7 +50,8 @@ export function useDiscoverParams() {
       ageMin: parseInt(params.get("amin"), DEFAULTS.ageMin),
       ageMax: parseInt(params.get("amax"), DEFAULTS.ageMax),
       query: params.get("q") ?? DEFAULTS.query,
-      view: view === "list" || view === "map" ? view : "split"
+      view: view === "list" || view === "map" ? view : "split",
+      savedOnly: params.get("s") === "1"
     };
   }, [params]);
 
@@ -64,6 +67,7 @@ export function useDiscoverParams() {
       if (merged.ageMax !== DEFAULTS.ageMax) next.set("amax", String(merged.ageMax));
       if (merged.query) next.set("q", merged.query);
       if (merged.view !== "split") next.set("v", merged.view);
+      if (merged.savedOnly) next.set("s", "1");
 
       const qs = next.toString();
       router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });

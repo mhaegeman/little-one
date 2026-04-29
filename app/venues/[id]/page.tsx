@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
+import { PlanVisitButton } from "@/components/discover/PlanVisitButton";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { categoryBadgeVariant, categoryLabels } from "@/lib/data/taxonomy";
@@ -101,29 +102,26 @@ export default async function VenuePage({ params }: VenuePageProps) {
                 ))}
               </div>
 
-              <div className="mt-5 flex flex-col gap-2 sm:flex-row">
-                <Link href="/journal" className="sm:flex-1">
-                  <Button className="w-full">
-                    <Baby size={14} weight="duotone" aria-hidden="true" />
-                    Tilføj til journal
-                  </Button>
-                </Link>
-                <Link
-                  href={googleMapsUrl(venue.lat, venue.lng, venue.name)}
-                  target="_blank"
-                  className="sm:flex-1"
-                >
-                  <Button variant="secondary" className="w-full">
-                    <NavigationArrow size={14} weight="fill" aria-hidden="true" />
-                    Google Maps
-                  </Button>
-                </Link>
-                <Link href={venue.website ?? "#"} target="_blank" className="sm:flex-1">
-                  <Button variant="ghost" className="w-full">
-                    <ArrowSquareOut size={14} weight="bold" aria-hidden="true" />
-                    Website
-                  </Button>
-                </Link>
+              <div className="mt-5 space-y-2">
+                <PlanVisitButton venueId={venue.id} venueName={venue.name} />
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Link
+                    href={googleMapsUrl(venue.lat, venue.lng, venue.name)}
+                    target="_blank"
+                    className="sm:flex-1"
+                  >
+                    <Button variant="secondary" className="w-full">
+                      <NavigationArrow size={14} weight="fill" aria-hidden="true" />
+                      Google Maps
+                    </Button>
+                  </Link>
+                  <Link href={venue.website ?? "#"} target="_blank" className="sm:flex-1">
+                    <Button variant="ghost" className="w-full">
+                      <ArrowSquareOut size={14} weight="bold" aria-hidden="true" />
+                      Website
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

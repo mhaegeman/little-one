@@ -4,12 +4,14 @@ import {
   Compass,
   MagnifyingGlass,
   NotePencil,
-  UserCircle
+  UserCircle,
+  UsersThree
 } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
+import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import { CommandPalette } from "@/components/layout/CommandPalette";
 import { Toaster } from "@/components/ui/Toaster";
 import { useViewTransitionRouter } from "@/hooks/useViewTransitionRouter";
@@ -18,6 +20,7 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { href: "/", key: "discover", icon: Compass },
   { href: "/journal", key: "journal", icon: NotePencil },
+  { href: "/families", key: "families", icon: UsersThree },
   { href: "/profile", key: "profile", icon: UserCircle }
 ] as const;
 
@@ -43,7 +46,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <Toaster>
       <div className="min-h-screen lg:grid lg:grid-cols-[232px_1fr]">
       <a href="#main" className="skip-link">
-        Spring til indhold
+        {t("skipToContent")}
       </a>
 
       {/* Desktop sidebar */}
@@ -127,7 +130,10 @@ export function AppShell({ children }: { children: ReactNode }) {
           })}
         </nav>
 
-        <div className="mt-auto pt-3">
+        <div className="mt-auto space-y-2 pt-3">
+          <div className="px-2">
+            <LanguageSwitcher />
+          </div>
           <p className="px-2 text-2xs leading-snug text-subtle">
             {tApp("tagline")}
           </p>
@@ -149,14 +155,17 @@ export function AppShell({ children }: { children: ReactNode }) {
           </span>
           <span className="font-display text-base font-semibold">{tApp("name")}</span>
         </Link>
-        <button
-          type="button"
-          onClick={() => setPaletteOpen(true)}
-          aria-label={t("search")}
-          className="focus-ring grid h-9 w-9 place-items-center rounded-lg bg-sunken text-muted ring-1 ring-hairline"
-        >
-          <MagnifyingGlass size={16} weight="bold" aria-hidden="true" />
-        </button>
+        <div className="flex items-center gap-2">
+          <LanguageSwitcher />
+          <button
+            type="button"
+            onClick={() => setPaletteOpen(true)}
+            aria-label={t("search")}
+            className="focus-ring grid h-9 w-9 place-items-center rounded-lg bg-sunken text-muted ring-1 ring-hairline"
+          >
+            <MagnifyingGlass size={16} weight="bold" aria-hidden="true" />
+          </button>
+        </div>
       </header>
 
       {/* Mobile bottom nav */}
@@ -164,7 +173,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         aria-label="Hovednavigation"
         className="fixed bottom-0 left-0 right-0 z-30 border-t border-hairline bg-canvas/95 px-2 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-1.5 backdrop-blur lg:hidden"
       >
-        <div className="relative grid grid-cols-3 gap-1">
+        <div className="relative grid grid-cols-4 gap-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);

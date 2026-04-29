@@ -16,7 +16,7 @@ import type { FamilyMember, FamilyProfile } from "@/lib/types";
 type Props = {
   profile: FamilyProfile | null;
   members: FamilyMember[];
-  onJumpTo: (tab: "preferences" | "recommendations" | "family") => void;
+  onJumpTo: (tab: "preferences" | "recommendations" | "family" | "saved") => void;
 };
 
 export function ProfileOverview({ profile, members, onJumpTo }: Props) {

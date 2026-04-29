@@ -1,10 +1,11 @@
 "use client";
 
-import { CalendarBlank, ImageSquare, NotePencil } from "@phosphor-icons/react/dist/ssr";
+import { CalendarBlank, NotePencil } from "@phosphor-icons/react/dist/ssr";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { PhotoUploader } from "@/components/ui/PhotoUploader";
 import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
 import { useToast } from "@/components/ui/Toaster";
@@ -23,7 +24,7 @@ export function MilestoneForm({ childId, onAdd }: MilestoneFormProps) {
   const [customTitle, setCustomTitle] = useState("");
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [notes, setNotes] = useState("");
-  const [photoUrl, setPhotoUrl] = useState("");
+  const [photos, setPhotos] = useState<string[]>([]);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -33,13 +34,14 @@ export function MilestoneForm({ childId, onAdd }: MilestoneFormProps) {
     setMessage("");
 
     const title = type === "custom" && customTitle ? customTitle : milestoneLabels[type];
+    const photoUrl = photos[0];
     const optimisticItem: TimelineItem = {
       id: crypto.randomUUID(),
       type: "milestone",
       title,
       description: notes || undefined,
       date,
-      photos: photoUrl ? [photoUrl] : undefined
+      photos: photos.length ? photos : undefined
     };
 
     const supabase = createClient();
@@ -50,7 +52,7 @@ export function MilestoneForm({ childId, onAdd }: MilestoneFormProps) {
         type,
         date,
         notes: notes || null,
-        photo_url: photoUrl || null
+        photo_url: photoUrl ?? null
       });
 
       if (error) {
@@ -63,7 +65,7 @@ export function MilestoneForm({ childId, onAdd }: MilestoneFormProps) {
 
     onAdd(optimisticItem);
     setNotes("");
-    setPhotoUrl("");
+    setPhotos([]);
     setCustomTitle("");
     setMessage("");
     toast({ title: "Milepælen er tilføjet", variant: "success" });
@@ -111,14 +113,8 @@ export function MilestoneForm({ childId, onAdd }: MilestoneFormProps) {
         />
       </FieldLabel>
 
-      <FieldLabel label="Foto URL">
-        <Input
-          value={photoUrl}
-          onChange={(event) => setPhotoUrl(event.target.value)}
-          placeholder="https://res.cloudinary.com/…"
-          leadingIcon={<ImageSquare size={14} weight="fill" aria-hidden="true" />}
-        />
-      </FieldLabel>
+      <PhotoUploader value={photos} onChange={setPhotos} label="Foto" />
+
 
       <Button type="submit" size="lg" className="w-full" disabled={saving}>
         <NotePencil size={14} weight="fill" aria-hidden="true" />

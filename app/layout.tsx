@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getLocale, getMessages } from "next-intl/server";
 import type { ReactNode } from "react";
+import { syncLocaleFromProfile } from "@/app/actions/locale";
 import { AppShell } from "@/components/layout/AppShell";
 import "./globals.css";
 
@@ -18,12 +19,18 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
+  // If a signed-in user has a preferred_locale in their family_profile but no
+  // cookie yet, hydrate it before next-intl reads. Best-effort; ignored if not
+  // signed in or Supabase unavailable.
+  await syncLocaleFromProfile().catch(() => null);
+
+  const locale = await getLocale();
   const messages = await getMessages();
 
   return (
-    <html lang="da">
+    <html lang={locale}>
       <body>
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <AppShell>{children}</AppShell>
         </NextIntlClientProvider>
       </body>

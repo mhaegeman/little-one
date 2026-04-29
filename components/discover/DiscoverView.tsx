@@ -2,6 +2,7 @@
 
 import {
   Faders,
+  Heart,
   ListBullets,
   MapTrifold,
   MagnifyingGlass,
@@ -12,6 +13,7 @@ import { useMemo, useState } from "react";
 import { DiscoverMap } from "@/components/discover/DiscoverMap";
 import { EventList } from "@/components/discover/EventList";
 import { LocationControl, type UserLocation } from "@/components/discover/LocationControl";
+import { TodayCard } from "@/components/discover/TodayCard";
 import { VenueCard } from "@/components/discover/VenueCard";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -21,6 +23,7 @@ import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { Select } from "@/components/ui/Select";
 import { Sheet } from "@/components/ui/Sheet";
 import { useDiscoverParams } from "@/hooks/useDiscoverParams";
+import { useFavorites } from "@/hooks/useFavorites";
 import { categories, categoryLabels, neighbourhoods } from "@/lib/data/taxonomy";
 import type { FamilyEvent, IndoorOutdoor, Neighbourhood, Venue, VenueCategory } from "@/lib/types";
 import { cn, haversineKm } from "@/lib/utils";
@@ -43,7 +46,8 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
     ageMin,
     ageMax,
     query,
-    view: viewMode
+    view: viewMode,
+    savedOnly
   } = state;
 
   const setNeighbourhood = (next: Neighbourhood | "all") => update({ neighbourhood: next });
@@ -53,10 +57,14 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
   const setAgeMax = (next: number) => update({ ageMax: next });
   const setQuery = (next: string) => update({ query: next });
   const setViewMode = (next: ViewMode) => update({ view: next });
+  const setSavedOnly = (next: boolean) => update({ savedOnly: next });
 
+  const { favorites } = useFavorites();
   const [selectedVenueId, setSelectedVenueId] = useState<string | undefined>(venues[0]?.id);
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
+
+  const favoriteSet = useMemo(() => new Set(favorites), [favorites]);
 
   const filteredVenues = useMemo(() => {
     const filtered = venues.filter((venue) => {
@@ -70,6 +78,7 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
         venue.indoorOutdoor === "both";
       const matchesAge = venue.ageMinMonths <= ageMax && venue.ageMaxMonths >= ageMin;
       const matchesOpen = !openNow || isProbablyOpenNow(venue);
+      const matchesSaved = !savedOnly || favoriteSet.has(venue.id);
       const haystack = `${venue.name} ${venue.description} ${venue.tags.join(" ")}`.toLowerCase();
       const matchesQuery = !query || haystack.includes(query.toLowerCase());
 
@@ -79,6 +88,7 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
         matchesIndoor &&
         matchesAge &&
         matchesOpen &&
+        matchesSaved &&
         matchesQuery
       );
     });
@@ -93,10 +103,12 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
   }, [
     ageMax,
     ageMin,
+    favoriteSet,
     indoorOutdoor,
     neighbourhood,
     openNow,
     query,
+    savedOnly,
     selectedCategories,
     userLocation,
     venues
@@ -133,6 +145,7 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
     (indoorOutdoor !== "all" ? 1 : 0) +
     (openNow ? 1 : 0) +
     (ageMin > 0 || ageMax < 72 ? 1 : 0) +
+    (savedOnly ? 1 : 0) +
     (query ? 1 : 0);
 
   const filterPanel = (
@@ -158,6 +171,10 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
   return (
     <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
       <div className="mx-auto max-w-[1400px]">
+        <TodayCard
+          venues={venues}
+          userLocation={userLocation ? { lat: userLocation.lat, lng: userLocation.lng } : null}
+        />
         <PageHeader
           eyebrow="København"
           title={t("title")}
@@ -192,6 +209,36 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
               className="ring-0 hover:bg-sunken/40"
             />
           </div>
+
+          <button
+            type="button"
+            onClick={() => setSavedOnly(!savedOnly)}
+            aria-pressed={savedOnly}
+            className={cn(
+              "focus-ring inline-flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold ring-1 transition-colors",
+              savedOnly
+                ? "bg-warm-50 text-warm-600 ring-warm-200"
+                : "bg-sunken text-muted ring-hairline hover:text-ink"
+            )}
+            title={`${favorites.length} gemte`}
+          >
+            <Heart
+              size={14}
+              weight={savedOnly ? "fill" : "regular"}
+              aria-hidden="true"
+            />
+            <span className="hidden sm:inline">Gemte</span>
+            {favorites.length > 0 ? (
+              <span
+                className={cn(
+                  "grid h-5 min-w-[1.25rem] place-items-center rounded-full px-1 text-2xs font-bold",
+                  savedOnly ? "bg-warm-500 text-white" : "bg-surface text-muted ring-1 ring-hairline"
+                )}
+              >
+                {favorites.length}
+              </span>
+            ) : null}
+          </button>
 
           <button
             type="button"
@@ -252,6 +299,9 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
                 label={indoorOutdoor === "indoor" ? t("indoor") : t("outdoor")}
                 onClear={() => setIndoorOutdoor("all")}
               />
+            ) : null}
+            {savedOnly ? (
+              <ChipDismiss label="Gemte steder" onClear={() => setSavedOnly(false)} />
             ) : null}
             {openNow ? <ChipDismiss label={t("openNow")} onClear={() => setOpenNow(false)} /> : null}
             {(ageMin > 0 || ageMax < 72) ? (

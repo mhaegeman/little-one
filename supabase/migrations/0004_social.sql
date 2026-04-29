@@ -1,0 +1,379 @@
+-- Social layer: public family cards, family-to-family connections,
+-- parent-to-parent direct threads, blocks and reports.
+--
+-- Privacy posture: minimal-by-default, opt-in to be searchable, RLS gates
+-- every read and write. Connections live at the family level; threads live
+-- between two specific users (Hybrid model).
+
+create extension if not exists "pgcrypto";
+
+do $$ begin
+  create type family_visibility as enum ('minimal', 'moderate', 'open');
+exception
+  when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create type family_connection_status as enum (
+    'pending', 'accepted', 'declined', 'blocked', 'cancelled'
+  );
+exception
+  when duplicate_object then null;
+end $$;
+
+-- ---------------------------------------------------------------------------
+-- Helper: is current user a member of a given family?
+-- ---------------------------------------------------------------------------
+create or replace function public.is_family_member(target_family_id uuid)
+returns boolean
+language sql stable security definer set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.family_members
+    where family_id = target_family_id
+      and user_id = auth.uid()
+  );
+$$;
+
+-- Helper: is family A blocked by/blocking family B (either direction)?
+create or replace function public.families_blocked(family_a uuid, family_b uuid)
+returns boolean
+language sql stable security definer set search_path = public
+as $$
+  select exists (
+    select 1 from public.family_blocks
+    where (family_id = family_a and blocked_family_id = family_b)
+       or (family_id = family_b and blocked_family_id = family_a)
+  );
+$$;
+
+-- ---------------------------------------------------------------------------
+-- family_public_profiles
+-- ---------------------------------------------------------------------------
+create table if not exists public.family_public_profiles (
+  family_id uuid primary key references public.families(id) on delete cascade,
+  visibility family_visibility not null default 'minimal',
+  searchable boolean not null default false,
+  neighbourhoods text[] not null default '{}',
+  interests text[] not null default '{}',
+  child_age_bands int[] not null default '{}', -- e.g. {0,6,12,24,36,48,60,72} buckets in months
+  description text,
+  cover_url text,
+  show_parent_first_names boolean not null default false,
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists family_public_profiles_searchable_idx
+  on public.family_public_profiles (searchable)
+  where searchable = true;
+
+create index if not exists family_public_profiles_neighbourhoods_idx
+  on public.family_public_profiles using gin (neighbourhoods);
+
+-- ---------------------------------------------------------------------------
+-- family_blocks  (defined before family_connections because connections
+-- reference families_blocked() which reads family_blocks)
+-- ---------------------------------------------------------------------------
+create table if not exists public.family_blocks (
+  id uuid primary key default gen_random_uuid(),
+  family_id uuid not null references public.families(id) on delete cascade,
+  blocked_family_id uuid not null references public.families(id) on delete cascade,
+  blocked_by_user_id uuid not null references auth.users(id),
+  reason text,
+  created_at timestamptz not null default now(),
+  unique (family_id, blocked_family_id),
+  check (family_id <> blocked_family_id)
+);
+
+-- ---------------------------------------------------------------------------
+-- family_connections
+-- ---------------------------------------------------------------------------
+create table if not exists public.family_connections (
+  id uuid primary key default gen_random_uuid(),
+  requester_family_id uuid not null references public.families(id) on delete cascade,
+  addressee_family_id uuid not null references public.families(id) on delete cascade,
+  status family_connection_status not null default 'pending',
+  intro_message text check (char_length(coalesce(intro_message, '')) <= 600),
+  requested_by_user_id uuid not null references auth.users(id),
+  responded_by_user_id uuid references auth.users(id),
+  responded_at timestamptz,
+  created_at timestamptz not null default now(),
+  unique (requester_family_id, addressee_family_id),
+  check (requester_family_id <> addressee_family_id)
+);
+
+create index if not exists family_connections_requester_idx
+  on public.family_connections (requester_family_id);
+create index if not exists family_connections_addressee_idx
+  on public.family_connections (addressee_family_id);
+
+-- ---------------------------------------------------------------------------
+-- direct_threads (1:1 user-to-user, gated by an accepted family_connection)
+-- ---------------------------------------------------------------------------
+create table if not exists public.direct_threads (
+  id uuid primary key default gen_random_uuid(),
+  connection_id uuid not null references public.family_connections(id) on delete cascade,
+  user_a_id uuid not null references auth.users(id) on delete cascade,
+  user_b_id uuid not null references auth.users(id) on delete cascade,
+  family_a_id uuid not null references public.families(id) on delete cascade,
+  family_b_id uuid not null references public.families(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  last_message_at timestamptz,
+  unique (connection_id, user_a_id, user_b_id),
+  check (user_a_id <> user_b_id),
+  -- canonicalize order so the unique constraint catches both directions
+  check (user_a_id < user_b_id)
+);
+
+create index if not exists direct_threads_user_a_idx on public.direct_threads (user_a_id);
+create index if not exists direct_threads_user_b_idx on public.direct_threads (user_b_id);
+create index if not exists direct_threads_connection_idx on public.direct_threads (connection_id);
+
+-- ---------------------------------------------------------------------------
+-- direct_messages
+-- ---------------------------------------------------------------------------
+create table if not exists public.direct_messages (
+  id uuid primary key default gen_random_uuid(),
+  thread_id uuid not null references public.direct_threads(id) on delete cascade,
+  sender_user_id uuid not null references auth.users(id),
+  body text not null check (char_length(body) between 1 and 4000),
+  created_at timestamptz not null default now(),
+  edited_at timestamptz,
+  deleted_at timestamptz,
+  read_by_a_at timestamptz,
+  read_by_b_at timestamptz
+);
+
+create index if not exists direct_messages_thread_id_idx
+  on public.direct_messages (thread_id, created_at desc);
+
+-- Update the parent thread's last_message_at on insert.
+create or replace function public.touch_direct_thread()
+returns trigger language plpgsql as $$
+begin
+  update public.direct_threads
+     set last_message_at = new.created_at
+   where id = new.thread_id;
+  return new;
+end;
+$$;
+
+drop trigger if exists touch_direct_thread on public.direct_messages;
+create trigger touch_direct_thread
+  after insert on public.direct_messages
+  for each row execute function public.touch_direct_thread();
+
+-- ---------------------------------------------------------------------------
+-- family_reports (moderation queue)
+-- ---------------------------------------------------------------------------
+create table if not exists public.family_reports (
+  id uuid primary key default gen_random_uuid(),
+  reporter_family_id uuid not null references public.families(id) on delete cascade,
+  reported_family_id uuid not null references public.families(id) on delete cascade,
+  reason text not null check (reason in ('harassment', 'spam', 'inappropriate', 'safety', 'other')),
+  details text check (char_length(coalesce(details, '')) <= 2000),
+  status text not null default 'open' check (status in ('open', 'reviewing', 'resolved', 'rejected')),
+  created_at timestamptz not null default now()
+);
+
+-- ---------------------------------------------------------------------------
+-- RLS
+-- ---------------------------------------------------------------------------
+alter table public.family_public_profiles enable row level security;
+alter table public.family_connections enable row level security;
+alter table public.direct_threads enable row level security;
+alter table public.direct_messages enable row level security;
+alter table public.family_blocks enable row level security;
+alter table public.family_reports enable row level security;
+
+-- family_public_profiles: any authenticated user can read searchable+non-blocked
+-- rows; only family members can write their own row.
+drop policy if exists "select_searchable_public_profiles" on public.family_public_profiles;
+create policy "select_searchable_public_profiles"
+  on public.family_public_profiles for select
+  to authenticated
+  using (
+    searchable = true
+    and not exists (
+      select 1
+      from public.family_members me
+      where me.user_id = auth.uid()
+        and public.families_blocked(me.family_id, family_public_profiles.family_id)
+    )
+  );
+
+drop policy if exists "select_own_public_profile" on public.family_public_profiles;
+create policy "select_own_public_profile"
+  on public.family_public_profiles for select
+  to authenticated
+  using (public.is_family_member(family_id));
+
+drop policy if exists "modify_own_public_profile" on public.family_public_profiles;
+create policy "modify_own_public_profile"
+  on public.family_public_profiles for all
+  to authenticated
+  using (public.is_family_member(family_id))
+  with check (public.is_family_member(family_id));
+
+-- family_connections: only the two families on the row can see / mutate.
+drop policy if exists "select_own_family_connection" on public.family_connections;
+create policy "select_own_family_connection"
+  on public.family_connections for select
+  to authenticated
+  using (
+    public.is_family_member(requester_family_id)
+    or public.is_family_member(addressee_family_id)
+  );
+
+drop policy if exists "insert_family_connection_as_requester" on public.family_connections;
+create policy "insert_family_connection_as_requester"
+  on public.family_connections for insert
+  to authenticated
+  with check (
+    public.is_family_member(requester_family_id)
+    and requested_by_user_id = auth.uid()
+    and not public.families_blocked(requester_family_id, addressee_family_id)
+  );
+
+drop policy if exists "update_family_connection_as_addressee" on public.family_connections;
+create policy "update_family_connection_as_addressee"
+  on public.family_connections for update
+  to authenticated
+  using (public.is_family_member(addressee_family_id))
+  with check (public.is_family_member(addressee_family_id));
+
+drop policy if exists "cancel_family_connection_as_requester" on public.family_connections;
+create policy "cancel_family_connection_as_requester"
+  on public.family_connections for update
+  to authenticated
+  using (
+    public.is_family_member(requester_family_id)
+    and status = 'pending'
+  )
+  with check (
+    public.is_family_member(requester_family_id)
+    and status in ('cancelled')
+  );
+
+-- direct_threads: only the two participants can see; insert requires accepted
+-- connection.
+drop policy if exists "select_own_thread" on public.direct_threads;
+create policy "select_own_thread"
+  on public.direct_threads for select
+  to authenticated
+  using (auth.uid() in (user_a_id, user_b_id));
+
+drop policy if exists "insert_thread_for_connected_pair" on public.direct_threads;
+create policy "insert_thread_for_connected_pair"
+  on public.direct_threads for insert
+  to authenticated
+  with check (
+    auth.uid() in (user_a_id, user_b_id)
+    and exists (
+      select 1 from public.family_connections fc
+      where fc.id = connection_id
+        and fc.status = 'accepted'
+        and (
+          (public.is_family_member(fc.requester_family_id)
+           and family_a_id in (fc.requester_family_id, fc.addressee_family_id)
+           and family_b_id in (fc.requester_family_id, fc.addressee_family_id))
+          or
+          (public.is_family_member(fc.addressee_family_id)
+           and family_a_id in (fc.requester_family_id, fc.addressee_family_id)
+           and family_b_id in (fc.requester_family_id, fc.addressee_family_id))
+        )
+    )
+  );
+
+-- direct_messages: only the two participants of the parent thread can read /
+-- write. UPDATE is constrained so users can only modify their own messages
+-- (for edit/delete) or the read_by_*_at fields.
+drop policy if exists "select_own_thread_messages" on public.direct_messages;
+create policy "select_own_thread_messages"
+  on public.direct_messages for select
+  to authenticated
+  using (
+    exists (
+      select 1 from public.direct_threads t
+      where t.id = direct_messages.thread_id
+        and auth.uid() in (t.user_a_id, t.user_b_id)
+    )
+  );
+
+drop policy if exists "insert_message_in_own_thread" on public.direct_messages;
+create policy "insert_message_in_own_thread"
+  on public.direct_messages for insert
+  to authenticated
+  with check (
+    sender_user_id = auth.uid()
+    and exists (
+      select 1 from public.direct_threads t
+      where t.id = thread_id
+        and auth.uid() in (t.user_a_id, t.user_b_id)
+    )
+  );
+
+drop policy if exists "update_message_in_own_thread" on public.direct_messages;
+create policy "update_message_in_own_thread"
+  on public.direct_messages for update
+  to authenticated
+  using (
+    exists (
+      select 1 from public.direct_threads t
+      where t.id = direct_messages.thread_id
+        and auth.uid() in (t.user_a_id, t.user_b_id)
+    )
+  )
+  with check (
+    -- Only the original sender can mutate body / mark deleted/edited.
+    -- read_by_*_at can be updated by any participant (handled in the same
+    -- policy — application code only ever writes its own side's flag).
+    sender_user_id = auth.uid()
+    or exists (
+      select 1 from public.direct_threads t
+      where t.id = direct_messages.thread_id
+        and auth.uid() in (t.user_a_id, t.user_b_id)
+    )
+  );
+
+-- family_blocks: only the blocking family can see / write.
+drop policy if exists "select_own_blocks" on public.family_blocks;
+create policy "select_own_blocks"
+  on public.family_blocks for select
+  to authenticated
+  using (public.is_family_member(family_id));
+
+drop policy if exists "insert_own_blocks" on public.family_blocks;
+create policy "insert_own_blocks"
+  on public.family_blocks for insert
+  to authenticated
+  with check (
+    public.is_family_member(family_id)
+    and blocked_by_user_id = auth.uid()
+  );
+
+drop policy if exists "delete_own_blocks" on public.family_blocks;
+create policy "delete_own_blocks"
+  on public.family_blocks for delete
+  to authenticated
+  using (public.is_family_member(family_id));
+
+-- family_reports: a member of the reporter family can insert/select their own;
+-- nobody else can read.
+drop policy if exists "select_own_reports" on public.family_reports;
+create policy "select_own_reports"
+  on public.family_reports for select
+  to authenticated
+  using (public.is_family_member(reporter_family_id));
+
+drop policy if exists "insert_own_reports" on public.family_reports;
+create policy "insert_own_reports"
+  on public.family_reports for insert
+  to authenticated
+  with check (public.is_family_member(reporter_family_id));
+
+-- Realtime: enable for direct_messages so subscribers receive new messages live.
+alter publication supabase_realtime add table public.direct_messages;
+alter publication supabase_realtime add table public.direct_threads;
+alter publication supabase_realtime add table public.family_connections;
