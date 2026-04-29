@@ -2,15 +2,17 @@
 
 import { Compass, Heart } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { VenueCard } from "@/components/discover/VenueCard";
 import { Button } from "@/components/ui/Button";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { useFavorites } from "@/hooks/useFavorites";
 import { venues } from "@/lib/data/venues";
 
 export function ProfileSaved() {
   const { favorites, clear } = useFavorites();
+  const [clearOpen, setClearOpen] = useState(false);
 
   const savedVenues = useMemo(() => {
     const order = new Map(favorites.map((id, index) => [id, index] as const));
@@ -50,9 +52,7 @@ export function ProfileSaved() {
         </div>
         <button
           type="button"
-          onClick={() => {
-            if (confirm("Fjern alle gemte steder?")) clear();
-          }}
+          onClick={() => setClearOpen(true)}
           className="focus-ring text-2xs font-bold uppercase tracking-wide text-warm-600 hover:text-warm-700"
         >
           Ryd alle
@@ -64,6 +64,20 @@ export function ProfileSaved() {
           <VenueCard key={venue.id} venue={venue} layout="compact" />
         ))}
       </div>
+
+      <ConfirmDialog
+        open={clearOpen}
+        title="Ryd alle gemte steder?"
+        description="Du kan altid gemme steder igen ved at trykke på hjertet."
+        confirmLabel="Ryd alle"
+        cancelLabel="Behold"
+        danger
+        onConfirm={() => {
+          clear();
+          setClearOpen(false);
+        }}
+        onCancel={() => setClearOpen(false)}
+      />
     </section>
   );
 }

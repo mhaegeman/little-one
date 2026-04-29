@@ -3,11 +3,14 @@
 import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl, { LngLatBounds, type Map as MapLibreMap, type Marker } from "maplibre-gl";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import Supercluster from "supercluster";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { categoryBadgeVariant, categoryLabels } from "@/lib/data/taxonomy";
 import type { Venue, VenueCategory } from "@/lib/types";
 import { cn, formatDistance, haversineKm } from "@/lib/utils";
+
+type VenuePointProps = { kind: "venue"; venueId: string; venue: Venue };
 
 type DiscoverMapProps = {
   venues: Venue[];
@@ -58,6 +61,7 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
   const onSelectRef = useRef(onSelect);
   const selectedIdRef = useRef(selectedVenueId);
   const [ready, setReady] = useState(false);
+  const [tick, setTick] = useState(0);
   const [hover, setHover] = useState<HoverState | null>(null);
 
   useEffect(() => {
@@ -67,6 +71,23 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
   useEffect(() => {
     selectedIdRef.current = selectedVenueId;
   }, [selectedVenueId]);
+
+  // Build a supercluster index whenever the venue list changes.
+  const cluster = useMemo(() => {
+    const index = new Supercluster<VenuePointProps>({
+      radius: 56,
+      maxZoom: 14,
+      minPoints: 2
+    });
+    index.load(
+      venues.map((venue) => ({
+        type: "Feature" as const,
+        geometry: { type: "Point" as const, coordinates: [venue.lng, venue.lat] },
+        properties: { kind: "venue" as const, venueId: venue.id, venue }
+      }))
+    );
+    return index;
+  }, [venues]);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) {
@@ -84,8 +105,12 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
     map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right");
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 
-    map.on("load", () => setReady(true));
+    map.on("load", () => {
+      setReady(true);
+      setTick((t) => t + 1);
+    });
     map.on("movestart", () => setHover(null));
+    map.on("moveend", () => setTick((t) => t + 1));
 
     mapRef.current = map;
 
@@ -99,27 +124,67 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
     };
   }, []);
 
+  // Reconcile markers from the cluster index for the current viewport.
   useEffect(() => {
     const map = mapRef.current;
     const container = containerRef.current;
     if (!map || !ready || !container) return;
 
+    const bounds = map.getBounds();
+    const bbox: [number, number, number, number] = [
+      bounds.getWest(),
+      bounds.getSouth(),
+      bounds.getEast(),
+      bounds.getNorth()
+    ];
+    const zoom = Math.round(map.getZoom());
+    const points = cluster.getClusters(bbox, zoom);
+
     const seen = new Set<string>();
 
-    for (const venue of venues) {
-      seen.add(venue.id);
-      const existing = markersRef.current.get(venue.id);
+    for (const point of points) {
+      const isCluster = (point.properties as { cluster?: boolean }).cluster === true;
+      const [lng, lat] = point.geometry.coordinates;
+
+      if (isCluster) {
+        const clusterId = (point.properties as { cluster_id: number }).cluster_id;
+        const count = (point.properties as { point_count: number }).point_count;
+        const id = `cluster-${clusterId}`;
+        seen.add(id);
+
+        const existing = markersRef.current.get(id);
+        if (existing) {
+          existing.setLngLat([lng, lat]);
+          const inner = existing.getElement().firstElementChild as HTMLElement | null;
+          if (inner) updateClusterStyle(inner, count);
+          continue;
+        }
+
+        const element = createClusterElement(count, () => {
+          const target = Math.min(cluster.getClusterExpansionZoom(clusterId), 16);
+          map.flyTo({ center: [lng, lat], zoom: target, duration: 500 });
+        });
+        const marker = new maplibregl.Marker({ element, anchor: "center" })
+          .setLngLat([lng, lat])
+          .addTo(map);
+        markersRef.current.set(id, marker);
+        continue;
+      }
+
+      const venue = (point.properties as VenuePointProps).venue;
+      const id = `venue-${venue.id}`;
+      seen.add(id);
+
+      const existing = markersRef.current.get(id);
       if (existing) {
         existing.setLngLat([venue.lng, venue.lat]);
         const inner = existing.getElement().firstElementChild as HTMLElement | null;
-        if (inner) {
-          updatePinStyle(inner, venue, selectedVenueId === venue.id);
-        }
+        if (inner) updatePinStyle(inner, venue, selectedVenueId === venue.id);
         continue;
       }
 
       const element = createMarkerElement(venue, selectedVenueId === venue.id, {
-        onSelect: (id) => onSelectRef.current(id),
+        onSelect: (next) => onSelectRef.current(next),
         onHover: (event) => {
           if (selectedIdRef.current === venue.id) {
             setHover(null);
@@ -140,7 +205,7 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
       const marker = new maplibregl.Marker({ element, anchor: "bottom" })
         .setLngLat([venue.lng, venue.lat])
         .addTo(map);
-      markersRef.current.set(venue.id, marker);
+      markersRef.current.set(id, marker);
     }
 
     for (const [id, marker] of markersRef.current.entries()) {
@@ -149,7 +214,7 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
         markersRef.current.delete(id);
       }
     }
-  }, [venues, selectedVenueId, ready]);
+  }, [cluster, selectedVenueId, ready, tick]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -331,6 +396,36 @@ function createMarkerElement(venue: Venue, selected: boolean, handlers: MarkerHa
   wrapper.addEventListener("mouseleave", handlers.onLeave);
 
   return wrapper;
+}
+
+function createClusterElement(count: number, onExpand: () => void) {
+  const wrapper = document.createElement("button");
+  wrapper.type = "button";
+  wrapper.setAttribute("aria-label", `${count} steder · klik for at zoome ind`);
+  wrapper.style.cssText =
+    "background:transparent;border:0;padding:0;margin:0;cursor:pointer;display:block;line-height:0;";
+
+  const inner = document.createElement("span");
+  updateClusterStyle(inner, count);
+  wrapper.appendChild(inner);
+
+  wrapper.addEventListener("click", (event) => {
+    event.stopPropagation();
+    onExpand();
+  });
+
+  return wrapper;
+}
+
+function updateClusterStyle(inner: HTMLElement, count: number) {
+  // Scale by count (logarithmic so 50 doesn't dwarf 5)
+  const size = Math.min(72, 36 + Math.log2(Math.max(2, count)) * 6);
+  inner.className =
+    "grid place-items-center rounded-full bg-sage-500 text-white font-display font-semibold ring-[3px] ring-white shadow-lift transition-transform duration-150 ease-out hover:scale-105";
+  inner.style.width = `${size}px`;
+  inner.style.height = `${size}px`;
+  inner.style.fontSize = `${Math.max(12, Math.min(18, size / 4))}px`;
+  inner.textContent = String(count);
 }
 
 function updatePinStyle(pin: HTMLElement, venue: Venue, selected: boolean) {

@@ -16,7 +16,9 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { ActivityForm } from "@/components/journal/ActivityForm";
+import { JournalCalendar } from "@/components/journal/JournalCalendar";
 import { MilestoneForm } from "@/components/journal/MilestoneForm";
+import { PlannedOutings } from "@/components/journal/PlannedOutings";
 import { Timeline } from "@/components/journal/Timeline";
 import { ChildProfileForm } from "@/components/onboarding/ChildProfileForm";
 import { Button } from "@/components/ui/Button";
@@ -334,6 +336,12 @@ export function JournalClient() {
           ) : null}
         </section>
 
+        {/* Planned outings (Discover → Journal loop) */}
+        <PlannedOutings
+          childId={activeChild.id}
+          onAdd={(item) => setTimeline((current) => [item, ...current])}
+        />
+
         {/* Filter bar */}
         {timeline.length > 0 ? (
           <section
@@ -391,6 +399,9 @@ export function JournalClient() {
             </div>
           </section>
         ) : null}
+
+        {/* Year-at-a-glance */}
+        <JournalCalendar items={filteredTimeline} />
 
         {/* Timeline */}
         <section className="mt-4">
