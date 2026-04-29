@@ -226,10 +226,29 @@ design_handoff_lille_liv/
 6. **Families screen** — invites, roles, per-child privacy.
 7. **Brand reel embed** — drop the landscape variant into the marketing hero (or export to MP4 if performance is a concern).
 
-## Open Questions for the Team
+## Decisions
 
-- Real photography direction / shoot brief?
-- Final wordmark + app icon (SVG / .icns / .ico)?
-- Pricing model — is "gratis" forever, or is a paid tier coming? (Affects FAQ + footer copy.)
-- iOS + Android bundles, or React Native, or Capacitor? Affects how much of the JSX maps over.
-- i18n: ship Danish-only at launch, or DA + EN from day 1? (Footer language toggle is mocked but not wired.)
+Open questions from handoff; resolved 2026-04-29. Treat as authoritative — implementation prompts should reference these rather than re-litigate.
+
+- **Framework.** Web + marketing: **Next.js 16 + Tailwind v4 + Supabase + next-intl** (already scaffolded in this repo). Mobile: **Expo 52 / React Native 0.76** (scaffold lives in `/mobile`). Tokens will be lifted into a shared package so web and RN consume the same source. Do not propose Capacitor, native iOS/Kotlin, or web-only PWA alternatives.
+
+- **Photography.** Hybrid. v1 ships with **licensed stock** (Stocksy / Cavan / Twenty20) for marketing placeholder slots — hero phone mock, three pillars, FAQ block. **v2 commissions an editorial shoot** in Copenhagen for the "for bedsteforældre" portrait + a small hero set (~6 frames). Venue covers (cafés, playgrounds, libraries, museums) are a separate pipeline — license-from-venue + Google Places + occasional self-shot — not part of the editorial commission. Design the journal-photo consent flow now so user-generated photography becomes available later without re-permissioning.
+
+- **Wordmark + app icon.** Keep **Fraunces 500 as the wordmark** (live text, `-0.02em` tracking) — no custom logotype commission. Commission **only the app icon mark**, in parallel with implementation. Brief: 1024² master SVG, iOS asset catalog (all sizes), Android adaptive icon (foreground + background layers), single-color favicon, must read at 16×16. Starting concept: mint (`#79B98A`) background, "ll" lowercase monogram in Fraunces. The current "ll" tile in the prototypes is a **placeholder** — code should reference `/public/icon.svg` from day one so swap-in is a one-file change.
+
+- **Pricing.** **Free during BETA.** A family subscription tier is planned post-BETA — no price or date committed yet. Implications for copy + code:
+  - Hero CTA "Opret familie — gratis" stays.
+  - FAQ entry "Hvad koster det?" — Danish answer: *"Lille Liv er gratis under beta. Vi tilføjer et familieabonnement senere — eksisterende familier får besked først, og de første 30 dage forbliver altid gratis."* (English mirror in `messages/en.json`.)
+  - No `/pricing` page in v1. Footer "Produkt" column omits a Premium link until the tier exists.
+  - Stripe stays as a dep but **do not wire checkout flows** until the subscription is greenlit. No paywalls, no "upgrade" CTAs anywhere in the app.
+
+- **i18n.** Ship **DA + EN both visible at launch**, footer language toggle wired (matches the mockup; default locale `da`, persisted via `NEXT_LOCALE` cookie — already implemented in `i18n/request.ts`). Translation rules:
+  - **Translate:** UI chrome, marketing copy, FAQ, journal prompts/labels, error/empty states, settings.
+  - **Do not translate:** venue names, neighborhood names, quoted Danish reactions and captions in the journal, place content sourced from city/venue feeds. Place content stays Danish in both locales.
+  - Locales stay in lockstep — every key in `da.json` exists in `en.json`. CI should fail on missing keys.
+
+## Open Questions (still open)
+
+- Final commissioned app icon — brief drafted, designer not yet selected.
+- Stock photography license budget + selection — pending procurement.
+- Post-BETA pricing — number, intro discount, family-size tiers — defer until BETA cohort feedback lands.
