@@ -22,7 +22,11 @@ export type Neighbourhood =
   | "Ishøj"
   | "Vanløse"
   | "Brønshøj"
-  | "Kastrup";
+  | "Kastrup"
+  | "Klampenborg"
+  | "Lyngby"
+  | "Humlebæk"
+  | "Roskilde";
 
 export type IndoorOutdoor = "indoor" | "outdoor" | "both";
 

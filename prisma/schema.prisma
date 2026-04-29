@@ -36,6 +36,10 @@ enum Neighbourhood {
   VANLOSE      @map("Vanløse")
   BRONSHOJ     @map("Brønshøj")
   KASTRUP      @map("Kastrup")
+  KLAMPENBORG  @map("Klampenborg")
+  LYNGBY       @map("Lyngby")
+  HUMLEBAEK    @map("Humlebæk")
+  ROSKILDE     @map("Roskilde")
 
   @@map("neighbourhood")
 }

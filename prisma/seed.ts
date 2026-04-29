@@ -18,7 +18,11 @@ const neighbourhoodMap: Record<AppNeighbourhood, PrismaNeighbourhood> = {
   Ishøj: "ISHOJ",
   Vanløse: "VANLOSE",
   Brønshøj: "BRONSHOJ",
-  Kastrup: "KASTRUP"
+  Kastrup: "KASTRUP",
+  Klampenborg: "KLAMPENBORG",
+  Lyngby: "LYNGBY",
+  "Humlebæk": "HUMLEBAEK",
+  Roskilde: "ROSKILDE"
 };
 
 async function main() {
