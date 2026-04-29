@@ -12,6 +12,7 @@ const neighbourhoodMap: Record<AppNeighbourhood, PrismaNeighbourhood> = {
   "Indre By": "INDRE_BY",
   Amager: "AMAGER",
   Valby: "VALBY",
+  Sydhavn: "SYDHAVN",
   Nordvest: "NORDVEST",
   Nordhavn: "NORDHAVN",
   Hellerup: "HELLERUP",

@@ -29,6 +29,7 @@ enum Neighbourhood {
   INDRE_BY     @map("Indre By")
   AMAGER       @map("Amager")
   VALBY        @map("Valby")
+  SYDHAVN      @map("Sydhavn")
   NORDVEST     @map("Nordvest")
   NORDHAVN     @map("Nordhavn")
   HELLERUP     @map("Hellerup")
