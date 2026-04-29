@@ -71,7 +71,9 @@
     "emptyHint": "Add the first milestone whenever the moment lands.",
     "private": "Private",
     "loginRequired": "Login required",
-    "loginRequiredBody": "The journal requires login because children's photos, milestones and institution updates are private."
+    "loginRequiredBody": "The journal requires login because children's photos, milestones and institution updates are private.",
+    "demoBanner": "You're viewing the demo journal. Sign in to start your own.",
+    "demoBannerCta": "Sign in"
   },
   "profile": {
     "title": "Profile",
@@ -145,8 +147,14 @@
     "description": "Connect with other families and plan outings together in your part of town.",
     "loginRequiredTitle": "Login required",
     "loginRequiredBody": "The family community requires Supabase. Set the env vars to enable it.",
-    "signInTitle": "Meet other families in your neighbourhood",
-    "signInBody": "Lille Liv lets you share a small family card — neighbourhood, child age, interests — and connect with other families nearby. Once a connection is accepted, you can chat and arrange playdates. Children's names and photos stay private unless you choose to share them.",
+    "locked": {
+      "title": "Meet other families in your neighbourhood",
+      "description": "Sign in to share a small family card and connect with families nearby. Once a request is accepted you can chat and plan playdates.",
+      "bullet1": "Discover families by neighbourhood, age and interests",
+      "bullet2": "Send and accept connection requests",
+      "bullet3": "Private chat to plan visits and playdates",
+      "cta": "Sign in to open Families"
+    },
     "noFamilyTitle": "No family to share yet",
     "noFamilyBody": "Next time you sign in we'll create a family for you automatically. You can also invite others from Profile → Family.",
     "tabs": {

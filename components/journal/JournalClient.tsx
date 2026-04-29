@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  ArrowRight,
   Baby,
   House,
   MagnifyingGlass,
@@ -12,9 +13,9 @@ import {
   X
 } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { LoginForm } from "@/components/auth/LoginForm";
 import { ActivityForm } from "@/components/journal/ActivityForm";
 import { JournalCalendar } from "@/components/journal/JournalCalendar";
 import { MilestoneForm } from "@/components/journal/MilestoneForm";
@@ -108,6 +109,8 @@ export function JournalClient() {
       setSignedIn(Boolean(session));
 
       if (!session) {
+        setChildren([demoChild]);
+        setUsingDemo(true);
         setLoading(false);
         return;
       }
@@ -232,27 +235,6 @@ export function JournalClient() {
     );
   }
 
-  if (!signedIn && !usingDemo) {
-    return (
-      <div className="px-4 pt-20 sm:px-6 lg:px-8 lg:pt-6">
-        <div className="mx-auto grid max-w-5xl gap-4 lg:grid-cols-[1fr_420px]">
-          <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
-            <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">
-              {t("private")}
-            </p>
-            <h1 className="mt-1 font-display text-3xl font-semibold text-ink">
-              {t("title")}
-            </h1>
-            <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
-              {t("loginRequiredBody")}
-            </p>
-          </section>
-          <LoginForm />
-        </div>
-      </div>
-    );
-  }
-
   if (!activeChild) {
     return (
       <div className="px-4 pt-20 sm:px-6 lg:px-8 lg:pt-6">
@@ -344,9 +326,18 @@ export function JournalClient() {
           </div>
 
           {usingDemo ? (
-            <div className="mt-3 flex items-start gap-2 rounded-lg bg-sage-50 p-2.5 text-xs text-sage-700 ring-1 ring-sage-100">
+            <div className="mt-3 flex items-center gap-2 rounded-lg bg-sage-50 p-2.5 text-xs text-sage-700 ring-1 ring-sage-100">
               <ShieldCheck className="mt-0.5 shrink-0" size={14} weight="fill" aria-hidden="true" />
-              Demojournalen kører lokalt, indtil Supabase er konfigureret.
+              <span className="flex-1">{t("demoBanner")}</span>
+              {!signedIn ? (
+                <Link
+                  href="/profile?next=/journal"
+                  className="focus-ring inline-flex items-center gap-1 rounded-pill bg-sage-500 px-2.5 py-1 text-2xs font-bold uppercase tracking-[0.08em] text-white hover:bg-sage-600"
+                >
+                  {t("demoBannerCta")}
+                  <ArrowRight size={11} weight="bold" aria-hidden="true" />
+                </Link>
+              ) : null}
             </div>
           ) : null}
         </section>
