@@ -3,21 +3,22 @@ import { cn } from "@/lib/utils";
 
 type IconButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   "aria-label": string;
-  variant?: "ghost" | "subtle" | "primary";
+  variant?: "ghost" | "subtle" | "primary" | "lift";
   size?: "sm" | "md" | "lg";
   children: ReactNode;
 };
 
 const variants = {
   ghost: "bg-transparent text-muted hover:bg-sunken hover:text-ink",
-  subtle: "bg-sunken text-ink hover:bg-sand-200",
-  primary: "bg-sage-500 text-white hover:bg-sage-600"
+  subtle: "bg-sunken text-ink hover:bg-mint-50",
+  primary: "bg-mint-300 text-mint-ink shadow-soft hover:bg-mint-200",
+  lift: "bg-surface text-ink ring-1 ring-border shadow-soft hover:shadow-lift hover:bg-mint-50"
 };
 
 const sizes = {
   sm: "h-8 w-8 rounded-lg",
   md: "h-9 w-9 rounded-lg",
-  lg: "h-10 w-10 rounded-xl"
+  lg: "h-11 w-11 rounded-pill"
 };
 
 export function IconButton({
@@ -32,7 +33,7 @@ export function IconButton({
     <button
       type={type}
       className={cn(
-        "focus-ring grid place-items-center transition-colors duration-150 ease-nordic disabled:cursor-not-allowed disabled:opacity-50",
+        "focus-ring grid place-items-center transition-all duration-150 ease-nordic disabled:cursor-not-allowed disabled:opacity-50",
         variants[variant],
         sizes[size],
         className

@@ -16,8 +16,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     return (
       <span
         className={cn(
-          "flex h-10 items-center gap-2 rounded-lg bg-surface px-3 ring-1 transition-colors",
-          invalid ? "ring-danger" : "ring-border focus-within:ring-sage-400",
+          "flex h-10 items-center gap-2 rounded-md bg-surface px-3 ring-1 transition-colors",
+          invalid ? "ring-danger" : "ring-border focus-within:ring-mint-300",
           className
         )}
       >
@@ -39,7 +39,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     <input
       ref={ref}
       className={cn(
-        "h-10 w-full rounded-lg bg-surface px-3 text-sm text-ink ring-1 outline-none transition-colors placeholder:text-subtle focus-visible:ring-2 focus-visible:ring-sage-400",
+        "h-10 w-full rounded-md bg-surface px-3 text-sm text-ink ring-1 outline-none transition-colors placeholder:text-subtle focus-visible:ring-2 focus-visible:ring-mint-300",
         invalid ? "ring-danger" : "ring-border",
         className
       )}
