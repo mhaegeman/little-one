@@ -42,6 +42,14 @@ export type OpeningHours = {
   periods?: OpeningPeriod[];
 };
 
+export type PhotoCredit = {
+  source: "wikimedia" | "unsplash";
+  author?: string;
+  license?: string;
+  licenseUrl?: string;
+  sourceUrl?: string;
+};
+
 export type Venue = {
   id: string;
   name: string;

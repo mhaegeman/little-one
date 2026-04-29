@@ -658,7 +658,10 @@
     "ageLabel": "Age",
     "neighbourhoodLabel": "Neighbourhood",
     "openingLabel": "Opening hours",
-    "addressLabel": "Address"
+    "addressLabel": "Address",
+    "photoCreditsLabel": "Photo credits",
+    "photoCreditBy": "by {author}",
+    "photoCreditVia": "via {source}"
   },
   "planVisit": {
     "buttonLabel": "Plan a visit",

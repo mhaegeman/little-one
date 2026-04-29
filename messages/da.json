@@ -658,7 +658,10 @@
     "ageLabel": "Alder",
     "neighbourhoodLabel": "Bydel",
     "openingLabel": "Åbning",
-    "addressLabel": "Adresse"
+    "addressLabel": "Adresse",
+    "photoCreditsLabel": "Fotokreditering",
+    "photoCreditBy": "af {author}",
+    "photoCreditVia": "via {source}"
   },
   "planVisit": {
     "buttonLabel": "Plan et besyøg",
