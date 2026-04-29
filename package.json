@@ -12,6 +12,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
+    "fetch:venue-photos": "node scripts/fetch-venue-photos.mjs",
     "mobile": "cd mobile && expo start"
   },
   "dependencies": {

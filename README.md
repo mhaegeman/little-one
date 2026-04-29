@@ -102,3 +102,19 @@ Aula parent access is MitID-based. The current MVP includes schema, timeline dis
 ## Seed Data
 
 The seed data lives in `lib/data/venues.ts` and includes 38 Copenhagen-area venues plus dated events. Each venue includes a `sourceUrl` so entries can be audited and refreshed.
+
+## Venue photos
+
+Each venue carries a `photos` array. The order of preference is:
+
+1. **Real photos from Wikimedia Commons** — populated by running the fetcher script. Photo credits (author, license, source) are surfaced on the venue detail page.
+2. **Per-venue Unsplash overrides** — curated stock photos (`photoOverrides` in `lib/data/venues.ts`).
+3. **Category Unsplash bank** — generic photos by category for venues without overrides.
+
+To pull real images for the venues mapped in `scripts/fetch-venue-photos.mjs`:
+
+```bash
+npm run fetch:venue-photos
+```
+
+This writes `lib/data/venuePhotos.generated.json` with image URLs and Wikimedia attribution. Commit the file to ship the photos. Adding a new venue to the mapping in the script and re-running picks up additional venues. The script needs internet access (Wikipedia + Wikimedia Commons APIs); it does not need any API keys.

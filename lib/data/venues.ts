@@ -1,4 +1,20 @@
-import type { FamilyEvent, Venue, VenueCategory } from "@/lib/types";
+import type { FamilyEvent, PhotoCredit, Venue, VenueCategory } from "@/lib/types";
+import generatedPhotos from "./venuePhotos.generated.json";
+
+type GeneratedPhoto = { url: string; credit: PhotoCredit };
+type GeneratedVenuePhotos = { articleUrl?: string; photos: GeneratedPhoto[] };
+const generated = generatedPhotos as Record<string, GeneratedVenuePhotos>;
+
+const photoCreditByUrl = new Map<string, PhotoCredit>();
+for (const entry of Object.values(generated)) {
+  for (const p of entry.photos ?? []) {
+    photoCreditByUrl.set(p.url, p.credit);
+  }
+}
+
+export function getPhotoCredit(url: string): PhotoCredit | undefined {
+  return photoCreditByUrl.get(url);
+}
 
 function unsplash(id: string, w = 1200) {
   return `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=80`;
@@ -174,6 +190,10 @@ const photoOverrides: Record<string, string[]> = {
 };
 
 function pickPhotos(category: VenueCategory, id: string): string[] {
+  const fromWikimedia = generated[id]?.photos?.map((p) => p.url) ?? [];
+  if (fromWikimedia.length > 0) {
+    return fromWikimedia;
+  }
   const override = photoOverrides[id];
   if (override && override.length > 0) {
     return override;
