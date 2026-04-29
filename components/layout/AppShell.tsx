@@ -11,6 +11,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
+import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import { CommandPalette } from "@/components/layout/CommandPalette";
 import { Toaster } from "@/components/ui/Toaster";
 import { useViewTransitionRouter } from "@/hooks/useViewTransitionRouter";
@@ -45,7 +46,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <Toaster>
       <div className="min-h-screen lg:grid lg:grid-cols-[232px_1fr]">
       <a href="#main" className="skip-link">
-        Spring til indhold
+        {t("skipToContent")}
       </a>
 
       {/* Desktop sidebar */}
@@ -129,7 +130,10 @@ export function AppShell({ children }: { children: ReactNode }) {
           })}
         </nav>
 
-        <div className="mt-auto pt-3">
+        <div className="mt-auto space-y-2 pt-3">
+          <div className="px-2">
+            <LanguageSwitcher />
+          </div>
           <p className="px-2 text-2xs leading-snug text-subtle">
             {tApp("tagline")}
           </p>
@@ -151,14 +155,17 @@ export function AppShell({ children }: { children: ReactNode }) {
           </span>
           <span className="font-display text-base font-semibold">{tApp("name")}</span>
         </Link>
-        <button
-          type="button"
-          onClick={() => setPaletteOpen(true)}
-          aria-label={t("search")}
-          className="focus-ring grid h-9 w-9 place-items-center rounded-lg bg-sunken text-muted ring-1 ring-hairline"
-        >
-          <MagnifyingGlass size={16} weight="bold" aria-hidden="true" />
-        </button>
+        <div className="flex items-center gap-2">
+          <LanguageSwitcher />
+          <button
+            type="button"
+            onClick={() => setPaletteOpen(true)}
+            aria-label={t("search")}
+            className="focus-ring grid h-9 w-9 place-items-center rounded-lg bg-sunken text-muted ring-1 ring-hairline"
+          >
+            <MagnifyingGlass size={16} weight="bold" aria-hidden="true" />
+          </button>
+        </div>
       </header>
 
       {/* Mobile bottom nav */}

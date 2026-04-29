@@ -14,6 +14,7 @@ import {
   Warning,
   X
 } from "@phosphor-icons/react/dist/ssr";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -29,7 +30,6 @@ import { useToast } from "@/components/ui/Toaster";
 import { categoryBadgeVariant, categoryLabels } from "@/lib/data/taxonomy";
 import { loadFamiliesForUser, loadFamilyMembers } from "@/lib/family";
 import {
-  AGE_BAND_LABELS,
   blockFamily,
   countOutgoingRequestsToday,
   getOrCreateThread,
@@ -55,6 +55,10 @@ type LoadState =
   | { kind: "error"; message: string };
 
 export function FamilyDetailPanel({ familyId }: Props) {
+  const t = useTranslations("families.detail");
+  const tCommon = useTranslations("common");
+  const tBands = useTranslations("families.ageBands");
+  const tReasons = useTranslations("families.detail.reasons");
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
   const { toast } = useToast();
@@ -74,7 +78,7 @@ export function FamilyDetailPanel({ familyId }: Props) {
 
   useEffect(() => {
     if (!supabase) {
-      setLoad({ kind: "error", message: "Login påkrævet — Supabase er ikke konfigureret." });
+      setLoad({ kind: "error", message: t("loginRequiredError") });
       return;
     }
     let cancelled = false;
@@ -138,8 +142,8 @@ export function FamilyDetailPanel({ familyId }: Props) {
       const used = await countOutgoingRequestsToday(supabase, primaryFamily.id);
       if (used >= MAX_REQUESTS_PER_DAY) {
         toast({
-          title: "Daglig grænse nået",
-          description: `I kan sende op til ${MAX_REQUESTS_PER_DAY} anmodninger om dagen.`,
+          title: t("rateLimitTitle"),
+          description: t("rateLimitBody", { max: MAX_REQUESTS_PER_DAY }),
           variant: "warning"
         });
         setSubmitting(false);
@@ -154,11 +158,11 @@ export function FamilyDetailPanel({ familyId }: Props) {
       setConnection(conn);
       setRequestOpen(false);
       setRequestMessage("");
-      toast({ title: "Anmodning sendt", variant: "success" });
+      toast({ title: t("requestSentToast"), variant: "success" });
     } catch (error) {
       toast({
-        title: "Kunne ikke sende",
-        description: error instanceof Error ? error.message : "Ukendt fejl",
+        title: t("requestError"),
+        description: error instanceof Error ? error.message : tCommon("unknownError"),
         variant: "danger"
       });
     } finally {
@@ -178,8 +182,8 @@ export function FamilyDetailPanel({ familyId }: Props) {
       router.push(`/families?tab=messages&thread=${thread.id}`);
     } catch (error) {
       toast({
-        title: "Kunne ikke åbne samtale",
-        description: error instanceof Error ? error.message : "Ukendt fejl",
+        title: t("openThreadError"),
+        description: error instanceof Error ? error.message : tCommon("unknownError"),
         variant: "danger"
       });
     }
@@ -196,11 +200,11 @@ export function FamilyDetailPanel({ familyId }: Props) {
       });
       setReportOpen(false);
       setReportDetails("");
-      toast({ title: "Tak for rapporten", description: "Vi gennemgår sagen.", variant: "info" });
+      toast({ title: t("reportSentToast"), description: t("reportSentBody"), variant: "info" });
     } catch (error) {
       toast({
-        title: "Kunne ikke sende rapport",
-        description: error instanceof Error ? error.message : "Ukendt fejl",
+        title: t("reportError"),
+        description: error instanceof Error ? error.message : tCommon("unknownError"),
         variant: "danger"
       });
     }
@@ -215,12 +219,12 @@ export function FamilyDetailPanel({ familyId }: Props) {
         blockedByUserId: me.userId
       });
       setBlockOpen(false);
-      toast({ title: "Familien er blokeret", variant: "info" });
+      toast({ title: t("blockedToast"), variant: "info" });
       router.push("/families");
     } catch (error) {
       toast({
-        title: "Kunne ikke blokere",
-        description: error instanceof Error ? error.message : "Ukendt fejl",
+        title: t("blockError"),
+        description: error instanceof Error ? error.message : tCommon("unknownError"),
         variant: "danger"
       });
     }
@@ -243,13 +247,13 @@ export function FamilyDetailPanel({ familyId }: Props) {
         <div className="mx-auto max-w-3xl">
           <EmptyState
             icon={<UsersThree size={20} weight="duotone" aria-hidden="true" />}
-            title="Familien er ikke offentlig"
-            description="Familien har ikke en offentlig profil, eller har valgt at trække den tilbage."
+            title={t("missingTitle")}
+            description={t("missingBody")}
             action={
               <Link href="/families">
                 <Button variant="secondary">
                   <ArrowLeft size={14} weight="bold" aria-hidden="true" />
-                  Tilbage til Familier
+                  {t("backToFamilies")}
                 </Button>
               </Link>
             }
@@ -263,7 +267,7 @@ export function FamilyDetailPanel({ familyId }: Props) {
     return (
       <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
         <div className="mx-auto max-w-3xl rounded-card bg-warm-50 p-5 ring-1 ring-warm-100">
-          <h1 className="font-display text-lg font-semibold text-danger">Kunne ikke hente</h1>
+          <h1 className="font-display text-lg font-semibold text-danger">{t("errorTitle")}</h1>
           <p className="mt-2 text-sm text-muted">{load.message}</p>
         </div>
       </div>
@@ -291,7 +295,7 @@ export function FamilyDetailPanel({ familyId }: Props) {
           className="focus-ring inline-flex h-9 items-center gap-1.5 rounded-pill bg-surface px-3 text-xs font-semibold text-muted ring-1 ring-hairline transition-colors hover:text-ink"
         >
           <ArrowLeft size={13} weight="bold" aria-hidden="true" />
-          Familier
+          {t("back")}
         </Link>
 
         <article className="mt-4 overflow-hidden rounded-card bg-surface ring-1 ring-hairline">
@@ -307,10 +311,10 @@ export function FamilyDetailPanel({ familyId }: Props) {
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">
-                  Familie
+                  {t("eyebrow")}
                 </p>
                 <h1 className="mt-1 font-display text-3xl font-semibold leading-tight text-ink">
-                  {profile.familyName ?? "Familie"}
+                  {profile.familyName ?? t("fallbackName")}
                 </h1>
                 {profile.neighbourhoods.length > 0 ? (
                   <p className="mt-1 flex items-center gap-1 text-sm text-muted">
@@ -322,12 +326,12 @@ export function FamilyDetailPanel({ familyId }: Props) {
               {isAccepted ? (
                 <Badge variant="success">
                   <CheckCircle size={11} weight="fill" aria-hidden="true" />
-                  Forbundet
+                  {t("connected")}
                 </Badge>
               ) : isPending ? (
                 <Badge variant="warning">
                   <Clock size={11} weight="fill" aria-hidden="true" />
-                  Anmodning afventer
+                  {t("pendingPill")}
                 </Badge>
               ) : null}
             </div>
@@ -341,19 +345,17 @@ export function FamilyDetailPanel({ familyId }: Props) {
                 <div className="rounded-lg bg-sunken p-3 ring-1 ring-hairline">
                   <p className="flex items-center gap-1 text-2xs font-bold uppercase tracking-[0.12em] text-muted">
                     <Baby size={11} weight="fill" aria-hidden="true" />
-                    Børn
+                    {t("children")}
                   </p>
                   <p className="mt-1 text-sm font-semibold text-ink">
-                    {profile.childAgeBands
-                      .map((band) => AGE_BAND_LABELS.get(band) ?? `${band} mdr.`)
-                      .join(" · ")}
+                    {profile.childAgeBands.map((band) => tBands(String(band))).join(" · ")}
                   </p>
                 </div>
               ) : null}
               {profile.interests.length > 0 ? (
                 <div className="rounded-lg bg-sunken p-3 ring-1 ring-hairline">
                   <p className="text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-                    Interesser
+                    {t("interests")}
                   </p>
                   <div className="mt-1 flex flex-wrap gap-1">
                     {profile.interests.map((interest) => (
@@ -366,19 +368,18 @@ export function FamilyDetailPanel({ familyId }: Props) {
               ) : null}
             </div>
 
-            {/* CTA row */}
             <div className="mt-5 flex flex-wrap gap-2">
               {canRequest && primaryFamily?.id !== profile.familyId ? (
                 <Button onClick={() => setRequestOpen(true)}>
                   <PaperPlaneTilt size={14} weight="fill" aria-hidden="true" />
-                  Send anmodning
+                  {t("sendRequest")}
                 </Button>
               ) : null}
               {isAccepted ? (
                 <div className="flex flex-wrap gap-2">
                   {showParentNames && members.length > 0 ? (
                     members.map((member) => {
-                      const name = member.profile?.displayName ?? member.displayName ?? "Forælder";
+                      const name = member.profile?.displayName ?? member.displayName ?? "Parent";
                       return (
                         <Button
                           key={member.userId}
@@ -386,14 +387,14 @@ export function FamilyDetailPanel({ familyId }: Props) {
                           onClick={() => startThread(member.userId)}
                         >
                           <ChatsCircle size={14} weight="fill" aria-hidden="true" />
-                          Skriv til {name}
+                          {t("messageSomeone", { name })}
                         </Button>
                       );
                     })
                   ) : members.length > 0 ? (
                     <Button onClick={() => startThread(members[0].userId)}>
                       <ChatsCircle size={14} weight="fill" aria-hidden="true" />
-                      Skriv besked
+                      {t("messageGeneric")}
                     </Button>
                   ) : null}
                 </div>
@@ -401,23 +402,23 @@ export function FamilyDetailPanel({ familyId }: Props) {
               {isPending ? (
                 <Badge variant="warning">
                   <Clock size={11} weight="fill" aria-hidden="true" />
-                  Vent på svar
+                  {t("waitForReply")}
                 </Badge>
               ) : null}
               {isBlocked ? (
                 <Badge variant="danger">
                   <ShieldSlash size={11} weight="fill" aria-hidden="true" />
-                  Blokeret
+                  {t("blockedPill")}
                 </Badge>
               ) : null}
               <span className="ml-auto flex gap-1">
                 <Button variant="ghost" size="sm" onClick={() => setReportOpen(true)}>
                   <Warning size={12} weight="fill" aria-hidden="true" />
-                  Rapportér
+                  {t("report")}
                 </Button>
                 <Button variant="ghost" size="sm" onClick={() => setBlockOpen(true)}>
                   <ShieldSlash size={12} weight="fill" aria-hidden="true" />
-                  Blokér
+                  {t("block")}
                 </Button>
               </span>
             </div>
@@ -426,8 +427,7 @@ export function FamilyDetailPanel({ familyId }: Props) {
 
         <p className="mt-3 inline-flex items-center gap-1.5 text-2xs text-subtle">
           <ShieldCheck size={11} weight="fill" aria-hidden="true" />
-          Lille Liv viser kun det, familien selv har valgt at dele. Børnenes navne og fotos er
-          aldrig offentlige.
+          {t("privacyNote")}
         </p>
       </div>
 
@@ -435,27 +435,27 @@ export function FamilyDetailPanel({ familyId }: Props) {
       <Dialog
         open={requestOpen}
         onClose={() => setRequestOpen(false)}
-        title="Send anmodning"
-        description="Skriv en kort hilsen — det øger chancen for at I bliver accepteret."
+        title={t("requestDialogTitle")}
+        description={t("requestDialogBody")}
       >
         <Textarea
           value={requestMessage}
           onChange={(event) => setRequestMessage(event.target.value)}
-          placeholder="Hej! Vi er en familie i Nørrebro med en pige på 2 — vil I mødes til en kaffe?"
+          placeholder={t("requestPlaceholder")}
           rows={4}
           maxLength={600}
         />
         <div className="mt-3 flex items-center justify-between text-2xs text-subtle">
-          <span>Bliver kun vist for den anden familie.</span>
+          <span>{t("requestVisibility")}</span>
           <span>{requestMessage.length}/600</span>
         </div>
         <div className="mt-4 flex justify-end gap-2">
           <Button variant="ghost" onClick={() => setRequestOpen(false)}>
-            Annullér
+            {tCommon("cancel")}
           </Button>
           <Button onClick={submitRequest} disabled={submitting}>
             <PaperPlaneTilt size={14} weight="fill" aria-hidden="true" />
-            Send anmodning
+            {t("requestSubmit")}
           </Button>
         </div>
       </Dialog>
@@ -464,12 +464,12 @@ export function FamilyDetailPanel({ familyId }: Props) {
       <Dialog
         open={reportOpen}
         onClose={() => setReportOpen(false)}
-        title="Rapportér familieprofil"
-        description="Vi gennemgår alle rapporter manuelt. Familien får ikke besked om rapporten."
+        title={t("reportDialogTitle")}
+        description={t("reportDialogBody")}
       >
         <label className="block">
           <span className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-            Årsag
+            {t("reportReason")}
           </span>
           <Select
             value={reportReason}
@@ -479,42 +479,42 @@ export function FamilyDetailPanel({ familyId }: Props) {
               )
             }
           >
-            <option value="harassment">Chikane</option>
-            <option value="spam">Spam eller reklame</option>
-            <option value="inappropriate">Upassende indhold</option>
-            <option value="safety">Sikkerhedsbekymring</option>
-            <option value="other">Andet</option>
+            <option value="harassment">{tReasons("harassment")}</option>
+            <option value="spam">{tReasons("spam")}</option>
+            <option value="inappropriate">{tReasons("inappropriate")}</option>
+            <option value="safety">{tReasons("safety")}</option>
+            <option value="other">{tReasons("other")}</option>
           </Select>
         </label>
         <label className="mt-3 block">
           <span className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-            Detaljer (valgfrit)
+            {t("reportDetails")}
           </span>
           <Textarea
             value={reportDetails}
             onChange={(event) => setReportDetails(event.target.value)}
             rows={3}
             maxLength={2000}
-            placeholder="Fortæl os hvad der er sket…"
+            placeholder={t("reportDetailsPlaceholder")}
           />
         </label>
         <div className="mt-4 flex justify-end gap-2">
           <Button variant="ghost" onClick={() => setReportOpen(false)}>
-            Annullér
+            {tCommon("cancel")}
           </Button>
           <Button variant="danger" onClick={submitReport}>
             <Warning size={14} weight="fill" aria-hidden="true" />
-            Send rapport
+            {t("reportSubmit")}
           </Button>
         </div>
       </Dialog>
 
       <ConfirmDialog
         open={blockOpen}
-        title="Blokér denne familie?"
-        description="I vil ikke længere kunne se hinandens profiler eller skrive sammen. Eventuelle igangværende samtaler skjules."
-        confirmLabel="Blokér"
-        cancelLabel="Behold"
+        title={t("blockDialogTitle")}
+        description={t("blockDialogBody")}
+        confirmLabel={t("blockConfirm")}
+        cancelLabel={t("blockKeep")}
         danger
         onConfirm={submitBlock}
         onCancel={() => setBlockOpen(false)}

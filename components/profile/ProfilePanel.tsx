@@ -14,6 +14,7 @@ import {
   UserCircle,
   Users
 } from "@phosphor-icons/react/dist/ssr";
+import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { LoginForm } from "@/components/auth/LoginForm";
@@ -23,6 +24,7 @@ import { ProfileOverview } from "@/components/profile/ProfileOverview";
 import { ProfilePreferences } from "@/components/profile/ProfilePreferences";
 import { ProfileRecommendations } from "@/components/profile/ProfileRecommendations";
 import { FamilyPublicEditor } from "@/components/profile/FamilyPublicEditor";
+import { LanguagePreferenceCard } from "@/components/profile/LanguagePreferenceCard";
 import { ProfileSaved } from "@/components/profile/ProfileSaved";
 import { ProfileStats } from "@/components/profile/ProfileStats";
 import { Button } from "@/components/ui/Button";
@@ -64,63 +66,19 @@ type Section =
   | "preferences"
   | "account";
 
-const SECTIONS: {
-  id: Section;
-  label: string;
-  description: string;
-  icon: typeof SquaresFour;
-}[] = [
-  {
-    id: "overview",
-    label: "Oversigt",
-    description: "Dit hjem her",
-    icon: SquaresFour
-  },
-  {
-    id: "profile",
-    label: "Profil",
-    description: "Navn, billede, bio",
-    icon: UserCircle
-  },
-  {
-    id: "family",
-    label: "Familie",
-    description: "Medlemmer & invitationer",
-    icon: Users
-  },
-  {
-    id: "public",
-    label: "Offentligt",
-    description: "Bliv synlig for andre familier",
-    icon: Eye
-  },
-  {
-    id: "saved",
-    label: "Gemte",
-    description: "Dine favoritsteder",
-    icon: Heart
-  },
-  {
-    id: "recommendations",
-    label: "Anbefalinger",
-    description: "Tilpasset feed",
-    icon: Sparkle
-  },
-  {
-    id: "preferences",
-    label: "Præferencer",
-    description: "Sprog, alder, notifikationer",
-    icon: SlidersHorizontal
-  },
-  {
-    id: "account",
-    label: "Konto",
-    description: "Privatliv & log ud",
-    icon: ShieldCheck
-  }
+const SECTION_DEFS: { id: Section; icon: typeof SquaresFour }[] = [
+  { id: "overview", icon: SquaresFour },
+  { id: "profile", icon: UserCircle },
+  { id: "family", icon: Users },
+  { id: "public", icon: Eye },
+  { id: "saved", icon: Heart },
+  { id: "recommendations", icon: Sparkle },
+  { id: "preferences", icon: SlidersHorizontal },
+  { id: "account", icon: ShieldCheck }
 ];
 
 export function ProfilePanel() {
+  const tSections = useTranslations("profile.sections");
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [signedIn, setSignedIn] = useState(false);
@@ -373,7 +331,7 @@ export function ProfilePanel() {
               </p>
             ) : null}
           </section>
-          <LoginForm redirectTo="/profile" locale="da" />
+          <LoginForm redirectTo="/profile" />
         </div>
       </div>
     );
@@ -400,11 +358,11 @@ export function ProfilePanel() {
 
         <div className="mt-5 grid gap-5 lg:grid-cols-[220px_1fr]">
           {/* Sub-nav */}
-          <aside aria-label="Profilsektioner">
+          <aside aria-label={tSections("profile.label")}>
             {/* Mobile horizontal scroll */}
             <div className="-mx-4 overflow-x-auto px-4 lg:hidden">
               <div className="flex gap-1.5">
-                {SECTIONS.map((entry) => {
+                {SECTION_DEFS.map((entry) => {
                   const Icon = entry.icon;
                   const active = section === entry.id;
                   return (
@@ -421,7 +379,7 @@ export function ProfilePanel() {
                       )}
                     >
                       <Icon size={14} weight={active ? "fill" : "regular"} aria-hidden="true" />
-                      {entry.label}
+                      {tSections(`${entry.id}.label`)}
                     </button>
                   );
                 })}
@@ -430,7 +388,7 @@ export function ProfilePanel() {
 
             {/* Desktop vertical list */}
             <nav className="hidden lg:flex lg:flex-col lg:gap-0.5">
-              {SECTIONS.map((entry) => {
+              {SECTION_DEFS.map((entry) => {
                 const Icon = entry.icon;
                 const active = section === entry.id;
                 return (
@@ -448,14 +406,14 @@ export function ProfilePanel() {
                   >
                     <Icon size={15} weight={active ? "fill" : "regular"} aria-hidden="true" />
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate">{entry.label}</span>
+                      <span className="block truncate">{tSections(`${entry.id}.label`)}</span>
                       <span
                         className={cn(
                           "block truncate text-2xs font-normal",
                           active ? "text-sage-700/70" : "text-subtle"
                         )}
                       >
-                        {entry.description}
+                        {tSections(`${entry.id}.description`)}
                       </span>
                     </span>
                   </button>
@@ -493,14 +451,7 @@ export function ProfilePanel() {
               familyViews[0] ? (
                 <FamilyPublicEditor primaryFamily={familyViews[0].family} />
               ) : (
-                <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
-                  <h2 className="font-display text-xl font-semibold text-ink">
-                    Ingen familie endnu
-                  </h2>
-                  <p className="mt-2 text-sm text-muted">
-                    Opret en familie først, så kan I dele en offentlig profil.
-                  </p>
-                </section>
+                <ProfileNoFamilyCard />
               )
             ) : null}
 
@@ -512,7 +463,10 @@ export function ProfilePanel() {
             ) : null}
 
             {section === "preferences" ? (
-              <ProfilePreferences profile={profile} onSave={handleProfileSave} />
+              <div className="space-y-4">
+                <LanguagePreferenceCard />
+                <ProfilePreferences profile={profile} onSave={handleProfileSave} />
+              </div>
             ) : null}
 
             {section === "family" ? (
@@ -583,6 +537,16 @@ export function ProfilePanel() {
         </div>
       </div>
     </div>
+  );
+}
+
+function ProfileNoFamilyCard() {
+  const t = useTranslations("profile");
+  return (
+    <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
+      <h2 className="font-display text-xl font-semibold text-ink">{t("noFamilyTitle")}</h2>
+      <p className="mt-2 text-sm text-muted">{t("noFamilyDescription")}</p>
+    </section>
   );
 }
 

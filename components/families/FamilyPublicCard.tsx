@@ -10,14 +10,11 @@ import {
   ShieldCheck,
   UsersThree
 } from "@phosphor-icons/react/dist/ssr";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 import { categoryBadgeVariant, categoryLabels } from "@/lib/data/taxonomy";
-import {
-  AGE_BAND_LABELS,
-  type FamilyConnection,
-  type FamilyPublicProfile
-} from "@/lib/social";
+import { type FamilyConnection, type FamilyPublicProfile } from "@/lib/social";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -27,12 +24,13 @@ type Props = {
 };
 
 function StatusPill({ connection }: { connection?: FamilyConnection }) {
+  const t = useTranslations("families.card");
   if (!connection) return null;
   if (connection.status === "accepted") {
     return (
       <Badge variant="success">
         <CheckCircle size={10} weight="fill" aria-hidden="true" />
-        Forbundet
+        {t("connected")}
       </Badge>
     );
   }
@@ -40,7 +38,7 @@ function StatusPill({ connection }: { connection?: FamilyConnection }) {
     return (
       <Badge variant="warning">
         <Clock size={10} weight="fill" aria-hidden="true" />
-        Afventer
+        {t("pending")}
       </Badge>
     );
   }
@@ -48,7 +46,7 @@ function StatusPill({ connection }: { connection?: FamilyConnection }) {
     return (
       <Badge variant="danger">
         <ShieldCheck size={10} weight="fill" aria-hidden="true" />
-        Blokeret
+        {t("blocked")}
       </Badge>
     );
   }
@@ -56,6 +54,8 @@ function StatusPill({ connection }: { connection?: FamilyConnection }) {
 }
 
 export function FamilyPublicCard({ profile, connection, href }: Props) {
+  const t = useTranslations("families.card");
+  const tBands = useTranslations("families.ageBands");
   const target = href ?? `/families/${profile.familyId}`;
   const showAvatar = profile.visibility !== "minimal" && profile.coverUrl;
   const showDescription = profile.visibility !== "minimal" && profile.description;
@@ -89,7 +89,7 @@ export function FamilyPublicCard({ profile, connection, href }: Props) {
         <div className="min-w-0 p-3.5">
           <div className="flex items-start justify-between gap-2">
             <h3 className="truncate font-display text-base font-semibold text-ink">
-              {profile.familyName ?? "Familie"}
+              {profile.familyName ?? t("fallbackName")}
             </h3>
             <StatusPill connection={connection} />
           </div>
@@ -113,8 +113,8 @@ export function FamilyPublicCard({ profile, connection, href }: Props) {
               <Badge variant="sky">
                 <Baby size={11} weight="fill" aria-hidden="true" />
                 {profile.childAgeBands
-                  .map((band) => AGE_BAND_LABELS.get(band) ?? `${band} mdr.`)
                   .slice(0, 3)
+                  .map((band) => tBands(String(band)))
                   .join(" · ")}
               </Badge>
             ) : null}
@@ -129,11 +129,11 @@ export function FamilyPublicCard({ profile, connection, href }: Props) {
             {connection?.status === "accepted" ? (
               <>
                 <ChatsCircle size={11} weight="fill" aria-hidden="true" />
-                Skriv besked
+                {t("messageThem")}
               </>
             ) : (
               <>
-                Se profil
+                {t("viewProfile")}
                 <ArrowRight size={11} weight="bold" aria-hidden="true" />
               </>
             )}

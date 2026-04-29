@@ -7,6 +7,7 @@ import {
   EyeSlash,
   ShieldCheck
 } from "@phosphor-icons/react/dist/ssr";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { PhotoUploader } from "@/components/ui/PhotoUploader";
@@ -15,7 +16,7 @@ import { Textarea } from "@/components/ui/Textarea";
 import { useToast } from "@/components/ui/Toaster";
 import { categories, categoryLabels, neighbourhoods } from "@/lib/data/taxonomy";
 import {
-  AGE_BANDS,
+  AGE_BAND_VALUES,
   loadOwnPublicProfile,
   upsertOwnPublicProfile,
   type FamilyPublicProfile,
@@ -41,6 +42,11 @@ const EMPTY: Omit<FamilyPublicProfile, "familyId" | "familyName"> = {
 };
 
 export function FamilyPublicEditor({ primaryFamily }: Props) {
+  const t = useTranslations("families.publicEditor");
+  const tSection = useTranslations("families.publicEditor.section");
+  const tVisibility = useTranslations("families.publicEditor.visibility");
+  const tBands = useTranslations("families.ageBands");
+  const tCommon = useTranslations("common");
   const supabase = useMemo(() => createClient(), []);
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
@@ -70,8 +76,8 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
       .catch((error) => {
         if (cancelled) return;
         toast({
-          title: "Kunne ikke hente profil",
-          description: error instanceof Error ? error.message : "Ukendt fejl",
+          title: t("errorTitle"),
+          description: error instanceof Error ? error.message : tCommon("unknownError"),
           variant: "danger"
         });
       })
@@ -81,7 +87,8 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [supabase, primaryFamily.id, toast]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [supabase, primaryFamily.id]);
 
   function toggle<T>(value: T, list: T[]): T[] {
     return list.includes(value) ? list.filter((x) => x !== value) : [...list, value];
@@ -92,11 +99,11 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
     setSaving(true);
     try {
       await upsertOwnPublicProfile(supabase, primaryFamily.id, draft);
-      toast({ title: "Familieprofil gemt", variant: "success" });
+      toast({ title: t("savedToast"), variant: "success" });
     } catch (error) {
       toast({
-        title: "Kunne ikke gemme",
-        description: error instanceof Error ? error.message : "Ukendt fejl",
+        title: t("saveError"),
+        description: error instanceof Error ? error.message : tCommon("unknownError"),
         variant: "danger"
       });
     } finally {
@@ -126,20 +133,16 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
       }}
       className="space-y-4"
     >
-      {/* Searchable toggle */}
       <section className="rounded-card bg-surface p-4 ring-1 ring-hairline">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">
-              Familie offentligt
+              {tSection("publicTitle")}
             </p>
             <h2 className="mt-0.5 font-display text-lg font-semibold text-ink">
-              Bliv synlig for andre familier
+              {tSection("publicHeading")}
             </h2>
-            <p className="mt-1 max-w-xl text-sm text-muted">
-              Når jeres familie er synlig, kan andre forældre i jeres bydel finde og forbinde
-              med jer. Børnenes navne og fotos er aldrig offentlige.
-            </p>
+            <p className="mt-1 max-w-xl text-sm text-muted">{tSection("publicBody")}</p>
           </div>
           <label
             className={cn(
@@ -154,58 +157,54 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
               checked={draft.searchable}
               onChange={(event) => setDraft({ ...draft, searchable: event.target.checked })}
               className="h-4 w-4 accent-sage-500"
-              aria-label="Søgbar"
+              aria-label={tSection("visible")}
             />
             {draft.searchable ? (
               <>
                 <Eye size={13} weight="fill" aria-hidden="true" />
-                Synlig
+                {tSection("visible")}
               </>
             ) : (
               <>
                 <EyeSlash size={13} weight="fill" aria-hidden="true" />
-                Skjult
+                {tSection("hidden")}
               </>
             )}
           </label>
         </div>
       </section>
 
-      {/* Visibility tier */}
       <section className="rounded-card bg-surface p-4 ring-1 ring-hairline">
-        <h3 className="font-display text-base font-semibold text-ink">Hvad må vi vise?</h3>
-        <p className="mt-1 text-sm text-muted">
-          Privatlivsindstilling. Du kan altid skifte tier — og du bestemmer selv felterne nedenfor.
-        </p>
+        <h3 className="font-display text-base font-semibold text-ink">{tSection("visibilityTitle")}</h3>
+        <p className="mt-1 text-sm text-muted">{tSection("visibilityBody")}</p>
         <div className="mt-3 grid gap-2 sm:grid-cols-3">
           <VisibilityCard
             value="minimal"
             current={draft.visibility}
             onChange={(visibility) => setDraft({ ...draft, visibility })}
-            title="Minimal"
-            description="Bydel + alder + interesser. Ingen beskrivelse, intet billede. Stærkest privatliv."
+            title={tVisibility("minimal.title")}
+            description={tVisibility("minimal.body")}
           />
           <VisibilityCard
             value="moderate"
             current={draft.visibility}
             onChange={(visibility) => setDraft({ ...draft, visibility })}
-            title="Moderat"
-            description="Det fra Minimal + kort familiebeskrivelse + valgfri familiebillede."
+            title={tVisibility("moderate.title")}
+            description={tVisibility("moderate.body")}
           />
           <VisibilityCard
             value="open"
             current={draft.visibility}
             onChange={(visibility) => setDraft({ ...draft, visibility })}
-            title="Åben"
-            description="Alt fra Moderat + valgfri visning af forældrenes fornavne (kun når I er forbundne)."
+            title={tVisibility("open.title")}
+            description={tVisibility("open.body")}
           />
         </div>
       </section>
 
-      {/* Neighbourhoods */}
       <section className="rounded-card bg-surface p-4 ring-1 ring-hairline">
-        <h3 className="font-display text-base font-semibold text-ink">Bydele I færdes i</h3>
-        <p className="mt-1 text-sm text-muted">Vælg de bydele andre familier kan finde jer i.</p>
+        <h3 className="font-display text-base font-semibold text-ink">{tSection("neighbourhoodsTitle")}</h3>
+        <p className="mt-1 text-sm text-muted">{tSection("neighbourhoodsBody")}</p>
         <div className="mt-3 flex flex-wrap gap-1.5">
           {neighbourhoods.map((hood) => {
             const active = draft.neighbourhoods.includes(hood);
@@ -230,21 +229,18 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
         </div>
       </section>
 
-      {/* Age bands */}
       <section className="rounded-card bg-surface p-4 ring-1 ring-hairline">
-        <h3 className="font-display text-base font-semibold text-ink">Børnenes aldersgruppe</h3>
-        <p className="mt-1 text-sm text-muted">
-          Vi viser kun aldersbånd — aldrig præcise fødselsdatoer eller navne.
-        </p>
+        <h3 className="font-display text-base font-semibold text-ink">{tSection("ageBandsTitle")}</h3>
+        <p className="mt-1 text-sm text-muted">{tSection("ageBandsBody")}</p>
         <div className="mt-3 flex flex-wrap gap-1.5">
-          {AGE_BANDS.map((band) => {
-            const active = draft.childAgeBands.includes(band.value);
+          {AGE_BAND_VALUES.map((band) => {
+            const active = draft.childAgeBands.includes(band);
             return (
               <button
-                key={band.value}
+                key={band}
                 type="button"
                 onClick={() =>
-                  setDraft({ ...draft, childAgeBands: toggle(band.value, draft.childAgeBands) })
+                  setDraft({ ...draft, childAgeBands: toggle(band, draft.childAgeBands) })
                 }
                 className={cn(
                   "focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors",
@@ -253,19 +249,16 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
                     : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                 )}
               >
-                {band.label}
+                {tBands(String(band))}
               </button>
             );
           })}
         </div>
       </section>
 
-      {/* Interests */}
       <section className="rounded-card bg-surface p-4 ring-1 ring-hairline">
-        <h3 className="font-display text-base font-semibold text-ink">Interesser</h3>
-        <p className="mt-1 text-sm text-muted">
-          Hjælper andre familier med at finde jer ud fra fælles interesser.
-        </p>
+        <h3 className="font-display text-base font-semibold text-ink">{tSection("interestsTitle")}</h3>
+        <p className="mt-1 text-sm text-muted">{tSection("interestsBody")}</p>
         <div className="mt-3 flex flex-wrap gap-1.5">
           {categories.map((category) => {
             const active = draft.interests.includes(category);
@@ -290,18 +283,15 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
         </div>
       </section>
 
-      {/* Description (moderate+) */}
       <section
         className={cn(
           "rounded-card bg-surface p-4 ring-1 ring-hairline",
           !allowDescription && "opacity-60"
         )}
       >
-        <h3 className="font-display text-base font-semibold text-ink">Familiebeskrivelse</h3>
+        <h3 className="font-display text-base font-semibold text-ink">{tSection("descriptionTitle")}</h3>
         <p className="mt-1 text-sm text-muted">
-          {allowDescription
-            ? "Et par linjer om jeres familie — hvor I bor, hvad I kan lide at lave."
-            : "Skift til Moderat eller Åben for at tilføje en beskrivelse."}
+          {allowDescription ? tSection("descriptionBody") : tSection("descriptionUpgrade")}
         </p>
         <Textarea
           value={draft.description ?? ""}
@@ -309,23 +299,20 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
           rows={3}
           disabled={!allowDescription}
           maxLength={500}
-          placeholder="Vi er en familie på fire — Asta og Theo, plus to søvnige forældre på Nørrebro. Elsker café-formiddage, vandpytter og biblioteket på Blågårds Plads."
+          placeholder={tSection("descriptionPlaceholder")}
           className="mt-3"
         />
       </section>
 
-      {/* Cover / family photo (moderate+) */}
       <section
         className={cn(
           "rounded-card bg-surface p-4 ring-1 ring-hairline",
           !allowAvatar && "opacity-60"
         )}
       >
-        <h3 className="font-display text-base font-semibold text-ink">Familiebillede</h3>
+        <h3 className="font-display text-base font-semibold text-ink">{tSection("photoTitle")}</h3>
         <p className="mt-1 text-sm text-muted">
-          {allowAvatar
-            ? "Et roligt familiebillede — gerne uden at vise børnenes ansigter direkte."
-            : "Skift til Moderat eller Åben for at vise et billede."}
+          {allowAvatar ? tSection("photoBody") : tSection("photoUpgrade")}
         </p>
         <div className="mt-3">
           <PhotoUploader
@@ -336,7 +323,6 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
         </div>
       </section>
 
-      {/* Parent names (open only) */}
       <section
         className={cn(
           "rounded-card bg-surface p-4 ring-1 ring-hairline",
@@ -346,12 +332,10 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h3 className="font-display text-base font-semibold text-ink">
-              Vis forældres fornavne
+              {tSection("parentNamesTitle")}
             </h3>
             <p className="mt-1 text-sm text-muted">
-              {allowParentNames
-                ? "Når I er forbundne med en familie, kan de skrive direkte til den enkelte forælder ved navn."
-                : "Kun tilgængeligt på “Åben”-niveau."}
+              {allowParentNames ? tSection("parentNamesBody") : tSection("parentNamesUpgrade")}
             </p>
           </div>
           <input
@@ -362,29 +346,28 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
               setDraft({ ...draft, showParentFirstNames: event.target.checked })
             }
             className="h-5 w-5 accent-sage-500"
-            aria-label="Vis forældrenes fornavne"
+            aria-label={tSection("parentNamesTitle")}
           />
         </div>
       </section>
 
-      {/* Save bar */}
       <div className="sticky bottom-3 flex flex-wrap items-center gap-3 rounded-card bg-surface/95 p-3 shadow-soft ring-1 ring-hairline backdrop-blur">
         <Button type="submit" disabled={saving}>
           {saving ? (
             <>
               <CircleNotch size={14} weight="bold" className="animate-spin" aria-hidden="true" />
-              Gemmer…
+              {t("saving")}
             </>
           ) : (
             <>
               <CheckCircle size={14} weight="fill" aria-hidden="true" />
-              Gem familieprofil
+              {t("saveButton")}
             </>
           )}
         </Button>
         <p className="ml-auto inline-flex items-center gap-1 text-2xs text-subtle">
           <ShieldCheck size={11} weight="fill" aria-hidden="true" />
-          Børnenes navne og fotos forbliver private.
+          {t("footerNote")}
         </p>
       </div>
     </form>

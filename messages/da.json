@@ -8,7 +8,8 @@
     "journal": "Journal",
     "families": "Familier",
     "profile": "Profil",
-    "search": "Søg"
+    "search": "Søg",
+    "skipToContent": "Spring til indhold"
   },
   "common": {
     "save": "Gem",
@@ -21,7 +22,13 @@
     "reset": "Nulstil",
     "showAll": "Vis alle",
     "today": "I dag",
-    "yesterday": "I går"
+    "yesterday": "I går",
+    "back": "Tilbage",
+    "send": "Send",
+    "saving": "Gemmer…",
+    "saved": "Gemt",
+    "unknownError": "Ukendt fejl",
+    "loginRequired": "Login påkrævet"
   },
   "discover": {
     "title": "Opdag",
@@ -85,7 +92,19 @@
     "language": "Sprog",
     "settings": "Konto og indstillinger",
     "logout": "Log ud",
-    "leaveFamily": "Forlad familien"
+    "leaveFamily": "Forlad familien",
+    "sections": {
+      "overview": { "label": "Overblik", "description": "Aktivitet & favoritter" },
+      "profile": { "label": "Profil", "description": "Visningsnavn & detaljer" },
+      "family": { "label": "Familie", "description": "Medlemmer & invitationer" },
+      "public": { "label": "Offentligt", "description": "Bliv synlig for andre familier" },
+      "saved": { "label": "Gemte", "description": "Steder I gerne vil tilbage til" },
+      "recommendations": { "label": "Anbefalinger", "description": "Forslag baseret på interesser" },
+      "preferences": { "label": "Præferencer", "description": "Sprog & visning" },
+      "account": { "label": "Konto", "description": "Sikkerhed & log ud" }
+    },
+    "noFamilyTitle": "Ingen familie endnu",
+    "noFamilyDescription": "Opret en familie først, så kan I dele en offentlig profil."
   },
   "auth": {
     "eyebrow": "Velkommen",
@@ -94,10 +113,19 @@
     "email": "E-mail",
     "name": "Dit navn",
     "sendMagicLink": "Send magisk link",
+    "sending": "Sender…",
     "checkInbox": "Tjek din indbakke",
+    "checkInboxBody": "Vi har sendt et magisk link til {email}. Klik på linket for at logge ind.",
     "notConfigured": "Supabase mangler miljøvariabler.",
     "inviteSubtitle": "Du er inviteret til en familie",
-    "inviteAccept": "Tilslut familien"
+    "inviteAccept": "Tilslut familien",
+    "emailPlaceholder": "din@email.dk",
+    "magicLinkExplainer": "Vi sender et engangs-loginlink til din e-mail. Ingen adgangskode."
+  },
+  "language": {
+    "title": "Sprog",
+    "description": "Vælg det sprog, hvor Lille Liv vises. Du kan altid skifte tilbage.",
+    "syncNote": "Når du er logget ind, gemmes valget på din konto, så det følger med på alle dine enheder."
   },
   "family": {
     "ownerBadge": "Ejer",
@@ -110,5 +138,195 @@
     "title": "Aula",
     "comingSoon": "Aula-forbindelse kommer snart",
     "body": "Vi forbereder en sikker MitID-baseret forbindelse. Indtil da gemmer Lille Liv ingen Aula-adgangskoder."
+  },
+  "families": {
+    "eyebrow": "Familier",
+    "title": "Familier i nabolaget",
+    "description": "Forbind med andre familier og planlæg fælles ture i jeres bydel.",
+    "loginRequiredTitle": "Login påkrævet",
+    "loginRequiredBody": "Familiefællesskabet kræver Supabase. Sæt miljøvariablerne for at tage det i brug.",
+    "signInTitle": "Mød andre familier i jeres bydel",
+    "signInBody": "Lille Liv lader jer dele en lille familieprofil — bydel, alder og interesser — og forbinde med andre familier i nabolaget. Når en forbindelse er accepteret, kan I skrive sammen og planlægge legeaftaler. Børnenes navne og billeder forbliver private medmindre I selv vælger at dele dem.",
+    "noFamilyTitle": "Ingen familie at dele endnu",
+    "noFamilyBody": "Næste gang du logger ind, opretter vi automatisk en familie til dig. Du kan også invitere andre fra Profil → Familie.",
+    "tabs": {
+      "discover": "Opdag",
+      "connections": "Forbindelser",
+      "messages": "Beskeder"
+    },
+    "discover": {
+      "search": "Søg efter familienavn, bydel eller interesse…",
+      "clearSearch": "Ryd søgning",
+      "filters": "Filtre",
+      "filtersTitle": "Filtre",
+      "filtersResults": "{count} familier matcher",
+      "neighbourhoods": "Bydel",
+      "ageBands": "Børnenes alder",
+      "interests": "Interesser",
+      "showResults": "Vis {count}",
+      "reset": "Nulstil filtre",
+      "errorTitle": "Kunne ikke hente familier",
+      "emptyTitle": "Ingen familier matcher endnu",
+      "emptyBodyFiltered": "Prøv at fjerne nogle filtre — fællesskabet er stadig ungt.",
+      "emptyBody": "Inviter andre forældre til at oprette deres familieprofil — eller del jeres egen profil offentligt for at blive fundet."
+    },
+    "connections": {
+      "incomingTab": "Modtagne",
+      "outgoingTab": "Sendte ({count})",
+      "acceptedTab": "Forbundne ({count})",
+      "accept": "Acceptér",
+      "decline": "Afvis",
+      "withdraw": "Træk tilbage",
+      "viewProfile": "Se profil",
+      "errorTitle": "Kunne ikke hente forbindelser",
+      "acceptedToast": "Forbindelse accepteret",
+      "declinedToast": "Anmodning afvist",
+      "withdrawnToast": "Anmodning trukket tilbage",
+      "acceptError": "Kunne ikke acceptere",
+      "declineError": "Kunne ikke afvise",
+      "withdrawError": "Kunne ikke fortryde",
+      "declineConfirmTitle": "Afvis anmodning?",
+      "declineConfirmBody": "Familien kan ikke se hvem der afviste eller hvorfor.",
+      "declineConfirmKeep": "Behold",
+      "emptyIncomingTitle": "Ingen modtagne anmodninger",
+      "emptyIncomingBody": "Når en anden familie sender jer en anmodning, dukker den op her.",
+      "emptyOutgoingTitle": "Ingen sendte anmodninger",
+      "emptyOutgoingBody": "Send en anmodning fra en familieprofil for at komme i gang.",
+      "emptyAcceptedTitle": "Ingen forbindelser endnu",
+      "emptyAcceptedBody": "Find familier i Opdag-fanen og send en anmodning.",
+      "fallbackName": "Familie"
+    },
+    "messages": {
+      "errorTitle": "Kunne ikke hente beskeder",
+      "emptyTitle": "Ingen beskeder endnu",
+      "emptyBody": "Når I accepterer en forbindelse, kan I starte en samtale fra familieprofilen.",
+      "selectThread": "Vælg en samtale fra listen.",
+      "noMessages": "Ingen beskeder endnu — sig hej.",
+      "placeholder": "Skriv en besked…",
+      "sendError": "Kunne ikke sende",
+      "sendLabel": "Send",
+      "back": "Tilbage",
+      "threadsLabel": "Samtaler",
+      "threadLabel": "Samtale",
+      "fallbackName": "Familie"
+    },
+    "detail": {
+      "back": "Familier",
+      "missingTitle": "Familien er ikke offentlig",
+      "missingBody": "Familien har ikke en offentlig profil, eller har valgt at trække den tilbage.",
+      "backToFamilies": "Tilbage til Familier",
+      "errorTitle": "Kunne ikke hente",
+      "loginRequiredError": "Login påkrævet — Supabase er ikke konfigureret.",
+      "eyebrow": "Familie",
+      "fallbackName": "Familie",
+      "connected": "Forbundet",
+      "pendingPill": "Anmodning afventer",
+      "blockedPill": "Blokeret",
+      "children": "Børn",
+      "interests": "Interesser",
+      "sendRequest": "Send anmodning",
+      "messageSomeone": "Skriv til {name}",
+      "messageGeneric": "Skriv besked",
+      "waitForReply": "Vent på svar",
+      "report": "Rapportér",
+      "block": "Blokér",
+      "privacyNote": "Lille Liv viser kun det, familien selv har valgt at dele. Børnenes navne og fotos er aldrig offentlige.",
+      "requestDialogTitle": "Send anmodning",
+      "requestDialogBody": "Skriv en kort hilsen — det øger chancen for at I bliver accepteret.",
+      "requestPlaceholder": "Hej! Vi er en familie i Nørrebro med en pige på 2 — vil I mødes til en kaffe?",
+      "requestVisibility": "Bliver kun vist for den anden familie.",
+      "requestSubmit": "Send anmodning",
+      "requestSentToast": "Anmodning sendt",
+      "rateLimitTitle": "Daglig grænse nået",
+      "rateLimitBody": "I kan sende op til {max} anmodninger om dagen.",
+      "requestError": "Kunne ikke sende",
+      "openThreadError": "Kunne ikke åbne samtale",
+      "reportDialogTitle": "Rapportér familieprofil",
+      "reportDialogBody": "Vi gennemgår alle rapporter manuelt. Familien får ikke besked om rapporten.",
+      "reportReason": "Årsag",
+      "reportDetails": "Detaljer (valgfrit)",
+      "reportDetailsPlaceholder": "Fortæl os hvad der er sket…",
+      "reportSubmit": "Send rapport",
+      "reportSentToast": "Tak for rapporten",
+      "reportSentBody": "Vi gennemgår sagen.",
+      "reportError": "Kunne ikke sende rapport",
+      "blockDialogTitle": "Blokér denne familie?",
+      "blockDialogBody": "I vil ikke længere kunne se hinandens profiler eller skrive sammen. Eventuelle igangværende samtaler skjules.",
+      "blockConfirm": "Blokér",
+      "blockKeep": "Behold",
+      "blockedToast": "Familien er blokeret",
+      "blockError": "Kunne ikke blokere",
+      "reasons": {
+        "harassment": "Chikane",
+        "spam": "Spam eller reklame",
+        "inappropriate": "Upassende indhold",
+        "safety": "Sikkerhedsbekymring",
+        "other": "Andet"
+      }
+    },
+    "card": {
+      "fallbackName": "Familie",
+      "viewProfile": "Se profil",
+      "messageThem": "Skriv besked",
+      "connected": "Forbundet",
+      "pending": "Afventer",
+      "blocked": "Blokeret"
+    },
+    "publicEditor": {
+      "errorTitle": "Kunne ikke hente profil",
+      "savedToast": "Familieprofil gemt",
+      "saveError": "Kunne ikke gemme",
+      "saveButton": "Gem familieprofil",
+      "saving": "Gemmer…",
+      "footerNote": "Børnenes navne og fotos forbliver private.",
+      "section": {
+        "publicTitle": "Familie offentligt",
+        "publicHeading": "Bliv synlig for andre familier",
+        "publicBody": "Når jeres familie er synlig, kan andre forældre i jeres bydel finde og forbinde med jer. Børnenes navne og fotos er aldrig offentlige.",
+        "visible": "Synlig",
+        "hidden": "Skjult",
+        "visibilityTitle": "Hvad må vi vise?",
+        "visibilityBody": "Privatlivsindstilling. Du kan altid skifte niveau — og du bestemmer selv felterne nedenfor.",
+        "neighbourhoodsTitle": "Bydele I færdes i",
+        "neighbourhoodsBody": "Vælg de bydele andre familier kan finde jer i.",
+        "ageBandsTitle": "Børnenes aldersgruppe",
+        "ageBandsBody": "Vi viser kun aldersbånd — aldrig præcise fødselsdatoer eller navne.",
+        "interestsTitle": "Interesser",
+        "interestsBody": "Hjælper andre familier med at finde jer ud fra fælles interesser.",
+        "descriptionTitle": "Familiebeskrivelse",
+        "descriptionBody": "Et par linjer om jeres familie — hvor I bor, hvad I kan lide at lave.",
+        "descriptionUpgrade": "Skift til Moderat eller Åben for at tilføje en beskrivelse.",
+        "descriptionPlaceholder": "Vi er en familie på fire — Asta og Theo, plus to søvnige forældre på Nørrebro. Elsker café-formiddage, vandpytter og biblioteket på Blågårds Plads.",
+        "photoTitle": "Familiebillede",
+        "photoBody": "Et roligt familiebillede — gerne uden at vise børnenes ansigter direkte.",
+        "photoUpgrade": "Skift til Moderat eller Åben for at vise et billede.",
+        "parentNamesTitle": "Vis forældres fornavne",
+        "parentNamesBody": "Når I er forbundne med en familie, kan de skrive direkte til den enkelte forælder ved navn.",
+        "parentNamesUpgrade": "Kun tilgængeligt på “Åben”-niveau."
+      },
+      "visibility": {
+        "minimal": {
+          "title": "Minimal",
+          "body": "Bydel + alder + interesser. Ingen beskrivelse, intet billede. Stærkest privatliv."
+        },
+        "moderate": {
+          "title": "Moderat",
+          "body": "Det fra Minimal + kort familiebeskrivelse + valgfri familiebillede."
+        },
+        "open": {
+          "title": "Åben",
+          "body": "Alt fra Moderat + valgfri visning af forældrenes fornavne (kun når I er forbundne)."
+        }
+      }
+    },
+    "ageBands": {
+      "0": "0–6 mdr.",
+      "6": "6–12 mdr.",
+      "12": "1–2 år",
+      "24": "2–3 år",
+      "36": "3–4 år",
+      "48": "4–5 år",
+      "60": "5–6 år"
+    }
   }
 }

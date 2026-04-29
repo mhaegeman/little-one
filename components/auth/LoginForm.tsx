@@ -8,6 +8,7 @@ import {
   Sparkle,
   UserCircle
 } from "@phosphor-icons/react/dist/ssr";
+import { useLocale } from "next-intl";
 import type { FormEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button";
@@ -110,8 +111,11 @@ const TAGLINE = {
 
 type Status = "idle" | "loading" | "sent" | "error";
 
-export function LoginForm({ invite, redirectTo = "/journal", locale = "da" }: LoginFormProps) {
-  const copy = COPY[locale];
+export function LoginForm({ invite, redirectTo = "/journal", locale }: LoginFormProps) {
+  const activeLocale = useLocale();
+  const effectiveLocale: "da" | "en" =
+    locale ?? (activeLocale === "en" ? "en" : "da");
+  const copy = COPY[effectiveLocale];
   const [email, setEmail] = useState(invite?.suggestedEmail ?? "");
   const [displayName, setDisplayName] = useState(invite ? invite.invitedByName ?? "" : "");
   const [role, setRole] = useState<FamilyRole>(invite ? "family" : "parent");
@@ -153,10 +157,10 @@ export function LoginForm({ invite, redirectTo = "/journal", locale = "da" }: Lo
         // Surfaces in the auth.users.raw_user_meta_data and in the email template via {{ .Data.* }}.
         data: {
           app_name: APP_NAME,
-          app_tagline: TAGLINE[locale],
+          app_tagline: TAGLINE[effectiveLocale],
           display_name: displayName.trim() || null,
           preferred_role: role,
-          preferred_locale: locale,
+          preferred_locale: effectiveLocale,
           invite_token: invite?.token ?? null,
           invited_by_name: invite?.invitedByName ?? null,
           family_name: invite?.familyName ?? null,

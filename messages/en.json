@@ -8,7 +8,8 @@
     "journal": "Journal",
     "families": "Families",
     "profile": "Profile",
-    "search": "Search"
+    "search": "Search",
+    "skipToContent": "Skip to content"
   },
   "common": {
     "save": "Save",
@@ -21,7 +22,13 @@
     "reset": "Reset",
     "showAll": "Show all",
     "today": "Today",
-    "yesterday": "Yesterday"
+    "yesterday": "Yesterday",
+    "back": "Back",
+    "send": "Send",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "unknownError": "Unknown error",
+    "loginRequired": "Login required"
   },
   "discover": {
     "title": "Discover",
@@ -52,19 +59,19 @@
   },
   "journal": {
     "title": "Journal",
-    "subtitle": "Milestones, outings, and daily highlights for each child.",
+    "subtitle": "Milestones, outings and everyday glimpses, gathered for each child.",
     "timeline": "Timeline",
     "addMilestone": "Add milestone",
-    "addActivity": "Add activity",
+    "addActivity": "Add outing",
     "milestone": "Milestone",
     "activity": "Outing",
     "aulaBadgeNursery": "From nursery",
     "aulaBadgeKindergarten": "From kindergarten",
     "empty": "Your timeline is ready",
-    "emptyHint": "Add the first milestone when the moment lands.",
+    "emptyHint": "Add the first milestone whenever the moment lands.",
     "private": "Private",
     "loginRequired": "Login required",
-    "loginRequiredBody": "The journal requires login because children's photos, milestones, and institution updates are private."
+    "loginRequiredBody": "The journal requires login because children's photos, milestones and institution updates are private."
   },
   "profile": {
     "title": "Profile",
@@ -79,29 +86,50 @@
     "saved": "Saved",
     "displayName": "Display name",
     "pronouns": "Pronouns",
-    "bio": "Short description",
-    "avatar": "Profile picture",
+    "bio": "Short bio",
+    "avatar": "Avatar",
     "role": "Role",
     "language": "Language",
     "settings": "Account & settings",
-    "logout": "Log out",
-    "leaveFamily": "Leave family"
+    "logout": "Sign out",
+    "leaveFamily": "Leave family",
+    "sections": {
+      "overview": { "label": "Overview", "description": "Activity & favorites" },
+      "profile": { "label": "Profile", "description": "Display name & details" },
+      "family": { "label": "Family", "description": "Members & invitations" },
+      "public": { "label": "Public", "description": "Make your family discoverable" },
+      "saved": { "label": "Saved", "description": "Places you want to return to" },
+      "recommendations": { "label": "Recommendations", "description": "Suggestions based on interests" },
+      "preferences": { "label": "Preferences", "description": "Language & display" },
+      "account": { "label": "Account", "description": "Security & sign out" }
+    },
+    "noFamilyTitle": "No family yet",
+    "noFamilyDescription": "Create a family first, then you can share a public profile."
   },
   "auth": {
     "eyebrow": "Welcome",
     "title": "A calm space for the whole family",
-    "body": "Lille Liv gathers milestones, everyday moments and outings for you and the people who share your days.",
+    "body": "Lille Liv gathers milestones, everyday glimpses and outings for you and the people you share life with.",
     "email": "Email",
     "name": "Your name",
     "sendMagicLink": "Send magic link",
+    "sending": "Sending…",
     "checkInbox": "Check your inbox",
-    "notConfigured": "Supabase environment variables are missing.",
-    "inviteSubtitle": "You're invited to a family",
-    "inviteAccept": "Join the family"
+    "checkInboxBody": "We sent a magic link to {email}. Click it to sign in.",
+    "notConfigured": "Supabase env vars are missing.",
+    "inviteSubtitle": "You've been invited to a family",
+    "inviteAccept": "Join the family",
+    "emailPlaceholder": "you@email.com",
+    "magicLinkExplainer": "We send a one-time sign-in link to your email. No password."
+  },
+  "language": {
+    "title": "Language",
+    "description": "Choose the language Lille Liv is shown in. You can switch back any time.",
+    "syncNote": "When you're signed in, your choice is saved to your account so it follows you across devices."
   },
   "family": {
     "ownerBadge": "Owner",
-    "addMembers": "Add grandparents, caregivers, or the rest of your family",
+    "addMembers": "Add grandparents, your nanny, or the rest of the family",
     "shareInvite": "Share the link",
     "expiresIn": "Expires in {days} days",
     "pending": "Awaiting reply"
@@ -109,6 +137,196 @@
   "aula": {
     "title": "Aula",
     "comingSoon": "Aula connection coming soon",
-    "body": "We are preparing a secure MitID-based connection. Until then, Lille Liv does not store Aula passwords."
+    "body": "We're preparing a secure MitID-based connection. Until then, Lille Liv stores no Aula passwords."
+  },
+  "families": {
+    "eyebrow": "Families",
+    "title": "Families in your neighbourhood",
+    "description": "Connect with other families and plan outings together in your part of town.",
+    "loginRequiredTitle": "Login required",
+    "loginRequiredBody": "The family community requires Supabase. Set the env vars to enable it.",
+    "signInTitle": "Meet other families in your neighbourhood",
+    "signInBody": "Lille Liv lets you share a small family card — neighbourhood, child age, interests — and connect with other families nearby. Once a connection is accepted, you can chat and arrange playdates. Children's names and photos stay private unless you choose to share them.",
+    "noFamilyTitle": "No family to share yet",
+    "noFamilyBody": "Next time you sign in we'll create a family for you automatically. You can also invite others from Profile → Family.",
+    "tabs": {
+      "discover": "Discover",
+      "connections": "Connections",
+      "messages": "Messages"
+    },
+    "discover": {
+      "search": "Search by family name, neighbourhood or interest…",
+      "clearSearch": "Clear search",
+      "filters": "Filters",
+      "filtersTitle": "Filters",
+      "filtersResults": "{count} families match",
+      "neighbourhoods": "Neighbourhood",
+      "ageBands": "Children's age",
+      "interests": "Interests",
+      "showResults": "Show {count}",
+      "reset": "Reset filters",
+      "errorTitle": "Couldn't load families",
+      "emptyTitle": "No families match yet",
+      "emptyBodyFiltered": "Try removing some filters — the community is still young.",
+      "emptyBody": "Invite other parents to create their family card — or share your own card publicly so others can find you."
+    },
+    "connections": {
+      "incomingTab": "Received",
+      "outgoingTab": "Sent ({count})",
+      "acceptedTab": "Connected ({count})",
+      "accept": "Accept",
+      "decline": "Decline",
+      "withdraw": "Withdraw",
+      "viewProfile": "View profile",
+      "errorTitle": "Couldn't load connections",
+      "acceptedToast": "Connection accepted",
+      "declinedToast": "Request declined",
+      "withdrawnToast": "Request withdrawn",
+      "acceptError": "Couldn't accept",
+      "declineError": "Couldn't decline",
+      "withdrawError": "Couldn't withdraw",
+      "declineConfirmTitle": "Decline this request?",
+      "declineConfirmBody": "The other family won't be told who declined or why.",
+      "declineConfirmKeep": "Keep",
+      "emptyIncomingTitle": "No incoming requests",
+      "emptyIncomingBody": "When another family sends you a request, it'll show up here.",
+      "emptyOutgoingTitle": "No outgoing requests",
+      "emptyOutgoingBody": "Send a request from a family card to get started.",
+      "emptyAcceptedTitle": "No connections yet",
+      "emptyAcceptedBody": "Find families in the Discover tab and send a request.",
+      "fallbackName": "Family"
+    },
+    "messages": {
+      "errorTitle": "Couldn't load messages",
+      "emptyTitle": "No messages yet",
+      "emptyBody": "Once you accept a connection, you can start a conversation from the family card.",
+      "selectThread": "Pick a conversation from the list.",
+      "noMessages": "No messages yet — say hi.",
+      "placeholder": "Write a message…",
+      "sendError": "Couldn't send",
+      "sendLabel": "Send",
+      "back": "Back",
+      "threadsLabel": "Conversations",
+      "threadLabel": "Conversation",
+      "fallbackName": "Family"
+    },
+    "detail": {
+      "back": "Families",
+      "missingTitle": "Family is not public",
+      "missingBody": "This family doesn't have a public card, or has chosen to take it down.",
+      "backToFamilies": "Back to Families",
+      "errorTitle": "Couldn't load",
+      "loginRequiredError": "Login required — Supabase isn't configured.",
+      "eyebrow": "Family",
+      "fallbackName": "Family",
+      "connected": "Connected",
+      "pendingPill": "Request pending",
+      "blockedPill": "Blocked",
+      "children": "Children",
+      "interests": "Interests",
+      "sendRequest": "Send request",
+      "messageSomeone": "Message {name}",
+      "messageGeneric": "Send a message",
+      "waitForReply": "Wait for reply",
+      "report": "Report",
+      "block": "Block",
+      "privacyNote": "Lille Liv only shows what families have chosen to share. Children's names and photos are never public.",
+      "requestDialogTitle": "Send a request",
+      "requestDialogBody": "Add a short hello — it makes acceptance more likely.",
+      "requestPlaceholder": "Hi! We're a family in Nørrebro with a 2-year-old — fancy meeting for a coffee?",
+      "requestVisibility": "Only visible to the other family.",
+      "requestSubmit": "Send request",
+      "requestSentToast": "Request sent",
+      "rateLimitTitle": "Daily limit reached",
+      "rateLimitBody": "You can send up to {max} requests per day.",
+      "requestError": "Couldn't send",
+      "openThreadError": "Couldn't open the conversation",
+      "reportDialogTitle": "Report this family",
+      "reportDialogBody": "We review every report manually. The family isn't told they were reported.",
+      "reportReason": "Reason",
+      "reportDetails": "Details (optional)",
+      "reportDetailsPlaceholder": "Tell us what happened…",
+      "reportSubmit": "Send report",
+      "reportSentToast": "Thanks for the report",
+      "reportSentBody": "We'll look into it.",
+      "reportError": "Couldn't send report",
+      "blockDialogTitle": "Block this family?",
+      "blockDialogBody": "You'll no longer see each other's profiles or be able to chat. Any open conversations are hidden.",
+      "blockConfirm": "Block",
+      "blockKeep": "Keep",
+      "blockedToast": "Family blocked",
+      "blockError": "Couldn't block",
+      "reasons": {
+        "harassment": "Harassment",
+        "spam": "Spam or advertising",
+        "inappropriate": "Inappropriate content",
+        "safety": "Safety concern",
+        "other": "Other"
+      }
+    },
+    "card": {
+      "fallbackName": "Family",
+      "viewProfile": "View profile",
+      "messageThem": "Send a message",
+      "connected": "Connected",
+      "pending": "Pending",
+      "blocked": "Blocked"
+    },
+    "publicEditor": {
+      "errorTitle": "Couldn't load profile",
+      "savedToast": "Family card saved",
+      "saveError": "Couldn't save",
+      "saveButton": "Save family card",
+      "saving": "Saving…",
+      "footerNote": "Children's names and photos stay private.",
+      "section": {
+        "publicTitle": "Public family card",
+        "publicHeading": "Be discoverable to other families",
+        "publicBody": "When your family is visible, other parents in your neighbourhood can find and connect with you. Children's names and photos are never public.",
+        "visible": "Visible",
+        "hidden": "Hidden",
+        "visibilityTitle": "What can we show?",
+        "visibilityBody": "Your privacy level. You can change it any time — and you control each field below.",
+        "neighbourhoodsTitle": "Neighbourhoods you spend time in",
+        "neighbourhoodsBody": "Pick the neighbourhoods other families can find you in.",
+        "ageBandsTitle": "Children's age range",
+        "ageBandsBody": "We only show age bands — never exact dates of birth or names.",
+        "interestsTitle": "Interests",
+        "interestsBody": "Helps other families find you based on shared interests.",
+        "descriptionTitle": "Family description",
+        "descriptionBody": "A line or two about your family — where you live, what you like to do.",
+        "descriptionUpgrade": "Switch to Moderate or Open to add a description.",
+        "descriptionPlaceholder": "We're a family of four — Asta and Theo, plus two sleepy parents in Nørrebro. We love café mornings, puddles and the library at Blågårds Plads.",
+        "photoTitle": "Family photo",
+        "photoBody": "A calm family photo — ideally without showing children's faces directly.",
+        "photoUpgrade": "Switch to Moderate or Open to show a photo.",
+        "parentNamesTitle": "Show parents' first names",
+        "parentNamesBody": "When connected to a family, they can message a specific parent by name.",
+        "parentNamesUpgrade": "Only available on the “Open” level."
+      },
+      "visibility": {
+        "minimal": {
+          "title": "Minimal",
+          "body": "Neighbourhood + age + interests. No description, no photo. Strongest privacy."
+        },
+        "moderate": {
+          "title": "Moderate",
+          "body": "Everything from Minimal + a short family description + an optional family photo."
+        },
+        "open": {
+          "title": "Open",
+          "body": "Everything from Moderate + an optional reveal of parents' first names (only when connected)."
+        }
+      }
+    },
+    "ageBands": {
+      "0": "0–6 mo",
+      "6": "6–12 mo",
+      "12": "1–2 yrs",
+      "24": "2–3 yrs",
+      "36": "3–4 yrs",
+      "48": "4–5 yrs",
+      "60": "5–6 yrs"
+    }
   }
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { Faders, MagnifyingGlass, UsersThree, X } from "@phosphor-icons/react/dist/ssr";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import { FamilyPublicCard } from "@/components/families/FamilyPublicCard";
 import { Button } from "@/components/ui/Button";
@@ -11,7 +12,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { useToast } from "@/components/ui/Toaster";
 import { categories, categoryLabels, neighbourhoods } from "@/lib/data/taxonomy";
 import {
-  AGE_BANDS,
+  AGE_BAND_VALUES,
   discoverFamilies,
   loadConnectionsForFamily,
   type FamilyConnection,
@@ -27,6 +28,9 @@ type Props = {
 };
 
 export function FamilyDiscover({ me, primaryFamily }: Props) {
+  const t = useTranslations("families.discover");
+  const tBands = useTranslations("families.ageBands");
+  const tCommon = useTranslations("common");
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [results, setResults] = useState<FamilyPublicProfile[]>([]);
@@ -60,8 +64,8 @@ export function FamilyDiscover({ me, primaryFamily }: Props) {
       .catch((error) => {
         if (cancelled) return;
         toast({
-          title: "Kunne ikke hente familier",
-          description: error instanceof Error ? error.message : "Ukendt fejl",
+          title: t("errorTitle"),
+          description: error instanceof Error ? error.message : tCommon("unknownError"),
           variant: "danger"
         });
       })
@@ -71,7 +75,8 @@ export function FamilyDiscover({ me, primaryFamily }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [supabase, primaryFamily.id, neighbourhoodFilter, interestFilter, bandFilter, toast]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [supabase, primaryFamily.id, neighbourhoodFilter, interestFilter, bandFilter]);
 
   // Connection lookup by other family id (for status pills).
   const connectionByFamily = useMemo(() => {
@@ -115,14 +120,14 @@ export function FamilyDiscover({ me, primaryFamily }: Props) {
           <Input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Søg efter familienavn, bydel eller interesse…"
+            placeholder={t("search")}
             leadingIcon={<MagnifyingGlass size={14} weight="bold" aria-hidden="true" />}
             trailingIcon={
               query ? (
                 <button
                   type="button"
                   onClick={() => setQuery("")}
-                  aria-label="Ryd søgning"
+                  aria-label={t("clearSearch")}
                   className="focus-ring grid h-5 w-5 place-items-center rounded-md hover:bg-sunken"
                 >
                   <X size={11} weight="bold" aria-hidden="true" />
@@ -137,7 +142,7 @@ export function FamilyDiscover({ me, primaryFamily }: Props) {
           className="focus-ring inline-flex h-10 items-center gap-2 rounded-lg bg-sunken px-3 text-sm font-semibold text-ink ring-1 ring-hairline hover:bg-sand-100"
         >
           <Faders size={15} weight="bold" aria-hidden="true" />
-          Filtre
+          {t("filters")}
           {activeFilterCount > 0 ? (
             <span className="grid h-5 min-w-[1.25rem] place-items-center rounded-full bg-sage-500 px-1 text-2xs font-bold text-white">
               {activeFilterCount}
@@ -156,17 +161,15 @@ export function FamilyDiscover({ me, primaryFamily }: Props) {
       ) : filtered.length === 0 ? (
         <EmptyState
           icon={<UsersThree size={20} weight="duotone" aria-hidden="true" />}
-          title="Ingen familier matcher endnu"
+          title={t("emptyTitle")}
           description={
-            activeFilterCount > 0
-              ? "Prøv at fjerne nogle filtre — fællesskabet er stadig ungt."
-              : "Inviter andre forældre til at oprette deres familieprofil — eller del jeres egen profil offentligt for at blive fundet."
+            activeFilterCount > 0 ? t("emptyBodyFiltered") : t("emptyBody")
           }
           action={
             activeFilterCount > 0 ? (
               <Button variant="secondary" size="sm" onClick={resetFilters}>
                 <X size={12} weight="bold" aria-hidden="true" />
-                Nulstil filtre
+                {t("reset")}
               </Button>
             ) : null
           }
@@ -184,14 +187,14 @@ export function FamilyDiscover({ me, primaryFamily }: Props) {
       <Sheet
         open={filtersOpen}
         onClose={() => setFiltersOpen(false)}
-        title="Filtre"
-        description={`${filtered.length} familier matcher`}
+        title={t("filtersTitle")}
+        description={t("filtersResults", { count: filtered.length })}
         size="md"
       >
         <div className="space-y-4">
           <div>
             <p className="mb-1.5 text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-              Bydel
+              {t("neighbourhoods")}
             </p>
             <div className="flex flex-wrap gap-1.5">
               {neighbourhoods.map((hood) => {
@@ -216,16 +219,16 @@ export function FamilyDiscover({ me, primaryFamily }: Props) {
           </div>
           <div>
             <p className="mb-1.5 text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-              Børnenes alder
+              {t("ageBands")}
             </p>
             <div className="flex flex-wrap gap-1.5">
-              {AGE_BANDS.map((band) => {
-                const active = bandFilter.includes(band.value);
+              {AGE_BAND_VALUES.map((band) => {
+                const active = bandFilter.includes(band);
                 return (
                   <button
-                    key={band.value}
+                    key={band}
                     type="button"
-                    onClick={() => setBandFilter(toggle(band.value, bandFilter))}
+                    onClick={() => setBandFilter(toggle(band, bandFilter))}
                     className={cn(
                       "focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors",
                       active
@@ -233,7 +236,7 @@ export function FamilyDiscover({ me, primaryFamily }: Props) {
                         : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                     )}
                   >
-                    {band.label}
+                    {tBands(String(band))}
                   </button>
                 );
               })}
@@ -241,7 +244,7 @@ export function FamilyDiscover({ me, primaryFamily }: Props) {
           </div>
           <div>
             <p className="mb-1.5 text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-              Interesser
+              {t("interests")}
             </p>
             <div className="flex flex-wrap gap-1.5">
               {categories.map((category) => {
@@ -268,13 +271,14 @@ export function FamilyDiscover({ me, primaryFamily }: Props) {
         <div className="mt-6 flex items-center justify-between gap-2 border-t border-hairline pt-4">
           <Button variant="ghost" size="md" onClick={resetFilters}>
             <X size={14} weight="bold" aria-hidden="true" />
-            Nulstil
+            {tCommon("reset")}
           </Button>
-          <Button onClick={() => setFiltersOpen(false)}>Vis {filtered.length}</Button>
+          <Button onClick={() => setFiltersOpen(false)}>
+            {t("showResults", { count: filtered.length })}
+          </Button>
         </div>
       </Sheet>
 
-      {/* Hint to opt in if I haven't yet — surfaced in Profile editor */}
       {me ? null : null}
     </section>
   );

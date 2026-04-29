@@ -6,6 +6,7 @@ import {
   PaperPlaneTilt,
   UsersThree
 } from "@phosphor-icons/react/dist/ssr";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -24,16 +25,17 @@ import {
 } from "@/lib/social";
 import { createClient } from "@/lib/supabase/client";
 import type { Family } from "@/lib/types";
-import { cn, formatDanishDate } from "@/lib/utils";
+import { cn, formatLocalizedDate } from "@/lib/utils";
 
 type Props = {
   me: { userId: string; email: string | null };
   primaryFamily: Family;
 };
 
-function formatTime(iso: string) {
+function formatTime(iso: string, locale: string) {
   const d = new Date(iso);
-  return d.toLocaleTimeString("da-DK", { hour: "2-digit", minute: "2-digit" });
+  const tag = locale === "en" ? "en-GB" : "da-DK";
+  return d.toLocaleTimeString(tag, { hour: "2-digit", minute: "2-digit" });
 }
 
 function isSameDay(a: string, b: string) {
@@ -47,6 +49,9 @@ function isSameDay(a: string, b: string) {
 }
 
 export function MessagesPanel({ me, primaryFamily }: Props) {
+  const t = useTranslations("families.messages");
+  const tCommon = useTranslations("common");
+  const locale = useLocale();
   const supabase = useMemo(() => createClient(), []);
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
@@ -86,8 +91,8 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
       } catch (error) {
         if (!cancelled) {
           toast({
-            title: "Kunne ikke hente beskeder",
-            description: error instanceof Error ? error.message : "Ukendt fejl",
+            title: t("errorTitle"),
+            description: error instanceof Error ? error.message : tCommon("unknownError"),
             variant: "danger"
           });
         }
@@ -123,8 +128,8 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
       } catch (error) {
         if (!cancelled) {
           toast({
-            title: "Kunne ikke hente beskeder",
-            description: error instanceof Error ? error.message : "Ukendt fejl",
+            title: t("errorTitle"),
+            description: error instanceof Error ? error.message : tCommon("unknownError"),
             variant: "danger"
           });
         }
@@ -218,8 +223,8 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
       setDraft("");
     } catch (error) {
       toast({
-        title: "Kunne ikke sende",
-        description: error instanceof Error ? error.message : "Ukendt fejl",
+        title: t("sendError"),
+        description: error instanceof Error ? error.message : tCommon("unknownError"),
         variant: "danger"
       });
     } finally {
@@ -240,8 +245,8 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
     return (
       <EmptyState
         icon={<ChatsCircle size={20} weight="duotone" aria-hidden="true" />}
-        title="Ingen beskeder endnu"
-        description="Når I accepterer en forbindelse, kan I starte en samtale fra familieprofilen."
+        title={t("emptyTitle")}
+        description={t("emptyBody")}
       />
     );
   }
@@ -253,7 +258,7 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
     <div className="grid gap-3 lg:grid-cols-[280px_1fr]">
       {/* Threads list */}
       <aside
-        aria-label="Samtaler"
+        aria-label={t("threadsLabel")}
         className={cn(
           "rounded-card bg-surface p-1.5 ring-1 ring-hairline",
           showList ? "block" : "hidden lg:block"
@@ -280,7 +285,7 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block truncate font-display text-sm font-semibold">
-                      {profile?.familyName ?? "Familie"}
+                      {profile?.familyName ?? t("fallbackName")}
                     </span>
                     <span className="block truncate text-2xs text-muted">
                       {profile?.neighbourhoods?.[0] ?? "—"}
@@ -288,7 +293,7 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
                   </span>
                   {thread.lastMessageAt ? (
                     <span className="shrink-0 text-2xs font-semibold text-subtle">
-                      {formatTime(thread.lastMessageAt)}
+                      {formatTime(thread.lastMessageAt, locale)}
                     </span>
                   ) : null}
                 </button>
@@ -300,7 +305,7 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
 
       {/* Thread detail */}
       <section
-        aria-label="Samtale"
+        aria-label={t("threadLabel")}
         className={cn(
           "flex min-h-[60vh] flex-col rounded-card bg-surface ring-1 ring-hairline",
           showThread ? "flex" : "hidden lg:flex"
@@ -308,7 +313,7 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
       >
         {!activeThreadId ? (
           <div className="grid flex-1 place-items-center p-6 text-center text-sm text-muted">
-            Vælg en samtale fra listen.
+            {t("selectThread")}
           </div>
         ) : (
           <>
@@ -316,7 +321,7 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
               <button
                 type="button"
                 onClick={() => setActiveThreadId(null)}
-                aria-label="Tilbage"
+                aria-label={t("back")}
                 className="focus-ring grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-sunken hover:text-ink lg:hidden"
               >
                 <ArrowLeft size={14} weight="bold" aria-hidden="true" />
@@ -337,7 +342,7 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
             <div className="flex-1 overflow-y-auto px-3 py-3 thin-scroll">
               {messages.length === 0 ? (
                 <p className="grid h-full place-items-center text-sm text-muted">
-                  Ingen beskeder endnu — sig hej.
+                  {t("noMessages")}
                 </p>
               ) : (
                 <ul className="space-y-1.5">
@@ -350,7 +355,13 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
                       <li key={message.id}>
                         {showDay ? (
                           <div className="my-2 text-center text-2xs font-semibold uppercase tracking-wide text-subtle">
-                            {formatDanishDate(message.createdAt, "EEEE d. MMM yyyy")}
+                            {formatLocalizedDate(
+                              message.createdAt,
+                              locale,
+                              locale === "en"
+                                ? "EEEE d MMM yyyy"
+                                : "EEEE d. MMM yyyy"
+                            )}
                           </div>
                         ) : null}
                         <div
@@ -374,7 +385,7 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
                                 mine ? "text-sage-100" : "text-subtle"
                               )}
                             >
-                              {formatTime(message.createdAt)}
+                              {formatTime(message.createdAt, locale)}
                             </p>
                           </div>
                         </div>
@@ -403,7 +414,7 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
                       handleSend();
                     }
                   }}
-                  placeholder="Skriv en besked…"
+                  placeholder={t("placeholder")}
                   rows={2}
                   className="resize-none"
                 />
@@ -411,7 +422,7 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
                   type="submit"
                   size="lg"
                   disabled={!draft.trim() || sending}
-                  aria-label="Send"
+                  aria-label={t("sendLabel")}
                 >
                   <PaperPlaneTilt size={14} weight="fill" aria-hidden="true" />
                 </Button>

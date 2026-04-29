@@ -8,6 +8,7 @@ import {
   UsersThree,
   X
 } from "@phosphor-icons/react/dist/ssr";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/Badge";
@@ -27,7 +28,7 @@ import {
 } from "@/lib/social";
 import { createClient } from "@/lib/supabase/client";
 import type { Family } from "@/lib/types";
-import { formatDanishDate } from "@/lib/utils";
+import { formatLocalizedDate } from "@/lib/utils";
 
 type Props = {
   me: { userId: string; email: string | null };
@@ -37,6 +38,8 @@ type Props = {
 type SubTab = "incoming" | "outgoing" | "accepted";
 
 export function ConnectionsInbox({ me, primaryFamily }: Props) {
+  const t = useTranslations("families.connections");
+  const tCommon = useTranslations("common");
   const supabase = useMemo(() => createClient(), []);
   const { toast } = useToast();
   const [tab, setTab] = useState<SubTab>("incoming");
@@ -72,8 +75,8 @@ export function ConnectionsInbox({ me, primaryFamily }: Props) {
       setProfiles(profileMap);
     } catch (error) {
       toast({
-        title: "Kunne ikke hente forbindelser",
-        description: error instanceof Error ? error.message : "Ukendt fejl",
+        title: t("errorTitle"),
+        description: error instanceof Error ? error.message : tCommon("unknownError"),
         variant: "danger"
       });
     } finally {
@@ -116,12 +119,12 @@ export function ConnectionsInbox({ me, primaryFamily }: Props) {
     setBusyId(conn.id);
     try {
       await respondToConnection(supabase, conn.id, "accepted", me.userId);
-      toast({ title: "Forbindelse accepteret", variant: "success" });
+      toast({ title: t("acceptedToast"), variant: "success" });
       await refresh();
     } catch (error) {
       toast({
-        title: "Kunne ikke acceptere",
-        description: error instanceof Error ? error.message : "Ukendt fejl",
+        title: t("acceptError"),
+        description: error instanceof Error ? error.message : tCommon("unknownError"),
         variant: "danger"
       });
     } finally {
@@ -134,12 +137,12 @@ export function ConnectionsInbox({ me, primaryFamily }: Props) {
     setBusyId(conn.id);
     try {
       await respondToConnection(supabase, conn.id, "declined", me.userId);
-      toast({ title: "Anmodning afvist", variant: "info" });
+      toast({ title: t("declinedToast"), variant: "info" });
       await refresh();
     } catch (error) {
       toast({
-        title: "Kunne ikke afvise",
-        description: error instanceof Error ? error.message : "Ukendt fejl",
+        title: t("declineError"),
+        description: error instanceof Error ? error.message : tCommon("unknownError"),
         variant: "danger"
       });
     } finally {
@@ -153,12 +156,12 @@ export function ConnectionsInbox({ me, primaryFamily }: Props) {
     setBusyId(conn.id);
     try {
       await cancelOutgoingConnection(supabase, conn.id);
-      toast({ title: "Anmodning trukket tilbage", variant: "info" });
+      toast({ title: t("withdrawnToast"), variant: "info" });
       await refresh();
     } catch (error) {
       toast({
-        title: "Kunne ikke fortryde",
-        description: error instanceof Error ? error.message : "Ukendt fejl",
+        title: t("withdrawError"),
+        description: error instanceof Error ? error.message : tCommon("unknownError"),
         variant: "danger"
       });
     } finally {
@@ -179,7 +182,7 @@ export function ConnectionsInbox({ me, primaryFamily }: Props) {
   return (
     <div className="space-y-3">
       <Tabs<SubTab>
-        ariaLabel="Forbindelser"
+        ariaLabel={t("incomingTab")}
         value={tab}
         onChange={setTab}
         items={[
@@ -187,7 +190,7 @@ export function ConnectionsInbox({ me, primaryFamily }: Props) {
             id: "incoming",
             label: (
               <span className="inline-flex items-center gap-1">
-                Modtagne
+                {t("incomingTab")}
                 {incoming.length > 0 ? (
                   <span className="rounded-full bg-warm-500 px-1.5 text-2xs font-bold text-white">
                     {incoming.length}
@@ -198,11 +201,11 @@ export function ConnectionsInbox({ me, primaryFamily }: Props) {
           },
           {
             id: "outgoing",
-            label: <span>Sendte ({outgoing.length})</span>
+            label: <span>{t("outgoingTab", { count: outgoing.length })}</span>
           },
           {
             id: "accepted",
-            label: <span>Forbundne ({accepted.length})</span>
+            label: <span>{t("acceptedTab", { count: accepted.length })}</span>
           }
         ]}
       />
@@ -211,8 +214,8 @@ export function ConnectionsInbox({ me, primaryFamily }: Props) {
         incoming.length === 0 ? (
           <EmptyState
             icon={<Clock size={20} weight="duotone" aria-hidden="true" />}
-            title="Ingen modtagne anmodninger"
-            description="Når en anden familie sender jer en anmodning, dukker den op her."
+            title={t("emptyIncomingTitle")}
+            description={t("emptyIncomingBody")}
           />
         ) : (
           <ul className="space-y-2">
@@ -231,7 +234,7 @@ export function ConnectionsInbox({ me, primaryFamily }: Props) {
                       disabled={busyId === conn.id}
                     >
                       <CheckCircle size={12} weight="fill" aria-hidden="true" />
-                      Acceptér
+                      {t("accept")}
                     </Button>
                   }
                   secondary={
@@ -242,7 +245,7 @@ export function ConnectionsInbox({ me, primaryFamily }: Props) {
                       disabled={busyId === conn.id}
                     >
                       <X size={12} weight="bold" aria-hidden="true" />
-                      Afvis
+                      {t("decline")}
                     </Button>
                   }
                 />
@@ -256,8 +259,8 @@ export function ConnectionsInbox({ me, primaryFamily }: Props) {
         outgoing.length === 0 ? (
           <EmptyState
             icon={<PaperPlaneTilt size={20} weight="duotone" aria-hidden="true" />}
-            title="Ingen sendte anmodninger"
-            description="Send en anmodning fra en familieprofil for at komme i gang."
+            title={t("emptyOutgoingTitle")}
+            description={t("emptyOutgoingBody")}
           />
         ) : (
           <ul className="space-y-2">
@@ -274,7 +277,7 @@ export function ConnectionsInbox({ me, primaryFamily }: Props) {
                       disabled={busyId === conn.id}
                     >
                       <X size={12} weight="bold" aria-hidden="true" />
-                      Træk tilbage
+                      {t("withdraw")}
                     </Button>
                   }
                 />
@@ -288,8 +291,8 @@ export function ConnectionsInbox({ me, primaryFamily }: Props) {
         accepted.length === 0 ? (
           <EmptyState
             icon={<UsersThree size={20} weight="duotone" aria-hidden="true" />}
-            title="Ingen forbindelser endnu"
-            description="Find familier i Opdag-fanen og send en anmodning."
+            title={t("emptyAcceptedTitle")}
+            description={t("emptyAcceptedBody")}
           />
         ) : (
           <ul className="space-y-2">
@@ -307,7 +310,7 @@ export function ConnectionsInbox({ me, primaryFamily }: Props) {
                     primary={
                       <Link href={`/families/${otherId}`}>
                         <Button size="sm" variant="secondary">
-                          Se profil
+                          {t("viewProfile")}
                         </Button>
                       </Link>
                     }
@@ -321,10 +324,10 @@ export function ConnectionsInbox({ me, primaryFamily }: Props) {
 
       <ConfirmDialog
         open={Boolean(decliningId)}
-        title="Afvis anmodning?"
-        description="Familien kan ikke se hvem der afviste eller hvorfor."
-        confirmLabel="Afvis"
-        cancelLabel="Behold"
+        title={t("declineConfirmTitle")}
+        description={t("declineConfirmBody")}
+        confirmLabel={t("decline")}
+        cancelLabel={t("declineConfirmKeep")}
         danger
         onConfirm={() => {
           const conn = incoming.find((c) => c.id === decliningId);
@@ -347,6 +350,8 @@ function ConnectionRow({
   primary: React.ReactNode;
   secondary?: React.ReactNode;
 }) {
+  const t = useTranslations("families.connections");
+  const locale = useLocale();
   return (
     <div className="flex items-start gap-3">
       <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-sunken text-sage-700 ring-1 ring-hairline">
@@ -355,14 +360,14 @@ function ConnectionRow({
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
           <p className="truncate font-display text-sm font-semibold text-ink">
-            {profile?.familyName ?? "Familie"}
+            {profile?.familyName ?? t("fallbackName")}
           </p>
           {profile?.neighbourhoods?.[0] ? (
             <Badge variant="sky">{profile.neighbourhoods[0]}</Badge>
           ) : null}
         </div>
         <p className="text-2xs font-semibold text-subtle">
-          {formatDanishDate(conn.createdAt)}
+          {formatLocalizedDate(conn.createdAt, locale)}
         </p>
         {conn.introMessage ? (
           <p className="mt-1.5 rounded-lg bg-sunken p-2 text-xs italic leading-5 text-ink ring-1 ring-hairline">

@@ -63,18 +63,10 @@ export type DirectMessage = {
   readByBAt: string | null;
 };
 
-// Age bands in months. These are the canonical buckets we let parents pick.
-export const AGE_BANDS: Array<{ value: number; label: string }> = [
-  { value: 0, label: "0–6 mdr." },
-  { value: 6, label: "6–12 mdr." },
-  { value: 12, label: "1–2 år" },
-  { value: 24, label: "2–3 år" },
-  { value: 36, label: "3–4 år" },
-  { value: 48, label: "4–5 år" },
-  { value: 60, label: "5–6 år" }
-];
-
-export const AGE_BAND_LABELS = new Map(AGE_BANDS.map((band) => [band.value, band.label]));
+// Age bands in months. Labels are localized at render time via the
+// "families.ageBands.<value>" translation keys.
+export const AGE_BAND_VALUES = [0, 6, 12, 24, 36, 48, 60] as const;
+export type AgeBand = (typeof AGE_BAND_VALUES)[number];
 
 // ---------------------------------------------------------------------------
 // Helpers
