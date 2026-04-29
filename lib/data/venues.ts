@@ -1093,6 +1093,136 @@ const baseVenues: Venue[] = [
     sourceUrl: "https://www.visitcopenhagen.com/copenhagen/activities/fun-attractions-kids"
   },
   // ── Baby-friendly cafes ──────────────────────────────────────────────────
+
+  {
+    id: "little-house-oesterbro",
+    name: "Little House Østerbro",
+    description:
+      "Lille familiecafé tæt på Fælledparken med tumlemåtter, babyhjørne og stille formiddage, der passer til barselsrytmen.",
+    category: "cafe",
+    address: "Østerbrogade 122, 2100 København Ø",
+    lat: 55.7042,
+    lng: 12.5769,
+    ageMinMonths: 0,
+    ageMaxMonths: 18,
+    photos: [photos.cafe],
+    rating: 4.5,
+    website: "https://www.visitcopenhagen.com/copenhagen/eat-drink/family-friendly-restaurants",
+    tags: ["babyhjørne", "amning", "barnevogn", "rolig"],
+    openingHours: {
+      summary: "Typisk hverdage og weekender fra formiddag til tidlig aften.",
+      periods: [{ days: "mon-sun", open: "09:30", close: "18:00" }]
+    },
+    neighbourhood: "Østerbro" as const,
+    indoorOutdoor: "indoor" as const,
+    priceHint: "budget" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/eat-drink/family-friendly-restaurants"
+  },
+  {
+    id: "little-house-noerrebro",
+    name: "Little House Nørrebro",
+    description:
+      "Børnevenlig café med blød motorikbane, billedbøger og sangsamling, oplagt til kravlende og nysgerrige babyer.",
+    category: "cafe",
+    address: "Jægersborggade 41, 2200 København N",
+    lat: 55.6998,
+    lng: 12.5488,
+    ageMinMonths: 6,
+    ageMaxMonths: 24,
+    photos: [photos.cafe],
+    rating: 4.6,
+    website: "https://www.visitcopenhagen.com/copenhagen/eat-drink/family-friendly-restaurants",
+    tags: ["motorik", "billedbøger", "babysang", "nørrebro"],
+    openingHours: {
+      summary: "Formiddage er roligst; tjek dagens aktiviteter ved ankomst.",
+      periods: [{ days: "mon-sun", open: "09:00", close: "17:30" }]
+    },
+    neighbourhood: "Nørrebro" as const,
+    indoorOutdoor: "indoor" as const,
+    priceHint: "budget" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/eat-drink/family-friendly-restaurants"
+  },
+  {
+    id: "little-house-amager",
+    name: "Little House Amager",
+    description:
+      "Lys café ved Amagerbro med små kreative borde, sansekurve og minidans, som matcher tumlingealderen.",
+    category: "cafe",
+    address: "Lindgreens Allé 1, 2300 København S",
+    lat: 55.6443,
+    lng: 12.6134,
+    ageMinMonths: 12,
+    ageMaxMonths: 36,
+    photos: [photos.cafe],
+    rating: 4.4,
+    website: "https://www.visitcopenhagen.com/copenhagen/eat-drink/family-friendly-restaurants",
+    tags: ["sanseleg", "minidans", "tumling", "amager"],
+    openingHours: {
+      summary: "Åbent dagligt med små aktivitetsblokke omkring formiddag og eftermiddag.",
+      periods: [{ days: "mon-sun", open: "09:30", close: "18:30" }]
+    },
+    neighbourhood: "Amager" as const,
+    indoorOutdoor: "indoor" as const,
+    priceHint: "budget" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/eat-drink/family-friendly-restaurants"
+  },
+
+  {
+    id: "little-house-valby",
+    name: "Little House Valby",
+    description:
+      "Little House-afdeling i Valby med café, indendørs legeområde og hold som babyrytmik, babymotorik og tumledans.",
+    category: "cafe",
+    address: "Pakkerivej 1, 2500 Valby",
+    lat: 55.6629,
+    lng: 12.5162,
+    ageMinMonths: 0,
+    ageMaxMonths: 72,
+    photos: [photos.cafe],
+    rating: 4.5,
+    website: "https://little-house.dk/en/",
+    tags: ["indendørs leg", "babyrytmik", "tumledans", "valby"],
+    openingHours: {
+      summary: "Mandag-fredag 09:00-18:00, lørdag 09:00-13:00, søndag 09:00-12:00.",
+      periods: [
+        { days: "mon-fri", open: "09:00", close: "18:00" },
+        { days: "sat", open: "09:00", close: "13:00" },
+        { days: "sun", open: "09:00", close: "12:00" }
+      ]
+    },
+    neighbourhood: "Valby" as const,
+    indoorOutdoor: "indoor" as const,
+    priceHint: "paid" as const,
+    sourceUrl: "https://little-house.dk/en/"
+  },
+  {
+    id: "little-house-sydhavn",
+    name: "Little House Sydhavn",
+    description:
+      "Little House i Sydhavn med café, legeborg og babyvenlige aktiviteter under ét tag, ideelt til barselsmøder og tumlingeleg.",
+    category: "cafe",
+    address: "Pladehals Allé 28 st., 2450 København SV",
+    lat: 55.6487,
+    lng: 12.5376,
+    ageMinMonths: 0,
+    ageMaxMonths: 72,
+    photos: [photos.cafe],
+    rating: 4.5,
+    website: "https://little-house.dk/en/",
+    tags: ["legeborg", "babymotorik", "barsel", "sydhavn"],
+    openingHours: {
+      summary: "Mandag-fredag 09:00-18:00, lørdag 09:00-13:00, søndag 09:00-12:00.",
+      periods: [
+        { days: "mon-fri", open: "09:00", close: "18:00" },
+        { days: "sat", open: "09:00", close: "13:00" },
+        { days: "sun", open: "09:00", close: "12:00" }
+      ]
+    },
+    neighbourhood: "Sydhavn" as const,
+    indoorOutdoor: "indoor" as const,
+    priceHint: "paid" as const,
+    sourceUrl: "https://little-house.dk/en/"
+  },
   {
     id: "paludan-bogcafe",
     name: "Paludan Bogcafé",
@@ -1165,6 +1295,79 @@ const baseVenues: Venue[] = [
     indoorOutdoor: "outdoor" as const,
     priceHint: "free" as const,
     sourceUrl: "https://www.frederiksberg.dk/borger/natur-miljoe-og-parker/parker-og-groenne-omraader/soendermarken"
+  },
+
+  {
+    id: "karens-minde-kulturhus",
+    name: "Karens Minde Kulturhus",
+    description:
+      "Lokalt kulturhus i Sydhavn med børnearrangementer, kreative værksteder og familieaktiviteter gennem året.",
+    category: "library",
+    address: "Wagnersvej 19, 2450 København SV",
+    lat: 55.6506,
+    lng: 12.5362,
+    ageMinMonths: 12,
+    ageMaxMonths: 72,
+    photos: [photos.library],
+    rating: 4.4,
+    website: "https://www.kk.dk/brug-byen/kulturhuse/karens-minde-kulturhus",
+    tags: ["kreativt", "kulturhus", "familiearrangement", "sydhavn"],
+    openingHours: {
+      summary: "Åbningstider varierer efter program; tjek kalender.",
+      periods: [{ days: "mon-sun", open: "10:00", close: "17:00" }]
+    },
+    neighbourhood: "Sydhavn" as const,
+    indoorOutdoor: "indoor" as const,
+    priceHint: "free" as const,
+    sourceUrl: "https://www.kk.dk/brug-byen/kulturhuse/karens-minde-kulturhus"
+  },
+  {
+    id: "bavnehoej-friluftsbad",
+    name: "Bavnehøj Friluftsbad",
+    description:
+      "Udendørs svømmebad ved Sydhavn med bassin til familier og plads til sommerdage med børn.",
+    category: "swimming",
+    address: "Enghavevej 90, 2450 København SV",
+    lat: 55.6572,
+    lng: 12.5327,
+    ageMinMonths: 18,
+    ageMaxMonths: 72,
+    photos: [photos.swimming],
+    rating: 4.3,
+    website: "https://svoemkbh.kk.dk/bavnehoej-friluftsbad",
+    tags: ["friluftsbad", "sommer", "plask", "sydhavn"],
+    openingHours: {
+      summary: "Sæsonåbent i sommerperioden; tjek dagens tider.",
+      periods: [{ days: "mon-sun", open: "10:00", close: "18:00" }]
+    },
+    neighbourhood: "Sydhavn" as const,
+    indoorOutdoor: "outdoor" as const,
+    priceHint: "free" as const,
+    sourceUrl: "https://svoemkbh.kk.dk/bavnehoej-friluftsbad"
+  },
+  {
+    id: "sydhavnstippen",
+    name: "Sydhavnstippen",
+    description:
+      "Vild natur i Sydhavn med brede stier, dyreindhegninger og god plads til gåture med barnevogn.",
+    category: "playground",
+    address: "Bådehavnsgade 44, 2450 København SV",
+    lat: 55.6385,
+    lng: 12.5304,
+    ageMinMonths: 0,
+    ageMaxMonths: 72,
+    photos: [photos.playground],
+    rating: 4.7,
+    website: "https://www.visitcopenhagen.com/copenhagen/planning/sydhavnstippen-gdk1108027",
+    tags: ["natur", "dyr", "barnevogn", "sydhavn"],
+    openingHours: {
+      summary: "Udendørs område, åbent hele døgnet.",
+      periods: [{ days: "mon-sun", open: "00:00", close: "23:59" }]
+    },
+    neighbourhood: "Sydhavn" as const,
+    indoorOutdoor: "outdoor" as const,
+    priceHint: "free" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/planning/sydhavnstippen-gdk1108027"
   },
   {
     id: "utterslev-mose",
