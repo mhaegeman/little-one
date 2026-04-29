@@ -258,26 +258,28 @@ export function JournalClient() {
           title={t("title")}
           description={t("subtitle")}
           action={
-            <div className="flex flex-wrap items-center gap-2">
-              <Button onClick={() => setSheetMode("milestone")}>
-                <Plus size={14} weight="bold" aria-hidden="true" />
-                {t("milestone")}
-              </Button>
-              <Button variant="secondary" onClick={() => setSheetMode("activity")}>
-                <Plus size={14} weight="bold" aria-hidden="true" />
-                {t("activity")}
-              </Button>
-              {!usingDemo ? (
-                <Button
-                  variant="ghost"
-                  onClick={() => setSheetMode("child")}
-                  aria-label="Tilføj barn"
-                >
-                  <UserPlus size={14} weight="bold" aria-hidden="true" />
-                  Barn
+            signedIn ? (
+              <div className="flex flex-wrap items-center gap-2">
+                <Button onClick={() => setSheetMode("milestone")}>
+                  <Plus size={14} weight="bold" aria-hidden="true" />
+                  {t("milestone")}
                 </Button>
-              ) : null}
-            </div>
+                <Button variant="secondary" onClick={() => setSheetMode("activity")}>
+                  <Plus size={14} weight="bold" aria-hidden="true" />
+                  {t("activity")}
+                </Button>
+                {!usingDemo ? (
+                  <Button
+                    variant="ghost"
+                    onClick={() => setSheetMode("child")}
+                    aria-label="Tilføj barn"
+                  >
+                    <UserPlus size={14} weight="bold" aria-hidden="true" />
+                    Barn
+                  </Button>
+                ) : null}
+              </div>
+            ) : null
           }
         />
 
