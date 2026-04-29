@@ -142,6 +142,34 @@ const photoOverrides: Record<string, string[]> = {
   granola: [
     unsplash("1559925393-8be0ec4767c8"),
     unsplash("1559925393-8be0ec4767c8")
+  ],
+  "frederiksberg-have": [
+    unsplash("1500964405936-6ce6b3c2ede1"),
+    unsplash("1502086223501-7ea6ecd79368")
+  ],
+  "dyrehaven": [
+    unsplash("1448376561459-dbe8868fa34f"),
+    unsplash("1469429954551-3eb88a02ab23")
+  ],
+  "bellevue-strand": [
+    unsplash("1507525428034-b723cf961d3e"),
+    unsplash("1518998053901-5348d3961a04")
+  ],
+  "havnebadet-islands-brygge": [
+    unsplash("1530549387789-4c1017266635"),
+    unsplash("1507525428034-b723cf961d3e")
+  ],
+  "louisiana-museum": [
+    unsplash("1531913764164-f85c52e6e654"),
+    unsplash("1577083552431-6e5fd01988ec")
+  ],
+  "vikingeskibsmuseet": [
+    unsplash("1580974928064-f0aeef70895a"),
+    unsplash("1542038784456-1ea8e935640e")
+  ],
+  "bakken": [
+    unsplash("1493225457124-a3eb161ffa5f"),
+    unsplash("1542038784456-1ea8e935640e")
   ]
 };
 
@@ -1063,6 +1091,600 @@ const baseVenues: Venue[] = [
     indoorOutdoor: "both",
     priceHint: "paid",
     sourceUrl: "https://www.visitcopenhagen.com/copenhagen/activities/fun-attractions-kids"
+  },
+  // ── Baby-friendly cafes ──────────────────────────────────────────────────
+
+  {
+    id: "little-house-oesterbro",
+    name: "Little House Østerbro",
+    description:
+      "Lille familiecafé tæt på Fælledparken med tumlemåtter, babyhjørne og stille formiddage, der passer til barselsrytmen.",
+    category: "cafe",
+    address: "Østerbrogade 122, 2100 København Ø",
+    lat: 55.7042,
+    lng: 12.5769,
+    ageMinMonths: 0,
+    ageMaxMonths: 18,
+    photos: [photos.cafe],
+    rating: 4.5,
+    website: "https://www.visitcopenhagen.com/copenhagen/eat-drink/family-friendly-restaurants",
+    tags: ["babyhjørne", "amning", "barnevogn", "rolig"],
+    openingHours: {
+      summary: "Typisk hverdage og weekender fra formiddag til tidlig aften.",
+      periods: [{ days: "mon-sun", open: "09:30", close: "18:00" }]
+    },
+    neighbourhood: "Østerbro" as const,
+    indoorOutdoor: "indoor" as const,
+    priceHint: "budget" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/eat-drink/family-friendly-restaurants"
+  },
+  {
+    id: "little-house-noerrebro",
+    name: "Little House Nørrebro",
+    description:
+      "Børnevenlig café med blød motorikbane, billedbøger og sangsamling, oplagt til kravlende og nysgerrige babyer.",
+    category: "cafe",
+    address: "Jægersborggade 41, 2200 København N",
+    lat: 55.6998,
+    lng: 12.5488,
+    ageMinMonths: 6,
+    ageMaxMonths: 24,
+    photos: [photos.cafe],
+    rating: 4.6,
+    website: "https://www.visitcopenhagen.com/copenhagen/eat-drink/family-friendly-restaurants",
+    tags: ["motorik", "billedbøger", "babysang", "nørrebro"],
+    openingHours: {
+      summary: "Formiddage er roligst; tjek dagens aktiviteter ved ankomst.",
+      periods: [{ days: "mon-sun", open: "09:00", close: "17:30" }]
+    },
+    neighbourhood: "Nørrebro" as const,
+    indoorOutdoor: "indoor" as const,
+    priceHint: "budget" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/eat-drink/family-friendly-restaurants"
+  },
+  {
+    id: "little-house-amager",
+    name: "Little House Amager",
+    description:
+      "Lys café ved Amagerbro med små kreative borde, sansekurve og minidans, som matcher tumlingealderen.",
+    category: "cafe",
+    address: "Lindgreens Allé 1, 2300 København S",
+    lat: 55.6443,
+    lng: 12.6134,
+    ageMinMonths: 12,
+    ageMaxMonths: 36,
+    photos: [photos.cafe],
+    rating: 4.4,
+    website: "https://www.visitcopenhagen.com/copenhagen/eat-drink/family-friendly-restaurants",
+    tags: ["sanseleg", "minidans", "tumling", "amager"],
+    openingHours: {
+      summary: "Åbent dagligt med små aktivitetsblokke omkring formiddag og eftermiddag.",
+      periods: [{ days: "mon-sun", open: "09:30", close: "18:30" }]
+    },
+    neighbourhood: "Amager" as const,
+    indoorOutdoor: "indoor" as const,
+    priceHint: "budget" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/eat-drink/family-friendly-restaurants"
+  },
+
+  {
+    id: "little-house-valby",
+    name: "Little House Valby",
+    description:
+      "Little House-afdeling i Valby med café, indendørs legeområde og hold som babyrytmik, babymotorik og tumledans.",
+    category: "cafe",
+    address: "Pakkerivej 1, 2500 Valby",
+    lat: 55.6629,
+    lng: 12.5162,
+    ageMinMonths: 0,
+    ageMaxMonths: 72,
+    photos: [photos.cafe],
+    rating: 4.5,
+    website: "https://little-house.dk/en/",
+    tags: ["indendørs leg", "babyrytmik", "tumledans", "valby"],
+    openingHours: {
+      summary: "Mandag-fredag 09:00-18:00, lørdag 09:00-13:00, søndag 09:00-12:00.",
+      periods: [
+        { days: "mon-fri", open: "09:00", close: "18:00" },
+        { days: "sat", open: "09:00", close: "13:00" },
+        { days: "sun", open: "09:00", close: "12:00" }
+      ]
+    },
+    neighbourhood: "Valby" as const,
+    indoorOutdoor: "indoor" as const,
+    priceHint: "paid" as const,
+    sourceUrl: "https://little-house.dk/en/"
+  },
+  {
+    id: "little-house-sydhavn",
+    name: "Little House Sydhavn",
+    description:
+      "Little House i Sydhavn med café, legeborg og babyvenlige aktiviteter under ét tag, ideelt til barselsmøder og tumlingeleg.",
+    category: "cafe",
+    address: "Pladehals Allé 28 st., 2450 København SV",
+    lat: 55.6487,
+    lng: 12.5376,
+    ageMinMonths: 0,
+    ageMaxMonths: 72,
+    photos: [photos.cafe],
+    rating: 4.5,
+    website: "https://little-house.dk/en/",
+    tags: ["legeborg", "babymotorik", "barsel", "sydhavn"],
+    openingHours: {
+      summary: "Mandag-fredag 09:00-18:00, lørdag 09:00-13:00, søndag 09:00-12:00.",
+      periods: [
+        { days: "mon-fri", open: "09:00", close: "18:00" },
+        { days: "sat", open: "09:00", close: "13:00" },
+        { days: "sun", open: "09:00", close: "12:00" }
+      ]
+    },
+    neighbourhood: "Sydhavn" as const,
+    indoorOutdoor: "indoor" as const,
+    priceHint: "paid" as const,
+    sourceUrl: "https://little-house.dk/en/"
+  },
+  {
+    id: "paludan-bogcafe",
+    name: "Paludan Bogcafé",
+    description:
+      "Stor bogcafé i Latinerkvartet med høje lofter, brede gange og rigelig plads til barnevogn under en lang brunch.",
+    category: "cafe",
+    address: "Fiolstræde 10, 1171 København K",
+    lat: 55.6812,
+    lng: 12.5714,
+    ageMinMonths: 0,
+    ageMaxMonths: 72,
+    photos: [photos.cafe],
+    rating: 4.2,
+    website: "https://www.paludan-cafe.dk/",
+    tags: ["brunch", "bogcafé", "barnevogn", "indre by"],
+    openingHours: {
+      summary: "Dagligt fra morgen til sen aften.",
+      periods: [{ days: "mon-sun", open: "09:00", close: "22:00" }]
+    },
+    neighbourhood: "Indre By" as const,
+    indoorOutdoor: "indoor" as const,
+    priceHint: "budget" as const,
+    sourceUrl: "https://www.paludan-cafe.dk/"
+  },
+  // ── Parks & outdoor play ──────────────────────────────────────────────────
+  {
+    id: "frederiksberg-have",
+    name: "Frederiksberg Have",
+    description:
+      "Romantisk kongelig park ved siden af Zoo med åer, broer, ænder og en hyggelig legeplads i rolige omgivelser.",
+    category: "playground",
+    address: "Frederiksberg Runddel 1, 2000 Frederiksberg",
+    lat: 55.6761,
+    lng: 12.5265,
+    ageMinMonths: 0,
+    ageMaxMonths: 72,
+    photos: [photos.playground],
+    rating: 4.8,
+    website: "https://www.visitcopenhagen.com/copenhagen/planning/frederiksberg-gardens-gdk443765",
+    tags: ["park", "andedammen", "gratis", "frederiksberg"],
+    openingHours: {
+      summary: "Sæsonmæssigt åbent; tjek parkens åbningstider.",
+      periods: [{ days: "mon-sun", open: "07:00", close: "20:00" }]
+    },
+    neighbourhood: "Frederiksberg" as const,
+    indoorOutdoor: "outdoor" as const,
+    priceHint: "free" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/planning/frederiksberg-gardens-gdk443765"
+  },
+  {
+    id: "soendermarken",
+    name: "Søndermarken",
+    description:
+      "Bakkende skovpark bag Zoo med snoede stier, åbne enge og et roligt alternativ til byens mere travle parker.",
+    category: "playground",
+    address: "Søndermarken, 2000 Frederiksberg",
+    lat: 55.6764,
+    lng: 12.5128,
+    ageMinMonths: 0,
+    ageMaxMonths: 72,
+    photos: [photos.playground],
+    rating: 4.6,
+    website: "https://www.frederiksberg.dk/borger/natur-miljoe-og-parker/parker-og-groenne-omraader/soendermarken",
+    tags: ["skov", "natur", "gratis", "frederiksberg"],
+    openingHours: {
+      summary: "Udendørs park, åbent hele døgnet.",
+      periods: [{ days: "mon-sun", open: "00:00", close: "23:59" }]
+    },
+    neighbourhood: "Frederiksberg" as const,
+    indoorOutdoor: "outdoor" as const,
+    priceHint: "free" as const,
+    sourceUrl: "https://www.frederiksberg.dk/borger/natur-miljoe-og-parker/parker-og-groenne-omraader/soendermarken"
+  },
+
+  {
+    id: "karens-minde-kulturhus",
+    name: "Karens Minde Kulturhus",
+    description:
+      "Lokalt kulturhus i Sydhavn med børnearrangementer, kreative værksteder og familieaktiviteter gennem året.",
+    category: "library",
+    address: "Wagnersvej 19, 2450 København SV",
+    lat: 55.6506,
+    lng: 12.5362,
+    ageMinMonths: 12,
+    ageMaxMonths: 72,
+    photos: [photos.library],
+    rating: 4.4,
+    website: "https://www.kk.dk/brug-byen/kulturhuse/karens-minde-kulturhus",
+    tags: ["kreativt", "kulturhus", "familiearrangement", "sydhavn"],
+    openingHours: {
+      summary: "Åbningstider varierer efter program; tjek kalender.",
+      periods: [{ days: "mon-sun", open: "10:00", close: "17:00" }]
+    },
+    neighbourhood: "Sydhavn" as const,
+    indoorOutdoor: "indoor" as const,
+    priceHint: "free" as const,
+    sourceUrl: "https://www.kk.dk/brug-byen/kulturhuse/karens-minde-kulturhus"
+  },
+  {
+    id: "bavnehoej-friluftsbad",
+    name: "Bavnehøj Friluftsbad",
+    description:
+      "Udendørs svømmebad ved Sydhavn med bassin til familier og plads til sommerdage med børn.",
+    category: "swimming",
+    address: "Enghavevej 90, 2450 København SV",
+    lat: 55.6572,
+    lng: 12.5327,
+    ageMinMonths: 18,
+    ageMaxMonths: 72,
+    photos: [photos.swimming],
+    rating: 4.3,
+    website: "https://svoemkbh.kk.dk/bavnehoej-friluftsbad",
+    tags: ["friluftsbad", "sommer", "plask", "sydhavn"],
+    openingHours: {
+      summary: "Sæsonåbent i sommerperioden; tjek dagens tider.",
+      periods: [{ days: "mon-sun", open: "10:00", close: "18:00" }]
+    },
+    neighbourhood: "Sydhavn" as const,
+    indoorOutdoor: "outdoor" as const,
+    priceHint: "free" as const,
+    sourceUrl: "https://svoemkbh.kk.dk/bavnehoej-friluftsbad"
+  },
+  {
+    id: "sydhavnstippen",
+    name: "Sydhavnstippen",
+    description:
+      "Vild natur i Sydhavn med brede stier, dyreindhegninger og god plads til gåture med barnevogn.",
+    category: "playground",
+    address: "Bådehavnsgade 44, 2450 København SV",
+    lat: 55.6385,
+    lng: 12.5304,
+    ageMinMonths: 0,
+    ageMaxMonths: 72,
+    photos: [photos.playground],
+    rating: 4.7,
+    website: "https://www.visitcopenhagen.com/copenhagen/planning/sydhavnstippen-gdk1108027",
+    tags: ["natur", "dyr", "barnevogn", "sydhavn"],
+    openingHours: {
+      summary: "Udendørs område, åbent hele døgnet.",
+      periods: [{ days: "mon-sun", open: "00:00", close: "23:59" }]
+    },
+    neighbourhood: "Sydhavn" as const,
+    indoorOutdoor: "outdoor" as const,
+    priceHint: "free" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/planning/sydhavnstippen-gdk1108027"
+  },
+  {
+    id: "utterslev-mose",
+    name: "Utterslev Mose",
+    description:
+      "Stor bynær naturreservat med søer, ænder, fuglekig og brede grusstier, der er perfekte til en lang barnevognsudflugt.",
+    category: "playground",
+    address: "Utterslev Mose, 2700 Brønshøj",
+    lat: 55.7145,
+    lng: 12.5105,
+    ageMinMonths: 0,
+    ageMaxMonths: 72,
+    photos: [photos.playground],
+    rating: 4.7,
+    website: "https://www.visitcopenhagen.com/copenhagen/planning/utterslev-mose-gdk481059",
+    tags: ["natur", "fugle", "sø", "barnevogn"],
+    openingHours: {
+      summary: "Udendørs naturreservat, åbent hele døgnet.",
+      periods: [{ days: "mon-sun", open: "00:00", close: "23:59" }]
+    },
+    neighbourhood: "Brønshøj" as const,
+    indoorOutdoor: "outdoor" as const,
+    priceHint: "free" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/planning/utterslev-mose-gdk481059"
+  },
+  {
+    id: "botanisk-have",
+    name: "Botanisk Have",
+    description:
+      "Kongelige botaniske haver med historisk victoriansk palmehus og stille søer – et gratis frikvarter med masser at kigge på, også på regnvejrsdage.",
+    category: "playground",
+    address: "Øster Farimagsgade 2B, 1353 København K",
+    lat: 55.6869,
+    lng: 12.5726,
+    ageMinMonths: 0,
+    ageMaxMonths: 72,
+    photos: [photos.playground],
+    rating: 4.7,
+    website: "https://botanik.snm.ku.dk/",
+    tags: ["have", "palmehus", "gratis", "regnvejrsdag"],
+    openingHours: {
+      summary: "Have åben dagligt; palmehus åbner typisk kl. 10, lukket mandage.",
+      periods: [{ days: "tue-sun", open: "10:00", close: "17:00" }]
+    },
+    neighbourhood: "Indre By" as const,
+    indoorOutdoor: "both" as const,
+    priceHint: "free" as const,
+    sourceUrl: "https://botanik.snm.ku.dk/"
+  },
+  {
+    id: "assistens-kirkegaard",
+    name: "Assistens Kirkegård",
+    description:
+      "Historisk kirkegård brugt som lokal park med grønne plæner, skygge og en fredfyldt stemning midt på Nørrebro.",
+    category: "playground",
+    address: "Kapelvej 4, 2200 København N",
+    lat: 55.6951,
+    lng: 12.5476,
+    ageMinMonths: 0,
+    ageMaxMonths: 72,
+    photos: [photos.playground],
+    rating: 4.5,
+    website: "https://www.visitcopenhagen.com/copenhagen/planning/assistens-cemetery-gdk414327",
+    tags: ["park", "grønt", "nørrebro", "gratis"],
+    openingHours: {
+      summary: "Åbent dagligt fra morgen til aften.",
+      periods: [{ days: "mon-sun", open: "07:00", close: "21:00" }]
+    },
+    neighbourhood: "Nørrebro" as const,
+    indoorOutdoor: "outdoor" as const,
+    priceHint: "free" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/planning/assistens-cemetery-gdk414327"
+  },
+  {
+    id: "oerstedsparken",
+    name: "Ørstedsparken",
+    description:
+      "Lille sø- og skovpark centralt i København med god barnevognssti rundt om søen, ænder og skygge på varme dage.",
+    category: "playground",
+    address: "Nørre Voldgade 34, 1358 København K",
+    lat: 55.6841,
+    lng: 12.5651,
+    ageMinMonths: 0,
+    ageMaxMonths: 72,
+    photos: [photos.playground],
+    rating: 4.6,
+    website: "https://www.visitcopenhagen.com/copenhagen/planning/oerstedsparken-gdk414325",
+    tags: ["park", "sø", "ænder", "gratis"],
+    openingHours: {
+      summary: "Udendørs park, åbent hele døgnet.",
+      periods: [{ days: "mon-sun", open: "00:00", close: "23:59" }]
+    },
+    neighbourhood: "Indre By" as const,
+    indoorOutdoor: "outdoor" as const,
+    priceHint: "free" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/planning/oerstedsparken-gdk414325"
+  },
+  {
+    id: "ishoj-strandpark",
+    name: "Ishøj Strandpark",
+    description:
+      "Bred sandstrand syd for København med rolige omgivelser og god plads til sandleg – nem med S-tog til Ishøj Station.",
+    category: "playground",
+    address: "Ishøj Strandvej, 2635 Ishøj",
+    lat: 55.6044,
+    lng: 12.2993,
+    ageMinMonths: 0,
+    ageMaxMonths: 72,
+    photos: [photos.playground],
+    rating: 4.4,
+    website: "https://www.visitcopenhagen.com/copenhagen/planning/ishoj-beach-gdk481123",
+    tags: ["strand", "sand", "sommer", "ishøj"],
+    openingHours: {
+      summary: "Udendørs strand, åbent hele døgnet.",
+      periods: [{ days: "mon-sun", open: "00:00", close: "23:59" }]
+    },
+    neighbourhood: "Ishøj" as const,
+    indoorOutdoor: "outdoor" as const,
+    priceHint: "free" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/planning/ishoj-beach-gdk481123"
+  },
+  // ── Swimming ──────────────────────────────────────────────────────────────
+  {
+    id: "havnebadet-islands-brygge",
+    name: "Havnebadet Islands Brygge",
+    description:
+      "Ikonisk udendørs havnebad på Islands Brygge med separat børnebassin, solebade-pontoner og livredder i sommersæsonen.",
+    category: "swimming",
+    address: "Islands Brygge 14, 2300 København S",
+    lat: 55.6659,
+    lng: 12.5754,
+    ageMinMonths: 6,
+    ageMaxMonths: 72,
+    photos: [photos.swimming],
+    rating: 4.7,
+    website: "https://www.visitcopenhagen.com/copenhagen/planning/islands-brygge-harbour-baths-gdk479963",
+    tags: ["havnebad", "børnebassin", "sommer", "gratis"],
+    openingHours: {
+      summary: "Sommer (ca. juni-august) dagligt 07-20; tjek åbningssæson.",
+      periods: [{ days: "mon-sun", open: "07:00", close: "20:00" }]
+    },
+    neighbourhood: "Amager" as const,
+    indoorOutdoor: "outdoor" as const,
+    priceHint: "free" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/planning/islands-brygge-harbour-baths-gdk479963"
+  },
+  // ── Day trips ─────────────────────────────────────────────────────────────
+  {
+    id: "dyrehaven",
+    name: "Dyrehaven",
+    description:
+      "Kongelig hjortepark med over 2.000 hjorte, brede åbne sletter og skovstier – perfekt til en lang barnevognsudflugt nord for byen.",
+    category: "playground",
+    address: "Dyrehaven, 2930 Klampenborg",
+    lat: 55.7734,
+    lng: 12.5521,
+    ageMinMonths: 0,
+    ageMaxMonths: 72,
+    photos: [photos.playground],
+    rating: 4.8,
+    website: "https://www.visitcopenhagen.com/copenhagen/planning/the-deer-park-gdk413955",
+    tags: ["hjorte", "natur", "skov", "barnevogn"],
+    openingHours: {
+      summary: "Udendørs park, åbent hele døgnet.",
+      periods: [{ days: "mon-sun", open: "00:00", close: "23:59" }]
+    },
+    neighbourhood: "Klampenborg" as const,
+    indoorOutdoor: "outdoor" as const,
+    priceHint: "free" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/planning/the-deer-park-gdk413955"
+  },
+  {
+    id: "bellevue-strand",
+    name: "Bellevue Strand",
+    description:
+      "Ikonisk sandstrand nord for København ved Klampenborg med blåt vand, livreddertårne og direkte S-togsforbindelse.",
+    category: "playground",
+    address: "Strandvejen 340, 2930 Klampenborg",
+    lat: 55.7672,
+    lng: 12.5947,
+    ageMinMonths: 6,
+    ageMaxMonths: 72,
+    photos: [photos.playground],
+    rating: 4.6,
+    website: "https://www.visitcopenhagen.com/copenhagen/planning/bellevue-beach-gdk413881",
+    tags: ["strand", "sand", "s-tog", "sommer"],
+    openingHours: {
+      summary: "Udendørs strand, åbent hele døgnet.",
+      periods: [{ days: "mon-sun", open: "00:00", close: "23:59" }]
+    },
+    neighbourhood: "Klampenborg" as const,
+    indoorOutdoor: "outdoor" as const,
+    priceHint: "free" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/planning/bellevue-beach-gdk413881"
+  },
+  {
+    id: "bakken",
+    name: "Bakken (Dyrehavsbakken)",
+    description:
+      "Verdens ældste forlystelsespark i skoven nord for København med gratis entré, rutsjebaner og sommer-nostalgi for hele familien.",
+    category: "event",
+    address: "Dyrehavevej 62, 2930 Klampenborg",
+    lat: 55.7736,
+    lng: 12.5783,
+    ageMinMonths: 18,
+    ageMaxMonths: 72,
+    photos: [photos.event],
+    rating: 4.5,
+    website: "https://bakken.dk/",
+    tags: ["forlystelsespark", "sommer", "gratis entré", "klampenborg"],
+    openingHours: {
+      summary: "Åbent april-august; tjek sæsonkalender.",
+      periods: [{ days: "mon-sun", open: "12:00", close: "23:00" }]
+    },
+    neighbourhood: "Klampenborg" as const,
+    indoorOutdoor: "both" as const,
+    priceHint: "free" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/planning/bakken-gdk413909"
+  },
+  {
+    id: "louisiana-museum",
+    name: "Louisiana Museum of Modern Art",
+    description:
+      "Verdensberømt kunstmuseum nord for byen med dedikeret børnefløj, skulpturpark ud mod Øresund og familiecafé med udsigt.",
+    category: "event",
+    address: "Gl Strandvej 13, 3050 Humlebæk",
+    lat: 55.9676,
+    lng: 12.5443,
+    ageMinMonths: 24,
+    ageMaxMonths: 72,
+    photos: [photos.event],
+    rating: 4.8,
+    website: "https://www.louisiana.dk/",
+    tags: ["kunst", "skulpturpark", "børnefløj", "Øresund"],
+    openingHours: {
+      summary: "Mandag lukket; tirsdag-fredag 11-22, weekender 11-18.",
+      periods: [
+        { days: "tue-fri", open: "11:00", close: "22:00" },
+        { days: "sat-sun", open: "11:00", close: "18:00" }
+      ]
+    },
+    neighbourhood: "Humlebæk" as const,
+    indoorOutdoor: "both" as const,
+    priceHint: "paid" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/planning/louisiana-museum-of-modern-art-gdk413997"
+  },
+  {
+    id: "vikingeskibsmuseet",
+    name: "Vikingeskibsmuseet",
+    description:
+      "Museum med fem originale vikingeskibe, levende havn, bådrejser og historisk håndværk i smukke omgivelser ved Roskilde Fjord.",
+    category: "event",
+    address: "Vindeboder 12, 4000 Roskilde",
+    lat: 55.6521,
+    lng: 12.0804,
+    ageMinMonths: 18,
+    ageMaxMonths: 72,
+    photos: [photos.event],
+    rating: 4.6,
+    website: "https://www.vikingeskibsmuseet.dk/",
+    tags: ["vikinger", "bådtur", "roskilde", "fjord"],
+    openingHours: {
+      summary: "Typisk dagligt 10-17; tjek sæsonkalender.",
+      periods: [{ days: "mon-sun", open: "10:00", close: "17:00" }]
+    },
+    neighbourhood: "Roskilde" as const,
+    indoorOutdoor: "both" as const,
+    priceHint: "paid" as const,
+    sourceUrl: "https://www.visitdenmark.com/denmark/plan-your-trip/viking-ship-museum-roskilde-gdk413787"
+  },
+  {
+    id: "frilandsmuseet",
+    name: "Frilandsmuseet",
+    description:
+      "Kæmpe friluftsmuseum i Lyngby med historiske bygninger fra hele landet, frilandsdyr og brede stier til lange barnevognsture.",
+    category: "event",
+    address: "Kongevejen 100, 2800 Kongens Lyngby",
+    lat: 55.7994,
+    lng: 12.5167,
+    ageMinMonths: 6,
+    ageMaxMonths: 72,
+    photos: [photos.event],
+    rating: 4.5,
+    website: "https://natmus.dk/frilandsmuseet/",
+    tags: ["friluftsmuseum", "dyr", "historiske huse", "lyngby"],
+    openingHours: {
+      summary: "Åbent april-oktober, typisk tirsdag-søndag 10-17; lukket mandage.",
+      periods: [{ days: "tue-sun", open: "10:00", close: "17:00" }]
+    },
+    neighbourhood: "Lyngby" as const,
+    indoorOutdoor: "outdoor" as const,
+    priceHint: "paid" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/planning/the-open-air-museum-gdk414133"
+  },
+  {
+    id: "arken-museum",
+    name: "ARKEN Museum for Moderne Kunst",
+    description:
+      "Arkitektonisk kunstmuseum ved stranden i Ishøj med børneværksteder, skulpturpark og café med udsigt over bugten.",
+    category: "event",
+    address: "Skovvej 100, 2635 Ishøj",
+    lat: 55.6003,
+    lng: 12.2856,
+    ageMinMonths: 24,
+    ageMaxMonths: 72,
+    photos: [photos.event],
+    rating: 4.5,
+    website: "https://www.arken.dk/",
+    tags: ["kunst", "museum", "børneværksted", "ishøj"],
+    openingHours: {
+      summary: "Tirsdag-søndag 10-17, onsdag til 21; lukket mandage.",
+      periods: [{ days: "tue-sun", open: "10:00", close: "17:00" }]
+    },
+    neighbourhood: "Ishøj" as const,
+    indoorOutdoor: "indoor" as const,
+    priceHint: "paid" as const,
+    sourceUrl: "https://www.visitcopenhagen.com/copenhagen/planning/arken-museum-gdk413924"
   },
   {
     id: "copenhagen-contemporary",

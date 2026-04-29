@@ -16,13 +16,18 @@ export type Neighbourhood =
   | "Indre By"
   | "Amager"
   | "Valby"
+  | "Sydhavn"
   | "Nordvest"
   | "Nordhavn"
   | "Hellerup"
   | "Ishøj"
   | "Vanløse"
   | "Brønshøj"
-  | "Kastrup";
+  | "Kastrup"
+  | "Klampenborg"
+  | "Lyngby"
+  | "Humlebæk"
+  | "Roskilde";
 
 export type IndoorOutdoor = "indoor" | "outdoor" | "both";
 
