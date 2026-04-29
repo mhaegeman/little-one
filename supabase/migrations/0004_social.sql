@@ -23,6 +23,9 @@ end $$;
 
 -- ---------------------------------------------------------------------------
 -- Helper: is current user a member of a given family?
+-- Safe to live in `public` — it uses auth.uid() so even when exposed as an
+-- RPC it only reveals the caller's own membership (which they can already
+-- read via the family_members RLS policy).
 -- ---------------------------------------------------------------------------
 create or replace function public.is_family_member(target_family_id uuid)
 returns boolean
@@ -36,8 +39,16 @@ as $$
   );
 $$;
 
--- Helper: is family A blocked by/blocking family B (either direction)?
-create or replace function public.families_blocked(family_a uuid, family_b uuid)
+-- ---------------------------------------------------------------------------
+-- Helpers that accept arbitrary (user_id, family_id) or (family, family)
+-- pairs live in a `private` schema so PostgREST does not expose them as
+-- /rest/v1/rpc/* endpoints. RLS policies still call them by qualified name;
+-- the authenticated role gets just enough access for policy evaluation.
+-- ---------------------------------------------------------------------------
+create schema if not exists private;
+grant usage on schema private to authenticated;
+
+create or replace function private.families_blocked(family_a uuid, family_b uuid)
 returns boolean
 language sql stable security definer set search_path = public
 as $$
@@ -48,10 +59,12 @@ as $$
   );
 $$;
 
--- Helper: is `target_user_id` a member of `target_family_id`?
+revoke all on function private.families_blocked(uuid, uuid) from public;
+grant execute on function private.families_blocked(uuid, uuid) to authenticated;
+
 -- Used to validate that thread participants actually belong to the families
 -- on the parent connection.
-create or replace function public.user_in_family(target_user_id uuid, target_family_id uuid)
+create or replace function private.user_in_family(target_user_id uuid, target_family_id uuid)
 returns boolean
 language sql stable security definer set search_path = public
 as $$
@@ -61,6 +74,14 @@ as $$
       and family_id = target_family_id
   );
 $$;
+
+revoke all on function private.user_in_family(uuid, uuid) from public;
+grant execute on function private.user_in_family(uuid, uuid) to authenticated;
+
+-- Drop any earlier public copies so we don't end up with two functions of
+-- the same name resolving differently between RLS policies and RPC.
+drop function if exists public.families_blocked(uuid, uuid);
+drop function if exists public.user_in_family(uuid, uuid);
 
 -- ---------------------------------------------------------------------------
 -- family_public_profiles
@@ -259,7 +280,7 @@ create policy "select_searchable_public_profiles"
       select 1
       from public.family_members me
       where me.user_id = auth.uid()
-        and public.families_blocked(me.family_id, family_public_profiles.family_id)
+        and private.families_blocked(me.family_id, family_public_profiles.family_id)
     )
   );
 
@@ -293,7 +314,7 @@ create policy "insert_family_connection_as_requester"
   with check (
     public.is_family_member(requester_family_id)
     and requested_by_user_id = auth.uid()
-    and not public.families_blocked(requester_family_id, addressee_family_id)
+    and not private.families_blocked(requester_family_id, addressee_family_id)
   );
 
 drop policy if exists "update_family_connection_as_addressee" on public.family_connections;
@@ -335,8 +356,8 @@ create policy "insert_thread_for_connected_pair"
     -- on their side. Without this a connected user could pin an arbitrary
     -- auth.users id into user_b_id and grant them read access via
     -- select_own_thread.
-    and public.user_in_family(user_a_id, family_a_id)
-    and public.user_in_family(user_b_id, family_b_id)
+    and private.user_in_family(user_a_id, family_a_id)
+    and private.user_in_family(user_b_id, family_b_id)
     -- The two families must be the two on an accepted connection record,
     -- in either ordering.
     and exists (
