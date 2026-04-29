@@ -8,6 +8,7 @@ import {
   MagnifyingGlass,
   X
 } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { DiscoverMap } from "@/components/discover/DiscoverMap";
@@ -185,6 +186,15 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
           action={
             <div className="flex items-center gap-2">
               <Badge variant="sage">{t("results", { count: filteredVenues.length })}</Badge>
+              {process.env.NODE_ENV !== "production" ? (
+                <Link
+                  href="/admin/map-tool"
+                  className="focus-ring inline-flex items-center gap-1 rounded-pill bg-sunken px-2 py-1 text-2xs font-semibold text-muted ring-1 ring-hairline hover:text-ink"
+                >
+                  <MapTrifold size={12} weight="bold" aria-hidden="true" />
+                  Edit pins
+                </Link>
+              ) : null}
             </div>
           }
         />
