@@ -1,8 +1,9 @@
 "use client";
 
-import { Loader2, MapPin, Navigation, X } from "lucide-react";
+import { CircleNotch, MapPin, NavigationArrow, X } from "@phosphor-icons/react/dist/ssr";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 
 export type UserLocation = {
   lat: number;
@@ -88,27 +89,24 @@ export function LocationControl({ userLocation, onChange }: LocationControlProps
   }
 
   return (
-    <div className="rounded-xl bg-white p-3 ring-1 ring-oat">
+    <div className="rounded-lg bg-surface p-3 ring-1 ring-hairline">
       <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2 text-rust">
-          <Navigation size={16} aria-hidden="true" />
-          <span className="text-sm font-bold text-ink/72">Sortér efter afstand</span>
-        </div>
+        <span className="text-xs font-semibold text-muted">Sortér efter afstand</span>
         {userLocation ? (
           <button
             type="button"
             onClick={() => onChange(null)}
-            className="focus-ring inline-flex items-center gap-1 rounded-full bg-linen px-2 py-1 text-xs font-bold text-ink/72 hover:text-rust"
+            className="focus-ring inline-flex items-center gap-1 rounded-pill bg-sunken px-2 py-0.5 text-2xs font-semibold text-muted hover:text-warm-600"
           >
-            <X size={12} aria-hidden="true" />
+            <X size={10} weight="bold" aria-hidden="true" />
             Ryd
           </button>
         ) : null}
       </div>
 
       {userLocation ? (
-        <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-moss/10 px-2.5 py-1 text-xs font-bold text-mossDark">
-          <MapPin size={12} aria-hidden="true" />
+        <p className="mt-2 inline-flex items-center gap-1.5 rounded-pill bg-sage-100 px-2 py-0.5 text-2xs font-semibold text-sage-700">
+          <MapPin size={11} weight="fill" aria-hidden="true" />
           {userLocation.label}
         </p>
       ) : null}
@@ -116,43 +114,42 @@ export function LocationControl({ userLocation, onChange }: LocationControlProps
       <Button
         type="button"
         variant="secondary"
+        size="md"
         className="mt-3 w-full justify-center"
         onClick={useDeviceLocation}
         disabled={status === "geo"}
       >
         {status === "geo" ? (
-          <Loader2 size={15} className="animate-spin" aria-hidden="true" />
+          <CircleNotch size={14} weight="bold" className="animate-spin" aria-hidden="true" />
         ) : (
-          <Navigation size={15} aria-hidden="true" />
+          <NavigationArrow size={14} weight="fill" aria-hidden="true" />
         )}
         Brug min lokation
       </Button>
 
       <form onSubmit={searchAddress} className="mt-2 flex gap-2">
-        <span className="flex h-10 flex-1 items-center gap-2 rounded-xl bg-linen px-2.5 ring-1 ring-oat">
-          <MapPin size={14} className="text-ink/45" aria-hidden="true" />
-          <input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Eller skriv en adresse..."
-            className="w-full bg-transparent text-sm outline-none"
-          />
-        </span>
+        <Input
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Eller skriv en adresse…"
+          leadingIcon={<MapPin size={13} weight="fill" aria-hidden="true" />}
+          className="flex-1"
+        />
         <Button
           type="submit"
           variant="ghost"
-          className="h-10 px-3"
+          size="md"
           disabled={status === "search" || query.trim().length === 0}
         >
           {status === "search" ? (
-            <Loader2 size={15} className="animate-spin" aria-hidden="true" />
+            <CircleNotch size={14} weight="bold" className="animate-spin" aria-hidden="true" />
           ) : (
             "Søg"
           )}
         </Button>
       </form>
 
-      {error ? <p className="mt-2 text-xs font-medium text-rust">{error}</p> : null}
+      {error ? <p className="mt-2 text-xs text-danger">{error}</p> : null}
     </div>
   );
 }

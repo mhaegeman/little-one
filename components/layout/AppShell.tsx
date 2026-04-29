@@ -1,97 +1,177 @@
 "use client";
 
-import { Baby, Compass, NotebookTabs, UserRound } from "lucide-react";
+import {
+  Compass,
+  MagnifyingGlass,
+  NotePencil,
+  UserCircle
+} from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { useTranslations } from "next-intl";
+import { CommandPalette } from "@/components/layout/CommandPalette";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/", label: "Opdag", icon: Compass },
-  { href: "/journal", label: "Journal", icon: NotebookTabs },
-  { href: "/profile", label: "Profil", icon: UserRound }
-];
+  { href: "/", key: "discover", icon: Compass },
+  { href: "/journal", key: "journal", icon: NotePencil },
+  { href: "/profile", key: "profile", icon: UserCircle }
+] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const t = useTranslations("nav");
+  const tApp = useTranslations("app");
+  const [paletteOpen, setPaletteOpen] = useState(false);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setPaletteOpen((v) => !v);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   return (
-    <div className="min-h-screen lg:grid lg:grid-cols-[248px_1fr]">
-      <aside className="sticky top-0 hidden h-screen border-r border-oat/80 bg-linen/88 px-5 py-6 backdrop-blur lg:block">
-        <Link href="/" className="flex items-center gap-3">
-          <span className="grid h-11 w-11 place-items-center rounded-2xl bg-moss text-white">
-            <Baby size={22} aria-hidden="true" />
+    <div className="min-h-screen lg:grid lg:grid-cols-[232px_1fr]">
+      <a href="#main" className="skip-link">
+        Spring til indhold
+      </a>
+
+      {/* Desktop sidebar */}
+      <aside
+        className="sticky top-0 hidden h-screen border-r border-hairline bg-canvas/85 px-4 py-5 backdrop-blur lg:flex lg:flex-col"
+        aria-label="Hovednavigation"
+      >
+        <Link
+          href="/"
+          className="focus-ring mb-2 flex items-center gap-2.5 rounded-lg px-1.5 py-1"
+          aria-label={tApp("name")}
+        >
+          <span
+            aria-hidden="true"
+            className="grid h-9 w-9 place-items-center rounded-xl bg-sage-500 text-white shadow-sm"
+          >
+            <span className="font-display text-lg font-semibold leading-none">LL</span>
           </span>
-          <span>
-            <span className="block font-display text-2xl font-semibold">Lille Liv</span>
-            <span className="block text-xs font-semibold uppercase tracking-[0.18em] text-mossDark/70">
+          <span className="min-w-0">
+            <span className="block font-display text-base font-semibold leading-tight text-ink">
+              {tApp("name")}
+            </span>
+            <span className="block text-2xs font-semibold uppercase tracking-[0.16em] text-subtle">
               København
             </span>
           </span>
         </Link>
 
-        <nav className="mt-10 space-y-2">
+        <button
+          type="button"
+          onClick={() => setPaletteOpen(true)}
+          className="focus-ring mt-3 flex h-9 items-center gap-2 rounded-lg bg-sunken px-2.5 text-xs text-muted ring-1 ring-hairline transition-colors hover:bg-sand-100 hover:text-ink"
+          aria-label="Søg (cmd+k)"
+        >
+          <MagnifyingGlass size={14} weight="bold" aria-hidden="true" />
+          <span className="flex-1 text-left">{t("search")}</span>
+          <kbd className="rounded bg-surface px-1.5 py-0.5 text-2xs font-bold text-muted ring-1 ring-hairline">
+            ⌘K
+          </kbd>
+        </button>
+
+        <nav className="mt-5 flex flex-col gap-0.5" aria-label="Sektioner">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-
             return (
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={active ? "page" : undefined}
                 className={cn(
-                  "focus-ring flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition",
-                  active ? "bg-white text-mossDark shadow-soft" : "text-ink/70 hover:bg-white/60"
+                  "focus-ring flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-sm font-semibold transition-colors duration-150 ease-nordic",
+                  active
+                    ? "bg-sage-100 text-sage-700"
+                    : "text-muted hover:bg-sunken hover:text-ink"
                 )}
               >
-                <Icon size={19} aria-hidden="true" />
-                {item.label}
+                <Icon
+                  size={17}
+                  weight={active ? "fill" : "regular"}
+                  aria-hidden="true"
+                />
+                {t(item.key)}
               </Link>
             );
           })}
         </nav>
+
+        <div className="mt-auto pt-3">
+          <p className="px-2 text-2xs leading-snug text-subtle">
+            {tApp("tagline")}
+          </p>
+        </div>
       </aside>
 
-      <main className="min-w-0 pb-24 lg:pb-0">{children}</main>
+      <main id="main" className="min-w-0 pb-20 lg:pb-10">
+        {children}
+      </main>
 
-      <header className="fixed left-0 right-0 top-0 z-30 flex h-16 items-center justify-between border-b border-oat/80 bg-linen/95 px-4 backdrop-blur lg:hidden">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="grid h-10 w-10 place-items-center rounded-2xl bg-moss text-white">
-            <Baby size={20} aria-hidden="true" />
+      {/* Mobile top bar */}
+      <header className="fixed left-0 right-0 top-0 z-30 flex h-14 items-center justify-between gap-2 border-b border-hairline bg-canvas/90 px-4 backdrop-blur lg:hidden">
+        <Link href="/" className="focus-ring flex items-center gap-2 rounded-lg px-1 py-1" aria-label={tApp("name")}>
+          <span
+            aria-hidden="true"
+            className="grid h-8 w-8 place-items-center rounded-lg bg-sage-500 text-white"
+          >
+            <span className="font-display text-sm font-semibold">LL</span>
           </span>
-          <span className="font-display text-xl font-semibold">Lille Liv</span>
+          <span className="font-display text-base font-semibold">{tApp("name")}</span>
         </Link>
-        <Link
-          href="/profile"
-          className="focus-ring grid h-10 w-10 place-items-center rounded-xl bg-white text-ink ring-1 ring-oat"
-          aria-label="Profil"
+        <button
+          type="button"
+          onClick={() => setPaletteOpen(true)}
+          aria-label={t("search")}
+          className="focus-ring grid h-9 w-9 place-items-center rounded-lg bg-sunken text-muted ring-1 ring-hairline"
         >
-          <UserRound size={19} aria-hidden="true" />
-        </Link>
+          <MagnifyingGlass size={16} weight="bold" aria-hidden="true" />
+        </button>
       </header>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-30 border-t border-oat bg-[#FFFDF8]/95 px-3 pb-3 pt-2 backdrop-blur lg:hidden">
-        <div className="grid grid-cols-3 gap-2">
+      {/* Mobile bottom nav */}
+      <nav
+        aria-label="Hovednavigation"
+        className="fixed bottom-0 left-0 right-0 z-30 border-t border-hairline bg-canvas/95 px-2 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-1.5 backdrop-blur lg:hidden"
+      >
+        <div className="grid grid-cols-3 gap-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-
             return (
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={active ? "page" : undefined}
                 className={cn(
-                  "focus-ring flex h-14 flex-col items-center justify-center gap-1 rounded-2xl text-xs font-bold transition",
-                  active ? "bg-moss text-white" : "text-ink/70 hover:bg-linen"
+                  "focus-ring flex flex-col items-center justify-center gap-0.5 rounded-lg py-1.5 text-2xs font-semibold transition-colors duration-150 ease-nordic",
+                  active ? "text-sage-700" : "text-subtle hover:text-ink"
                 )}
               >
-                <Icon size={19} aria-hidden="true" />
-                {item.label}
+                <Icon
+                  size={20}
+                  weight={active ? "fill" : "regular"}
+                  aria-hidden="true"
+                />
+                {t(item.key)}
               </Link>
             );
           })}
         </div>
       </nav>
+
+      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
     </div>
   );
 }

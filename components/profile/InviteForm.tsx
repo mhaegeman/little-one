@@ -1,9 +1,11 @@
 "use client";
 
-import { Copy, Loader2, Mail, Send } from "lucide-react";
+import { CircleNotch, Copy, EnvelopeSimple, PaperPlaneTilt } from "@phosphor-icons/react/dist/ssr";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
 import { ROLE_LABELS_DA, inviteShareUrl } from "@/lib/family";
 import type { FamilyInvite, FamilyRole } from "@/lib/types";
 
@@ -50,21 +52,17 @@ export function InviteForm({ familyName, onSubmit }: Props) {
 
   if (status === "done" && shareUrl) {
     return (
-      <div className="rounded-card bg-linen p-5 ring-1 ring-oat">
-        <p className="text-xs font-bold uppercase tracking-[0.16em] text-rust">Invitation klar</p>
-        <h3 className="mt-1 font-display text-xl font-semibold text-ink">
+      <div className="rounded-card bg-sunken p-4 ring-1 ring-hairline">
+        <p className="text-2xs font-bold uppercase tracking-[0.14em] text-warm-500">Invitation klar</p>
+        <h3 className="mt-0.5 font-display text-base font-semibold text-ink">
           Del linket med {invitedName || invitedEmail || "din familie"}
         </h3>
-        <p className="mt-2 text-sm leading-6 text-ink/70">
-          Vi har sendt en e-mail (hvis adressen blev udfyldt). Du kan også dele linket selv —
-          det virker i 14 dage.
+        <p className="mt-1.5 text-sm leading-6 text-muted">
+          Vi har sendt en e-mail (hvis adressen blev udfyldt). Du kan også dele linket selv — det
+          virker i 14 dage.
         </p>
         <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-          <input
-            readOnly
-            value={shareUrl}
-            className="focus-ring h-11 w-full rounded-xl bg-white px-3 text-sm font-semibold ring-1 ring-oat"
-          />
+          <Input readOnly value={shareUrl} />
           <Button
             type="button"
             variant="secondary"
@@ -78,7 +76,7 @@ export function InviteForm({ familyName, onSubmit }: Props) {
               }
             }}
           >
-            <Copy size={15} aria-hidden="true" />
+            <Copy size={13} weight="bold" aria-hidden="true" />
             {copied ? "Kopieret!" : "Kopiér"}
           </Button>
         </div>
@@ -91,7 +89,7 @@ export function InviteForm({ familyName, onSubmit }: Props) {
             setInvitedEmail("");
             setMessage("");
           }}
-          className="focus-ring mt-3 text-sm font-bold text-rust underline-offset-4 hover:underline"
+          className="focus-ring mt-3 text-sm font-semibold text-warm-600 underline-offset-4 hover:underline"
         >
           Inviter en til
         </button>
@@ -100,45 +98,43 @@ export function InviteForm({ familyName, onSubmit }: Props) {
   }
 
   return (
-    <form onSubmit={submit} className="rounded-card bg-linen p-5 ring-1 ring-oat">
-      <p className="text-xs font-bold uppercase tracking-[0.16em] text-rust">Inviter til {familyName}</p>
-      <h3 className="mt-1 font-display text-xl font-semibold text-ink">
+    <form onSubmit={submit} className="rounded-card bg-sunken p-4 ring-1 ring-hairline">
+      <p className="text-2xs font-bold uppercase tracking-[0.14em] text-warm-500">
+        Inviter til {familyName}
+      </p>
+      <h3 className="mt-0.5 font-display text-base font-semibold text-ink">
         Tilføj bedsteforældre, dagplejer eller resten af familien
       </h3>
-      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+      <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
         <label className="block">
-          <span className="mb-1.5 block text-xs font-bold uppercase tracking-[0.14em] text-ink/60">
+          <span className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
             Navn
           </span>
-          <input
+          <Input
             value={invitedName}
             onChange={(event) => setInvitedName(event.target.value)}
             placeholder="Mormor"
-            className="focus-ring h-11 w-full rounded-xl bg-white px-3 text-sm font-semibold ring-1 ring-oat"
           />
         </label>
         <label className="block">
-          <span className="mb-1.5 block text-xs font-bold uppercase tracking-[0.14em] text-ink/60">
+          <span className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
             E-mail
           </span>
-          <span className="flex h-11 items-center gap-2 rounded-xl bg-white px-3 ring-1 ring-oat">
-            <Mail size={15} className="text-ink/45" aria-hidden="true" />
-            <input
-              type="email"
-              value={invitedEmail}
-              onChange={(event) => setInvitedEmail(event.target.value)}
-              placeholder="mormor@example.dk"
-              className="w-full bg-transparent text-sm font-semibold outline-none"
-            />
-          </span>
+          <Input
+            type="email"
+            value={invitedEmail}
+            onChange={(event) => setInvitedEmail(event.target.value)}
+            placeholder="mormor@example.dk"
+            leadingIcon={<EnvelopeSimple size={13} weight="fill" aria-hidden="true" />}
+          />
         </label>
       </div>
 
       <fieldset className="mt-3">
-        <legend className="mb-1.5 block text-xs font-bold uppercase tracking-[0.14em] text-ink/60">
+        <legend className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
           Rolle
         </legend>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-1.5">
           {(Object.keys(ROLE_LABELS_DA) as FamilyRole[])
             .filter((roleKey) => roleKey !== "owner")
             .map((roleKey) => (
@@ -146,10 +142,10 @@ export function InviteForm({ familyName, onSubmit }: Props) {
                 key={roleKey}
                 type="button"
                 onClick={() => setRole(roleKey)}
-                className={`focus-ring rounded-xl px-2 py-2 text-xs font-bold ring-1 transition ${
+                className={`focus-ring rounded-lg px-2 py-2 text-xs font-semibold ring-1 transition-colors ${
                   role === roleKey
-                    ? "bg-moss text-white ring-moss"
-                    : "bg-white text-ink/70 ring-oat hover:bg-linen"
+                    ? "bg-sage-500 text-white ring-sage-500"
+                    : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                 }`}
               >
                 {ROLE_LABELS_DA[roleKey]}
@@ -159,34 +155,35 @@ export function InviteForm({ familyName, onSubmit }: Props) {
       </fieldset>
 
       <label className="mt-3 block">
-        <span className="mb-1.5 block text-xs font-bold uppercase tracking-[0.14em] text-ink/60">
+        <span className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
           Personlig hilsen (valgfri)
         </span>
-        <textarea
+        <Textarea
           value={message}
           onChange={(event) => setMessage(event.target.value)}
           rows={3}
           placeholder="Velkommen ind, mormor — så kan du følge med på Astas hverdag."
-          className="focus-ring w-full rounded-xl bg-white p-3 text-sm font-semibold ring-1 ring-oat"
         />
       </label>
 
-      <Button type="submit" className="mt-4" disabled={status === "saving"}>
+      <Button type="submit" className="mt-3" disabled={status === "saving"}>
         {status === "saving" ? (
           <>
-            <Loader2 size={15} className="animate-spin" aria-hidden="true" />
-            Sender invitation...
+            <CircleNotch size={13} weight="bold" className="animate-spin" aria-hidden="true" />
+            Sender invitation…
           </>
         ) : (
           <>
-            <Send size={15} aria-hidden="true" />
+            <PaperPlaneTilt size={13} weight="fill" aria-hidden="true" />
             Send invitation
           </>
         )}
       </Button>
 
       {status === "error" ? (
-        <p className="mt-3 rounded-xl bg-rust/10 p-3 text-sm font-semibold text-rust">{error}</p>
+        <p className="mt-3 rounded-lg bg-warm-50 p-2.5 text-sm font-semibold text-danger ring-1 ring-warm-100">
+          {error}
+        </p>
       ) : null}
     </form>
   );

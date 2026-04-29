@@ -5,8 +5,18 @@
 
 :root {
   color-scheme: light;
-  --background: #f5f0e8;
-  --foreground: #26312d;
+  --bg-canvas: #fbf8f2;
+  --bg-surface: #ffffff;
+  --bg-sunken: #f4efe6;
+  --fg-ink: #1f2a26;
+  --fg-muted: #5c6661;
+  --fg-subtle: #8c918c;
+  --border-hairline: #ece4d2;
+  --border-strong: #e2d9c4;
+  --accent-sage: #5b8377;
+  --accent-sage-strong: #33554c;
+  --accent-warm: #c46a40;
+  --focus-ring: rgba(91, 131, 119, 0.32);
 }
 
 * {
@@ -15,18 +25,22 @@
 
 html {
   min-height: 100%;
-  background: var(--background);
+  background: var(--bg-canvas);
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
 }
 
 body {
   min-height: 100%;
   margin: 0;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(245, 240, 232, 0) 320px),
-    var(--background);
-  color: var(--foreground);
+  background: var(--bg-canvas);
+  color: var(--fg-ink);
   font-family: "DM Sans", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
   letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -39,10 +53,16 @@ input,
 select,
 textarea {
   font: inherit;
+  color: inherit;
+}
+
+::selection {
+  background: rgba(91, 131, 119, 0.18);
+  color: var(--fg-ink);
 }
 
 .focus-ring {
-  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rust focus-visible:ring-offset-2 focus-visible:ring-offset-linen;
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-400 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas;
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -52,4 +72,54 @@ textarea {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Custom scrollbar for desktop scroll containers */
+.thin-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.thin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 8px;
+}
+
+.thin-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--fg-subtle);
+}
+
+/* Honor reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--accent-sage);
+  color: white;
+  padding: 0.5rem 0.875rem;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
 }

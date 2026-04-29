@@ -1,4 +1,4 @@
-import { HeartHandshake, ShieldCheck } from "lucide-react";
+import { HandHeart, ShieldCheck } from "@phosphor-icons/react/dist/ssr";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { createClient } from "@/lib/supabase/server";
 
@@ -63,10 +63,10 @@ export default async function InvitePage({ params }: InvitePageProps) {
 
   if (!invite) {
     return (
-      <div className="px-4 pt-24 sm:px-6 lg:px-8 lg:pt-8">
-        <div className="mx-auto max-w-xl rounded-card bg-white p-6 shadow-soft ring-1 ring-oat">
-          <h1 className="font-display text-3xl font-semibold">Invitationen findes ikke</h1>
-          <p className="mt-2 text-sm leading-6 text-ink/70">
+      <div className="px-4 pt-20 sm:px-6 lg:px-8 lg:pt-6">
+        <div className="mx-auto max-w-xl rounded-card bg-surface p-5 ring-1 ring-hairline">
+          <h1 className="font-display text-2xl font-semibold text-ink">Invitationen findes ikke</h1>
+          <p className="mt-2 text-sm leading-6 text-muted">
             Linket er udløbet eller forkert. Bed afsenderen om at sende et nyt.
           </p>
         </div>
@@ -78,10 +78,10 @@ export default async function InvitePage({ params }: InvitePageProps) {
 
   if (expired) {
     return (
-      <div className="px-4 pt-24 sm:px-6 lg:px-8 lg:pt-8">
-        <div className="mx-auto max-w-xl rounded-card bg-white p-6 shadow-soft ring-1 ring-oat">
-          <h1 className="font-display text-3xl font-semibold">Invitationen er ikke aktiv længere</h1>
-          <p className="mt-2 text-sm leading-6 text-ink/70">
+      <div className="px-4 pt-20 sm:px-6 lg:px-8 lg:pt-6">
+        <div className="mx-auto max-w-xl rounded-card bg-surface p-5 ring-1 ring-hairline">
+          <h1 className="font-display text-2xl font-semibold text-ink">Invitationen er ikke aktiv længere</h1>
+          <p className="mt-2 text-sm leading-6 text-muted">
             {invite.status === "accepted"
               ? "Den er allerede brugt."
               : "Den er udløbet eller trukket tilbage. Bed familien om en ny invitation."}
@@ -92,37 +92,51 @@ export default async function InvitePage({ params }: InvitePageProps) {
   }
 
   return (
-    <div className="px-4 pt-20 sm:px-6 lg:px-8 lg:pt-10">
-      <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[1fr_440px]">
-        <section className="rounded-card bg-white p-6 shadow-soft ring-1 ring-oat">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-rust">Du er inviteret</p>
-          <h1 className="mt-2 font-display text-4xl font-semibold leading-tight text-ink">
+    <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+      <div className="mx-auto grid max-w-5xl gap-4 lg:grid-cols-[1fr_440px]">
+        <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
+          <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">
+            Du er inviteret
+          </p>
+          <h1 className="mt-1 font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">
             {invite.invitedByName && invite.familyName
               ? `${invite.invitedByName} har inviteret dig til ${invite.familyName}`
               : invite.familyName
               ? `Velkommen til ${invite.familyName}`
               : "Velkommen til familien"}
           </h1>
-          <p className="mt-3 max-w-xl text-base leading-7 text-ink/70">
-            Lille Liv er en privat plads til familiens hverdag — milepæle, små glimt, fotos og udflugter, samlet for jer.
+          <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
+            Lille Liv er en privat plads til familiens hverdag — milepæle, små glimt, fotos og
+            udflugter, samlet for jer.
           </p>
 
           {invite.message ? (
-            <div className="mt-5 flex items-start gap-3 rounded-card bg-linen p-4 ring-1 ring-oat">
-              <HeartHandshake className="mt-0.5 shrink-0 text-rust" size={20} aria-hidden="true" />
+            <div className="mt-4 flex items-start gap-2.5 rounded-card bg-sunken p-3 ring-1 ring-hairline">
+              <HandHeart
+                className="mt-0.5 shrink-0 text-warm-500"
+                size={18}
+                weight="fill"
+                aria-hidden="true"
+              />
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-mossDark/80">
+                <p className="text-2xs font-bold uppercase tracking-[0.14em] text-sage-700">
                   Hilsen fra {invite.invitedByName ?? "familien"}
                 </p>
-                <p className="mt-1 text-sm leading-6 text-ink/80">{invite.message}</p>
+                <p className="mt-0.5 text-sm leading-6 text-ink">{invite.message}</p>
               </div>
             </div>
           ) : null}
 
-          <div className="mt-5 flex items-start gap-2 text-sm text-ink/65">
-            <ShieldCheck size={17} className="mt-0.5 shrink-0 text-moss" aria-hidden="true" />
+          <div className="mt-4 flex items-start gap-1.5 text-sm text-muted">
+            <ShieldCheck
+              size={14}
+              weight="fill"
+              className="mt-0.5 shrink-0 text-sage-500"
+              aria-hidden="true"
+            />
             <p>
-              Vi gemmer dine data i EU-region med strikte adgangsregler. Du kan til enhver tid forlade familien igen.
+              Vi gemmer dine data i EU-region med strikte adgangsregler. Du kan til enhver tid
+              forlade familien igen.
             </p>
           </div>
         </section>

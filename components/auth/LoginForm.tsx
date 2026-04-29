@@ -1,16 +1,17 @@
 "use client";
 
 import {
-  CheckCircle2,
-  HeartHandshake,
-  Loader2,
-  Mail,
-  Sparkles,
-  UserRound
-} from "lucide-react";
+  CheckCircle,
+  CircleNotch,
+  EnvelopeSimple,
+  HandHeart,
+  Sparkle,
+  UserCircle
+} from "@phosphor-icons/react/dist/ssr";
 import type { FormEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { createClient } from "@/lib/supabase/client";
 import type { FamilyRole } from "@/lib/types";
 
@@ -175,21 +176,21 @@ export function LoginForm({ invite, redirectTo = "/journal", locale = "da" }: Lo
 
   if (status === "sent") {
     return (
-      <div className="rounded-card bg-white p-6 shadow-soft ring-1 ring-oat">
-        <div className="flex items-center gap-2 text-mossDark">
-          <CheckCircle2 size={22} aria-hidden="true" />
-          <h2 className="font-display text-2xl font-semibold text-ink">{copy.sentTitle}</h2>
+      <div className="rounded-card bg-surface p-5 ring-1 ring-hairline">
+        <div className="flex items-center gap-2 text-sage-700">
+          <CheckCircle size={20} weight="fill" aria-hidden="true" />
+          <h2 className="font-display text-xl font-semibold text-ink">{copy.sentTitle}</h2>
         </div>
-        <p className="mt-3 text-sm leading-6 text-ink/75">
+        <p className="mt-2 text-sm leading-6 text-muted">
           {copy.sentBody.replace("{email}", email)}
         </p>
         {invite ? (
-          <p className="mt-2 text-sm leading-6 text-ink/60">{copy.sentHintInvite}</p>
+          <p className="mt-1 text-sm leading-6 text-subtle">{copy.sentHintInvite}</p>
         ) : null}
         <button
           type="button"
           onClick={() => setStatus("idle")}
-          className="focus-ring mt-4 text-sm font-bold text-rust underline-offset-4 hover:underline"
+          className="focus-ring mt-4 text-sm font-semibold text-warm-600 underline-offset-4 hover:underline"
         >
           {locale === "da" ? "Send igen" : "Resend"}
         </button>
@@ -200,41 +201,48 @@ export function LoginForm({ invite, redirectTo = "/journal", locale = "da" }: Lo
   return (
     <form
       onSubmit={submitMagicLink}
-      className="rounded-card bg-white p-6 shadow-soft ring-1 ring-oat"
+      className="rounded-card bg-surface p-5 ring-1 ring-hairline"
     >
       {invite ? (
-        <div className="mb-5 rounded-card bg-gradient-to-br from-moss to-mossDark p-5 text-white">
-          <div className="flex items-center gap-2 text-butter">
-            <HeartHandshake size={19} aria-hidden="true" />
-            <p className="text-xs font-bold uppercase tracking-[0.18em]">
+        <div className="mb-4 rounded-card bg-sage-700 p-4 text-white">
+          <div className="flex items-center gap-2 text-sand-100">
+            <HandHeart size={16} weight="fill" aria-hidden="true" />
+            <p className="text-2xs font-bold uppercase tracking-[0.16em]">
               {locale === "da" ? "Familie-invitation" : "Family invite"}
             </p>
           </div>
-          <h2 className="mt-2 font-display text-2xl font-semibold leading-tight">
+          <h2 className="mt-1.5 font-display text-xl font-semibold leading-tight">
             {invite.invitedByName && invite.familyName
               ? copy.inviteHeadline
                   .replace("{inviter}", invite.invitedByName)
                   .replace("{family}", invite.familyName)
               : copy.inviteFallback}
           </h2>
-          <p className="mt-2 text-sm leading-6 text-white/85">{copy.inviteIntro}</p>
+          <p className="mt-1.5 text-sm leading-6 text-white/85">{copy.inviteIntro}</p>
           {invite.message ? (
-            <p className="mt-3 rounded-xl bg-white/10 p-3 text-sm italic leading-6 text-white/95">
+            <p className="mt-2.5 rounded-lg bg-white/10 p-2.5 text-sm italic leading-6 text-white/95">
               &ldquo;{invite.message}&rdquo;
             </p>
           ) : null}
         </div>
       ) : (
-        <div className="mb-5">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-rust">{copy.eyebrow}</p>
-          <h2 className="mt-1 font-display text-3xl font-semibold leading-tight text-ink">
+        <div className="mb-4">
+          <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">
+            {copy.eyebrow}
+          </p>
+          <h2 className="mt-1 font-display text-2xl font-semibold leading-tight text-ink">
             {copy.title}
           </h2>
-          <p className="mt-2 text-sm leading-6 text-ink/70">{copy.body}</p>
-          <ul className="mt-3 space-y-1.5">
+          <p className="mt-1.5 text-sm leading-6 text-muted">{copy.body}</p>
+          <ul className="mt-2.5 space-y-1">
             {copy.bullets.map((bullet) => (
-              <li key={bullet} className="flex items-start gap-2 text-sm text-ink/80">
-                <Sparkles size={15} className="mt-0.5 shrink-0 text-rust" aria-hidden="true" />
+              <li key={bullet} className="flex items-start gap-1.5 text-sm text-ink/80">
+                <Sparkle
+                  size={13}
+                  weight="fill"
+                  className="mt-1 shrink-0 text-warm-500"
+                  aria-hidden="true"
+                />
                 <span>{bullet}</span>
               </li>
             ))}
@@ -244,27 +252,24 @@ export function LoginForm({ invite, redirectTo = "/journal", locale = "da" }: Lo
 
       <div className="space-y-3">
         <label className="block">
-          <span className="mb-1.5 block text-xs font-bold uppercase tracking-[0.14em] text-ink/60">
+          <span className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
             {copy.nameLabel}
           </span>
-          <span className="flex h-12 items-center gap-2 rounded-xl bg-linen px-3 ring-1 ring-oat focus-within:ring-2 focus-within:ring-moss">
-            <UserRound size={17} className="text-ink/45" aria-hidden="true" />
-            <input
-              value={displayName}
-              onChange={(event) => setDisplayName(event.target.value)}
-              className="w-full bg-transparent text-sm font-semibold text-ink outline-none placeholder:text-ink/40"
-              placeholder={copy.namePlaceholder}
-              autoComplete="given-name"
-            />
-          </span>
-          <span className="mt-1 block text-xs text-ink/50">{copy.nameHelp}</span>
+          <Input
+            value={displayName}
+            onChange={(event) => setDisplayName(event.target.value)}
+            placeholder={copy.namePlaceholder}
+            autoComplete="given-name"
+            leadingIcon={<UserCircle size={15} weight="fill" aria-hidden="true" />}
+          />
+          <span className="mt-1 block text-xs text-subtle">{copy.nameHelp}</span>
         </label>
 
         <fieldset>
-          <legend className="mb-1.5 block text-xs font-bold uppercase tracking-[0.14em] text-ink/60">
+          <legend className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
             {copy.roleLabel}
           </legend>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-1.5">
             {(Object.keys(copy.roles) as FamilyRole[]).map((roleKey) => {
               const active = role === roleKey;
               return (
@@ -272,10 +277,10 @@ export function LoginForm({ invite, redirectTo = "/journal", locale = "da" }: Lo
                   key={roleKey}
                   type="button"
                   onClick={() => setRole(roleKey)}
-                  className={`focus-ring rounded-xl px-2 py-2 text-xs font-bold ring-1 transition ${
+                  className={`focus-ring rounded-lg px-2 py-2 text-xs font-semibold ring-1 transition-colors ${
                     active
-                      ? "bg-moss text-white ring-moss"
-                      : "bg-linen text-ink/70 ring-oat hover:bg-white"
+                      ? "bg-sage-500 text-white ring-sage-500"
+                      : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                   }`}
                 >
                   {copy.roles[roleKey]}
@@ -286,51 +291,48 @@ export function LoginForm({ invite, redirectTo = "/journal", locale = "da" }: Lo
         </fieldset>
 
         <label className="block">
-          <span className="mb-1.5 block text-xs font-bold uppercase tracking-[0.14em] text-ink/60">
+          <span className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
             {copy.emailLabel}
           </span>
-          <span className="flex h-12 items-center gap-2 rounded-xl bg-linen px-3 ring-1 ring-oat focus-within:ring-2 focus-within:ring-moss">
-            <Mail size={17} className="text-ink/45" aria-hidden="true" />
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              className="w-full bg-transparent text-sm font-semibold text-ink outline-none placeholder:text-ink/40"
-              placeholder={copy.emailPlaceholder}
-              autoComplete="email"
-            />
-          </span>
+          <Input
+            type="email"
+            required
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder={copy.emailPlaceholder}
+            autoComplete="email"
+            leadingIcon={<EnvelopeSimple size={15} weight="fill" aria-hidden="true" />}
+          />
         </label>
       </div>
 
-      <Button type="submit" className="mt-5 h-12 w-full text-base" disabled={status === "loading"}>
+      <Button type="submit" size="lg" className="mt-4 w-full" disabled={status === "loading"}>
         {status === "loading" ? (
           <>
-            <Loader2 size={18} className="animate-spin" aria-hidden="true" />
+            <CircleNotch size={16} weight="bold" className="animate-spin" aria-hidden="true" />
             {copy.sending}
           </>
         ) : (
           <>
-            <Mail size={17} aria-hidden="true" />
+            <EnvelopeSimple size={15} weight="fill" aria-hidden="true" />
             {invite ? copy.submitInvite : copy.submit}
           </>
         )}
       </Button>
 
       {status === "error" ? (
-        <p className="mt-3 rounded-xl bg-rust/10 p-3 text-sm font-semibold text-rust">
+        <p className="mt-3 rounded-lg bg-warm-50 p-2.5 text-sm font-semibold text-danger ring-1 ring-warm-100">
           {errorMessage || copy.error}
         </p>
       ) : null}
 
       {!supabaseAvailable ? (
-        <p className="mt-3 rounded-xl bg-butter/40 p-3 text-xs font-semibold text-ink/70">
+        <p className="mt-3 rounded-lg bg-[#FBF1D9] p-2.5 text-xs font-semibold text-warning ring-1 ring-[#F0DFB1]">
           {copy.notConfigured}
         </p>
       ) : null}
 
-      <p className="mt-4 text-[11px] leading-5 text-ink/50">{copy.privacy}</p>
+      <p className="mt-3 text-2xs leading-5 text-subtle">{copy.privacy}</p>
     </form>
   );
 }

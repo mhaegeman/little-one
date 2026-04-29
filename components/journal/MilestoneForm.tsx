@@ -1,9 +1,12 @@
 "use client";
 
-import { Calendar, ImagePlus, PenLine, Sparkles } from "lucide-react";
+import { CalendarBlank, ImageSquare, NotePencil } from "@phosphor-icons/react/dist/ssr";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
+import { Textarea } from "@/components/ui/Textarea";
 import { milestoneLabels, milestoneTypes } from "@/lib/data/taxonomy";
 import { createClient } from "@/lib/supabase/client";
 import type { MilestoneType, TimelineItem } from "@/lib/types";
@@ -64,83 +67,71 @@ export function MilestoneForm({ childId, onAdd }: MilestoneFormProps) {
   }
 
   return (
-    <form onSubmit={submitMilestone} className="rounded-card bg-white p-5 shadow-soft ring-1 ring-oat">
-      <div className="flex items-center gap-2 text-rust">
-        <Sparkles size={19} aria-hidden="true" />
-        <h2 className="font-display text-2xl font-semibold text-ink">Tilføj milepæl</h2>
-      </div>
-      <label className="mt-4 block">
-        <span className="mb-2 block text-sm font-bold text-ink/70">Type</span>
-        <select
-          value={type}
-          onChange={(event) => setType(event.target.value as MilestoneType)}
-          className="focus-ring h-12 w-full rounded-xl bg-linen px-3 text-sm font-semibold ring-1 ring-oat"
-        >
+    <form onSubmit={submitMilestone} className="space-y-3">
+      <FieldLabel label="Type">
+        <Select value={type} onChange={(event) => setType(event.target.value as MilestoneType)}>
           {milestoneTypes.map((item) => (
             <option key={item} value={item}>
               {milestoneLabels[item]}
             </option>
           ))}
-        </select>
-      </label>
+        </Select>
+      </FieldLabel>
 
       {type === "custom" ? (
-        <label className="mt-4 block">
-          <span className="mb-2 block text-sm font-bold text-ink/70">Titel</span>
-          <input
+        <FieldLabel label="Titel">
+          <Input
             value={customTitle}
             onChange={(event) => setCustomTitle(event.target.value)}
-            className="focus-ring h-12 w-full rounded-xl bg-linen px-3 text-sm font-semibold ring-1 ring-oat"
             placeholder="Første tur i ladcyklen"
           />
-        </label>
+        </FieldLabel>
       ) : null}
 
-      <label className="mt-4 block">
-        <span className="mb-2 block text-sm font-bold text-ink/70">Dato</span>
-        <span className="flex h-12 items-center gap-2 rounded-xl bg-linen px-3 ring-1 ring-oat">
-          <Calendar size={17} className="text-ink/45" aria-hidden="true" />
-          <input
-            type="date"
-            required
-            value={date}
-            onChange={(event) => setDate(event.target.value)}
-            className="w-full bg-transparent text-sm font-semibold outline-none"
-          />
-        </span>
-      </label>
+      <FieldLabel label="Dato">
+        <Input
+          type="date"
+          required
+          value={date}
+          onChange={(event) => setDate(event.target.value)}
+          leadingIcon={<CalendarBlank size={14} weight="fill" aria-hidden="true" />}
+        />
+      </FieldLabel>
 
-      <label className="mt-4 block">
-        <span className="mb-2 block text-sm font-bold text-ink/70">Note</span>
-        <span className="flex items-start gap-2 rounded-xl bg-linen px-3 py-3 ring-1 ring-oat">
-          <PenLine size={17} className="mt-1 text-ink/45" aria-hidden="true" />
-          <textarea
-            value={notes}
-            onChange={(event) => setNotes(event.target.value)}
-            rows={3}
-            className="w-full resize-none bg-transparent text-sm font-semibold outline-none"
-            placeholder="Hvad skete der?"
-          />
-        </span>
-      </label>
+      <FieldLabel label="Note">
+        <Textarea
+          value={notes}
+          onChange={(event) => setNotes(event.target.value)}
+          rows={3}
+          placeholder="Hvad skete der?"
+        />
+      </FieldLabel>
 
-      <label className="mt-4 block">
-        <span className="mb-2 block text-sm font-bold text-ink/70">Foto URL</span>
-        <span className="flex h-12 items-center gap-2 rounded-xl bg-linen px-3 ring-1 ring-oat">
-          <ImagePlus size={17} className="text-ink/45" aria-hidden="true" />
-          <input
-            value={photoUrl}
-            onChange={(event) => setPhotoUrl(event.target.value)}
-            className="w-full bg-transparent text-sm font-semibold outline-none"
-            placeholder="https://res.cloudinary.com/..."
-          />
-        </span>
-      </label>
+      <FieldLabel label="Foto URL">
+        <Input
+          value={photoUrl}
+          onChange={(event) => setPhotoUrl(event.target.value)}
+          placeholder="https://res.cloudinary.com/…"
+          leadingIcon={<ImageSquare size={14} weight="fill" aria-hidden="true" />}
+        />
+      </FieldLabel>
 
-      <Button type="submit" className="mt-4 w-full" disabled={saving}>
-        {saving ? "Gemmer..." : "Gem milepæl"}
+      <Button type="submit" size="lg" className="w-full" disabled={saving}>
+        <NotePencil size={14} weight="fill" aria-hidden="true" />
+        {saving ? "Gemmer…" : "Gem milepæl"}
       </Button>
-      {message ? <p className="mt-3 text-sm font-semibold text-ink/70">{message}</p> : null}
+      {message ? <p className="text-sm text-muted">{message}</p> : null}
     </form>
+  );
+}
+
+function FieldLabel({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="block">
+      <span className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
+        {label}
+      </span>
+      {children}
+    </label>
   );
 }

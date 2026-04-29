@@ -1,8 +1,9 @@
 "use client";
 
-import { ArrowRight, Heart, MapPinned, Sparkles, Users } from "lucide-react";
+import { ArrowRight, Heart, MapPinArea, Sparkle, Users } from "@phosphor-icons/react/dist/ssr";
+import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { categoryColors, categoryLabels } from "@/lib/data/taxonomy";
+import { categoryLabels } from "@/lib/data/taxonomy";
 import { ROLE_LABELS_DA } from "@/lib/family";
 import {
   COMPLETENESS_LABELS_DA,
@@ -27,155 +28,155 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
   const childAgeMax = profile?.childAgeMaxMonths ?? null;
 
   return (
-    <div className="grid gap-5 lg:grid-cols-3">
-      <section className="rounded-card bg-white p-5 shadow-soft ring-1 ring-oat lg:col-span-2">
-        <div className="flex items-center gap-2 text-rust">
-          <Sparkles size={18} aria-hidden="true" />
-          <h2 className="font-display text-2xl font-semibold text-ink">Gør profilen klar</h2>
+    <div className="grid gap-4 lg:grid-cols-3">
+      <section className="rounded-card bg-surface p-5 ring-1 ring-hairline lg:col-span-2">
+        <div className="flex items-center gap-2">
+          <Sparkle size={16} weight="fill" className="text-warm-500" aria-hidden="true" />
+          <h2 className="font-display text-xl font-semibold text-ink">Gør profilen klar</h2>
         </div>
-        <p className="mt-1 text-sm leading-6 text-ink/70">
+        <p className="mt-1 text-sm leading-6 text-muted">
           Jo mere du fortæller, jo bedre kuraterer vi steder, ture og begivenheder for jer.
         </p>
 
         {completeness.missing.length === 0 ? (
-          <p className="mt-4 rounded-2xl bg-mossDark/95 p-4 text-sm font-semibold text-white">
+          <p className="mt-3 rounded-lg bg-sage-100 p-3 text-sm font-semibold text-sage-700 ring-1 ring-sage-200">
             Din profil er fuldt udfyldt. Tjek anbefalingerne — vi har skræddersyet dem til jer.
           </p>
         ) : (
-          <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+          <ul className="mt-3 grid gap-1.5 sm:grid-cols-2">
             {completeness.missing.map((field) => (
               <li
                 key={field}
-                className="flex items-center justify-between gap-2 rounded-2xl bg-linen p-3 ring-1 ring-oat"
+                className="flex items-center justify-between gap-2 rounded-lg bg-sunken p-2.5 ring-1 ring-hairline"
               >
-                <span className="text-sm font-bold text-ink/75">
+                <span className="text-sm font-semibold text-ink">
                   {COMPLETENESS_LABELS_DA[field]}
                 </span>
                 <button
                   type="button"
                   onClick={() => onJumpTo("preferences")}
-                  className="focus-ring flex items-center gap-1 text-xs font-bold text-rust"
+                  className="focus-ring inline-flex items-center gap-1 rounded-md text-2xs font-bold uppercase tracking-wide text-warm-600 hover:text-warm-700"
                 >
                   Tilføj
-                  <ArrowRight size={13} aria-hidden="true" />
+                  <ArrowRight size={11} weight="bold" aria-hidden="true" />
                 </button>
               </li>
             ))}
           </ul>
         )}
 
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-ink/55">Interesser</p>
+            <p className="text-2xs font-bold uppercase tracking-[0.14em] text-subtle">
+              Interesser
+            </p>
             {interests.length === 0 ? (
               <button
                 type="button"
                 onClick={() => onJumpTo("preferences")}
-                className="focus-ring mt-2 inline-flex items-center gap-1 rounded-full bg-linen px-3 py-1.5 text-xs font-bold text-mossDark ring-1 ring-oat"
+                className="focus-ring mt-1.5 inline-flex items-center gap-1 rounded-pill bg-sunken px-2.5 py-1 text-xs font-semibold text-muted ring-1 ring-hairline hover:bg-sand-100"
               >
-                <Heart size={13} aria-hidden="true" /> Vælg jeres yndlingskategorier
+                <Heart size={12} weight="fill" aria-hidden="true" />
+                Vælg jeres yndlingskategorier
               </button>
             ) : (
-              <div className="mt-2 flex flex-wrap gap-1.5">
+              <div className="mt-1.5 flex flex-wrap gap-1">
                 {interests.map((category) => (
-                  <span
-                    key={category}
-                    className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold ring-1 ${categoryColors[category]}`}
-                  >
+                  <Badge key={category} variant="sage">
                     {categoryLabels[category]}
-                  </span>
+                  </Badge>
                 ))}
               </div>
             )}
           </div>
 
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-ink/55">
+            <p className="text-2xs font-bold uppercase tracking-[0.14em] text-subtle">
               Bydele I færdes i
             </p>
             {neighbourhoods.length === 0 ? (
               <button
                 type="button"
                 onClick={() => onJumpTo("preferences")}
-                className="focus-ring mt-2 inline-flex items-center gap-1 rounded-full bg-linen px-3 py-1.5 text-xs font-bold text-mossDark ring-1 ring-oat"
+                className="focus-ring mt-1.5 inline-flex items-center gap-1 rounded-pill bg-sunken px-2.5 py-1 text-xs font-semibold text-muted ring-1 ring-hairline hover:bg-sand-100"
               >
-                <MapPinned size={13} aria-hidden="true" /> Tilføj bydele
+                <MapPinArea size={12} weight="fill" aria-hidden="true" />
+                Tilføj bydele
               </button>
             ) : (
-              <div className="mt-2 flex flex-wrap gap-1.5">
+              <div className="mt-1.5 flex flex-wrap gap-1">
                 {neighbourhoods.map((hood) => (
-                  <span
-                    key={hood}
-                    className="inline-flex items-center gap-1 rounded-full bg-skywash px-2.5 py-1 text-xs font-bold text-mossDark"
-                  >
-                    <MapPinned size={11} aria-hidden="true" />
+                  <Badge key={hood} variant="sky">
+                    <MapPinArea size={10} weight="fill" aria-hidden="true" />
                     {hood}
-                  </span>
+                  </Badge>
                 ))}
               </div>
             )}
           </div>
 
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-ink/55">Inde / ude</p>
-            <p className="mt-2 text-sm font-semibold text-ink/75">
+            <p className="text-2xs font-bold uppercase tracking-[0.14em] text-subtle">
+              Inde / ude
+            </p>
+            <p className="mt-1.5 text-sm font-semibold text-ink">
               {INDOOR_PREFERENCE_LABELS_DA[indoorPreference]}
             </p>
           </div>
 
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-ink/55">
+            <p className="text-2xs font-bold uppercase tracking-[0.14em] text-subtle">
               Barnets alder
             </p>
             {childAgeMin === null || childAgeMax === null ? (
               <button
                 type="button"
                 onClick={() => onJumpTo("preferences")}
-                className="focus-ring mt-2 text-sm font-bold text-rust"
+                className="focus-ring mt-1.5 text-sm font-semibold text-warm-600 hover:text-warm-700"
               >
                 Sæt aldersinterval
               </button>
             ) : (
-              <p className="mt-2 text-sm font-semibold text-ink/75">
+              <p className="mt-1.5 text-sm font-semibold text-ink">
                 {ageMonthsToLabel(childAgeMin)} – {ageMonthsToLabel(childAgeMax)}
               </p>
             )}
           </div>
         </div>
 
-        <div className="mt-5 flex flex-wrap gap-2">
+        <div className="mt-4 flex flex-wrap gap-2">
           <Button onClick={() => onJumpTo("recommendations")}>
-            <Sparkles size={16} aria-hidden="true" />
+            <Sparkle size={14} weight="fill" aria-hidden="true" />
             Se anbefalinger
           </Button>
           <Button variant="secondary" onClick={() => onJumpTo("preferences")}>
-            <Heart size={16} aria-hidden="true" />
+            <Heart size={14} weight="fill" aria-hidden="true" />
             Tilpas præferencer
           </Button>
         </div>
       </section>
 
-      <section className="rounded-card bg-white p-5 shadow-soft ring-1 ring-oat">
+      <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-rust">
-            <Users size={18} aria-hidden="true" />
-            <h2 className="font-display text-xl font-semibold text-ink">Familien</h2>
+          <div className="flex items-center gap-2">
+            <Users size={16} weight="fill" className="text-sage-700" aria-hidden="true" />
+            <h2 className="font-display text-lg font-semibold text-ink">Familien</h2>
           </div>
           <button
             type="button"
             onClick={() => onJumpTo("family")}
-            className="focus-ring text-xs font-bold text-rust"
+            className="focus-ring text-2xs font-bold uppercase tracking-wide text-warm-600 hover:text-warm-700"
           >
             Se alle
           </button>
         </div>
 
         {members.length === 0 ? (
-          <p className="mt-3 rounded-2xl bg-linen p-3 text-sm font-semibold text-ink/65 ring-1 ring-oat">
+          <p className="mt-3 rounded-lg bg-sunken p-2.5 text-sm font-semibold text-muted ring-1 ring-hairline">
             Når Supabase opretter familien for dig, dukker bedsteforældre, dagplejer og medforælder op her.
           </p>
         ) : (
-          <ul className="mt-3 space-y-2">
+          <ul className="mt-3 space-y-1.5">
             {members.slice(0, 5).map((member) => {
               const name = member.profile?.displayName ?? member.displayName ?? "Familie";
               const initials = name
@@ -186,23 +187,23 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
               return (
                 <li
                   key={member.id}
-                  className="flex items-center gap-3 rounded-2xl bg-linen p-2.5 ring-1 ring-oat"
+                  className="flex items-center gap-2.5 rounded-lg bg-sunken p-2 ring-1 ring-hairline"
                 >
                   {member.profile?.avatarUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={member.profile.avatarUrl}
                       alt=""
-                      className="h-10 w-10 rounded-2xl object-cover ring-2 ring-white"
+                      className="h-8 w-8 rounded-lg object-cover ring-2 ring-surface"
                     />
                   ) : (
-                    <span className="grid h-10 w-10 place-items-center rounded-2xl bg-white font-display text-sm font-semibold text-mossDark ring-2 ring-white">
+                    <span className="grid h-8 w-8 place-items-center rounded-lg bg-surface font-display text-xs font-semibold text-sage-700 ring-2 ring-surface">
                       {initials || "?"}
                     </span>
                   )}
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-bold text-ink">{name}</p>
-                    <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-ink/55">
+                    <p className="truncate text-sm font-semibold text-ink">{name}</p>
+                    <p className="text-2xs font-semibold uppercase tracking-[0.12em] text-subtle">
                       {ROLE_LABELS_DA[member.role]}
                     </p>
                   </div>

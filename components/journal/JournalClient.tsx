@@ -1,6 +1,12 @@
 "use client";
 
-import { Baby, Plus, ShieldCheck } from "lucide-react";
+import {
+  Baby,
+  Plus,
+  ShieldCheck,
+  Sparkle
+} from "@phosphor-icons/react/dist/ssr";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { ActivityForm } from "@/components/journal/ActivityForm";
@@ -8,9 +14,12 @@ import { MilestoneForm } from "@/components/journal/MilestoneForm";
 import { Timeline } from "@/components/journal/Timeline";
 import { ChildProfileForm } from "@/components/onboarding/ChildProfileForm";
 import { Button } from "@/components/ui/Button";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Sheet } from "@/components/ui/Sheet";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { createClient } from "@/lib/supabase/client";
 import type { Child, TimelineItem } from "@/lib/types";
-import { formatChildAge } from "@/lib/utils";
+import { cn, formatChildAge } from "@/lib/utils";
 
 const demoChild: Child = {
   id: "demo-asta",
@@ -44,14 +53,16 @@ const demoTimeline: TimelineItem[] = [
   }
 ];
 
+type SheetMode = "milestone" | "activity" | null;
+
 export function JournalClient() {
+  const t = useTranslations("journal");
   const [loading, setLoading] = useState(true);
   const [signedIn, setSignedIn] = useState(false);
   const [children, setChildren] = useState<Child[]>([]);
   const [activeChildId, setActiveChildId] = useState<string>(demoChild.id);
   const [timeline, setTimeline] = useState<TimelineItem[]>(demoTimeline);
-  const [showMilestoneForm, setShowMilestoneForm] = useState(true);
-  const [showActivityForm, setShowActivityForm] = useState(false);
+  const [sheetMode, setSheetMode] = useState<SheetMode>(null);
   const [usingDemo, setUsingDemo] = useState(false);
 
   useEffect(() => {
@@ -161,20 +172,32 @@ export function JournalClient() {
   );
 
   if (loading) {
-    return <div className="px-4 pt-24 text-sm font-bold text-ink/60 lg:px-8 lg:pt-8">Henter journal...</div>;
+    return (
+      <div className="px-4 pt-20 sm:px-6 lg:px-8 lg:pt-6">
+        <div className="mx-auto max-w-5xl space-y-3">
+          <Skeleton className="h-24 w-full" />
+          <Skeleton className="h-32 w-full" />
+          <Skeleton className="h-32 w-full" />
+        </div>
+      </div>
+    );
   }
 
   if (!signedIn && !usingDemo) {
     return (
-      <div className="px-4 pt-24 sm:px-6 lg:px-8 lg:pt-8">
-        <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[1fr_420px]">
-          <div className="rounded-card bg-white p-6 shadow-soft ring-1 ring-oat">
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-rust">Privat</p>
-            <h1 className="mt-2 font-display text-4xl font-semibold">Journal</h1>
-            <p className="mt-3 max-w-xl text-base leading-7 text-ink/70">
-              Journalen kræver login, fordi børns billeder, milepæle og institutionsglimt er private.
+      <div className="px-4 pt-20 sm:px-6 lg:px-8 lg:pt-6">
+        <div className="mx-auto grid max-w-5xl gap-4 lg:grid-cols-[1fr_420px]">
+          <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
+            <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">
+              {t("private")}
             </p>
-          </div>
+            <h1 className="mt-1 font-display text-3xl font-semibold text-ink">
+              {t("title")}
+            </h1>
+            <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
+              {t("loginRequiredBody")}
+            </p>
+          </section>
           <LoginForm />
         </div>
       </div>
@@ -183,7 +206,7 @@ export function JournalClient() {
 
   if (!activeChild) {
     return (
-      <div className="px-4 pt-24 sm:px-6 lg:px-8 lg:pt-8">
+      <div className="px-4 pt-20 sm:px-6 lg:px-8 lg:pt-6">
         <div className="mx-auto max-w-3xl">
           <ChildProfileForm
             onCreated={(child) => {
@@ -197,104 +220,126 @@ export function JournalClient() {
   }
 
   return (
-    <div className="px-4 pt-20 sm:px-6 lg:px-8 lg:pt-8">
-      <div className="mx-auto max-w-7xl">
-        <section className="rounded-card bg-white p-5 shadow-soft ring-1 ring-oat/70 sm:p-6">
-          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-4">
-              {activeChild.photoUrl ? (
-                <img
-                  src={activeChild.photoUrl}
-                  alt=""
-                  className="h-20 w-20 rounded-2xl object-cover ring-4 ring-linen"
-                />
-              ) : (
-                <span className="grid h-20 w-20 place-items-center rounded-2xl bg-linen text-rust">
-                  <Baby size={34} aria-hidden="true" />
-                </span>
-              )}
-              <div>
-                <p className="text-sm font-bold uppercase tracking-[0.16em] text-rust">Journal</p>
-                <h1 className="font-display text-4xl font-semibold text-ink">{activeChild.name}</h1>
-                <p className="mt-1 text-sm font-bold text-ink/60">
-                  {formatChildAge(activeChild.dateOfBirth)}
-                </p>
-              </div>
+    <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+      <div className="mx-auto max-w-5xl">
+        <PageHeader
+          eyebrow={t("private")}
+          title={t("title")}
+          description={t("subtitle")}
+          action={
+            <div className="flex items-center gap-2">
+              <Button onClick={() => setSheetMode("milestone")}>
+                <Plus size={14} weight="bold" aria-hidden="true" />
+                {t("milestone")}
+              </Button>
+              <Button variant="secondary" onClick={() => setSheetMode("activity")}>
+                <Plus size={14} weight="bold" aria-hidden="true" />
+                {t("activity")}
+              </Button>
+            </div>
+          }
+        />
+
+        {/* Child header card */}
+        <section className="mt-4 rounded-card bg-surface p-3.5 ring-1 ring-hairline">
+          <div className="flex items-center gap-3">
+            {activeChild.photoUrl ? (
+              <img
+                src={activeChild.photoUrl}
+                alt=""
+                className="h-14 w-14 rounded-2xl object-cover ring-2 ring-canvas"
+              />
+            ) : (
+              <span className="grid h-14 w-14 place-items-center rounded-2xl bg-sage-100 text-sage-700">
+                <Baby size={26} weight="duotone" aria-hidden="true" />
+              </span>
+            )}
+            <div className="min-w-0 flex-1">
+              <h2 className="font-display text-xl font-semibold text-ink">
+                {activeChild.name}
+              </h2>
+              <p className="text-xs font-semibold text-muted">
+                {formatChildAge(activeChild.dateOfBirth)}
+              </p>
             </div>
 
-            <div className="flex flex-wrap gap-2">
-              {children.map((child) => (
-                <button
-                  key={child.id}
-                  type="button"
-                  onClick={() => setActiveChildId(child.id)}
-                  className={`focus-ring rounded-full px-3 py-2 text-sm font-bold ring-1 ${
-                    child.id === activeChild.id
-                      ? "bg-moss text-white ring-moss"
-                      : "bg-linen text-ink/70 ring-oat"
-                  }`}
-                >
-                  {child.name}
-                </button>
-              ))}
-            </div>
+            {children.length > 1 ? (
+              <div className="flex flex-wrap gap-1">
+                {children.map((child) => (
+                  <button
+                    key={child.id}
+                    type="button"
+                    onClick={() => setActiveChildId(child.id)}
+                    className={cn(
+                      "focus-ring rounded-pill px-2.5 py-1 text-xs font-semibold ring-1 transition-colors",
+                      child.id === activeChild.id
+                        ? "bg-sage-500 text-white ring-sage-500"
+                        : "bg-surface text-muted ring-hairline hover:bg-sunken"
+                    )}
+                  >
+                    {child.name}
+                  </button>
+                ))}
+              </div>
+            ) : null}
           </div>
 
           {usingDemo ? (
-            <div className="mt-5 flex items-start gap-2 rounded-xl bg-linen p-3 text-sm font-semibold text-ink/70">
-              <ShieldCheck className="mt-0.5 shrink-0 text-moss" size={17} aria-hidden="true" />
+            <div className="mt-3 flex items-start gap-2 rounded-lg bg-sage-50 p-2.5 text-xs text-sage-700 ring-1 ring-sage-100">
+              <ShieldCheck className="mt-0.5 shrink-0" size={14} weight="fill" aria-hidden="true" />
               Demojournalen kører lokalt, indtil Supabase er konfigureret.
             </div>
           ) : null}
         </section>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
-          <section>
-            <div className="mb-4 flex items-center justify-between gap-3">
-              <h2 className="font-display text-2xl font-semibold">Tidslinje</h2>
-              <div className="flex gap-2">
-                <Button className="h-10 px-3" onClick={() => setShowMilestoneForm((value) => !value)}>
-                  <Plus size={16} aria-hidden="true" />
-                  Milepæl
-                </Button>
-                <Button
-                  variant="secondary"
-                  className="h-10 px-3"
-                  onClick={() => setShowActivityForm((value) => !value)}
-                >
-                  <Plus size={16} aria-hidden="true" />
-                  Tur
-                </Button>
-              </div>
-            </div>
-            <Timeline items={timeline} />
-          </section>
+        {/* Timeline */}
+        <section className="mt-5">
+          <Timeline items={timeline} />
+        </section>
 
-          <aside className="space-y-4">
-            {showMilestoneForm ? (
-              <MilestoneForm
-                childId={activeChild.id}
-                onAdd={(item) => setTimeline((current) => [item, ...current])}
-              />
-            ) : null}
-
-            {showActivityForm ? (
-              <ActivityForm
-                childId={activeChild.id}
-                onAdd={(item) => setTimeline((current) => [item, ...current])}
-              />
-            ) : null}
-
-            <div className="rounded-card bg-white p-5 shadow-soft ring-1 ring-oat">
-              <h2 className="font-display text-2xl font-semibold">Aula</h2>
-              <p className="mt-2 text-sm leading-6 text-ink/70">
-                Aula-forbindelse kommer snart som sikker MitID-baseret import. Lille Liv gemmer ikke
-                Aula-adgangskoder i MVP-demoen.
+        {/* Aula footer */}
+        <aside className="mt-6 rounded-card bg-surface p-4 ring-1 ring-hairline">
+          <div className="flex items-start gap-2">
+            <Sparkle size={16} weight="fill" className="mt-0.5 text-warm-500" aria-hidden="true" />
+            <div>
+              <h3 className="font-display text-base font-semibold text-ink">Aula</h3>
+              <p className="mt-1 text-sm leading-6 text-muted">
+                Aula-forbindelse kommer snart som sikker MitID-baseret import. Lille Liv gemmer
+                ikke Aula-adgangskoder i MVP-demoen.
               </p>
             </div>
-          </aside>
-        </div>
+          </div>
+        </aside>
       </div>
+
+      {/* Sheet for new entry */}
+      <Sheet
+        open={sheetMode !== null}
+        onClose={() => setSheetMode(null)}
+        side="right"
+        size="md"
+        title={sheetMode === "milestone" ? t("addMilestone") : t("addActivity")}
+        description={sheetMode === "milestone" ? "Marker en milepæl for senere." : "Tilføj en lille tur eller hverdagsoplevelse."}
+      >
+        {sheetMode === "milestone" ? (
+          <MilestoneForm
+            childId={activeChild.id}
+            onAdd={(item) => {
+              setTimeline((current) => [item, ...current]);
+              setSheetMode(null);
+            }}
+          />
+        ) : null}
+        {sheetMode === "activity" ? (
+          <ActivityForm
+            childId={activeChild.id}
+            onAdd={(item) => {
+              setTimeline((current) => [item, ...current]);
+              setSheetMode(null);
+            }}
+          />
+        ) : null}
+      </Sheet>
     </div>
   );
 }
