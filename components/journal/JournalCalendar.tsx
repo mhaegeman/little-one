@@ -2,8 +2,9 @@
 
 import { CalendarBlank } from "@phosphor-icons/react/dist/ssr";
 import { useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import type { TimelineItem } from "@/lib/types";
-import { cn, formatDanishDate } from "@/lib/utils";
+import { cn, formatLocalizedDate } from "@/lib/utils";
 
 type Bucket = {
   key: string;
@@ -24,8 +25,6 @@ function jumpToMonth(key: string) {
   if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-const WEEKDAY_LABELS = ["M", "T", "O", "T", "F", "L", "S"]; // Monday-first (DK)
-
 export function JournalCalendar({
   items,
   activeKey
@@ -33,6 +32,9 @@ export function JournalCalendar({
   items: TimelineItem[];
   activeKey?: string;
 }) {
+  const t = useTranslations("journal");
+  const locale = useLocale();
+  const weekdayLabels = t("calendarWeekdays").split(",");
   const [expandedKey, setExpandedKey] = useState<string | null>(null);
 
   const buckets = useMemo<Bucket[]>(() => {
@@ -54,14 +56,14 @@ export function JournalCalendar({
         const date = new Date(value.iso);
         return {
           key,
-          label: formatDanishDate(value.iso, "MMM yyyy"),
+          label: formatLocalizedDate(value.iso, locale, "MMM yyyy"),
           count: value.count,
           iso: value.iso,
           year: date.getFullYear(),
           month: date.getMonth()
         };
       });
-  }, [items]);
+  }, [items, locale]);
 
   const dayCounts = useMemo(() => {
     const map = new Map<string, number>();
@@ -190,7 +192,7 @@ function DayGrid({
   return (
     <div>
       <div className="grid grid-cols-7 gap-1 pb-1 text-[10px] font-semibold uppercase tracking-wide text-subtle">
-        {WEEKDAY_LABELS.map((label, i) => (
+        {weekdayLabels.map((label, i) => (
           <span key={`${label}-${i}`} className="text-center">
             {label}
           </span>
@@ -202,7 +204,9 @@ function DayGrid({
             return <span key={`b-${index}`} aria-hidden="true" className="aspect-square" />;
           }
           const intensity = maxDayCount > 0 ? cell.count / maxDayCount : 0;
-          const tooltip = `${cell.day}. ${formatDanishDate(cell.iso, "MMM yyyy")}${cell.count ? ` · ${cell.count} indslag` : ""}`;
+          const monthYear = formatLocalizedDate(cell.iso, locale, "MMM yyyy");
+          const countPart = cell.count ? t("calendarEntryCount", { count: cell.count }) : "";
+          const tooltip = `${cell.day}. ${monthYear}${countPart}`;
           return (
             <button
               key={cell.iso}

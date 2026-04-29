@@ -14,7 +14,7 @@ import { PhotoUploader } from "@/components/ui/PhotoUploader";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { Textarea } from "@/components/ui/Textarea";
 import { useToast } from "@/components/ui/Toaster";
-import { categories, categoryLabels, neighbourhoods } from "@/lib/data/taxonomy";
+import { categories, neighbourhoods } from "@/lib/data/taxonomy";
 import {
   AGE_BAND_VALUES,
   loadOwnPublicProfile,
@@ -46,6 +46,7 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
   const tSection = useTranslations("families.publicEditor.section");
   const tVisibility = useTranslations("families.publicEditor.visibility");
   const tBands = useTranslations("families.ageBands");
+  const tTaxonomy = useTranslations("taxonomy");
   const tCommon = useTranslations("common");
   const supabase = useMemo(() => createClient(), []);
   const { toast } = useToast();
@@ -276,7 +277,7 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
                     : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                 )}
               >
-                {categoryLabels[category]}
+                {tTaxonomy(category as VenueCategory)}
               </button>
             );
           })}

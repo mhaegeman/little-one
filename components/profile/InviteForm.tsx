@@ -3,10 +3,11 @@
 import { CircleNotch, Copy, EnvelopeSimple, PaperPlaneTilt } from "@phosphor-icons/react/dist/ssr";
 import type { FormEvent } from "react";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
-import { ROLE_LABELS_DA, inviteShareUrl } from "@/lib/family";
+import { ROLE_LABELS_EN, inviteShareUrl } from "@/lib/family";
 import type { FamilyInvite, FamilyRole } from "@/lib/types";
 
 type Props = {
@@ -20,6 +21,8 @@ type Props = {
 };
 
 export function InviteForm({ familyName, onSubmit }: Props) {
+  const t = useTranslations("inviteForm");
+  const tRoles = useTranslations("roles");
   const [invitedName, setInvitedName] = useState("");
   const [invitedEmail, setInvitedEmail] = useState("");
   const [role, setRole] = useState<FamilyRole>("family");
@@ -46,20 +49,21 @@ export function InviteForm({ familyName, onSubmit }: Props) {
       setStatus("done");
     } catch (caught) {
       setStatus("error");
-      setError(caught instanceof Error ? caught.message : "Kunne ikke oprette invitationen.");
+      setError(caught instanceof Error ? caught.message : t("error"));
     }
   }
 
   if (status === "done" && shareUrl) {
     return (
       <div className="rounded-card bg-sunken p-4 ring-1 ring-hairline">
-        <p className="text-2xs font-bold uppercase tracking-[0.14em] text-warm-500">Invitation klar</p>
+        <p className="text-2xs font-bold uppercase tracking-[0.14em] text-warm-500">
+          {t("doneEyebrow")}
+        </p>
         <h3 className="mt-0.5 font-display text-base font-semibold text-ink">
-          Del linket med {invitedName || invitedEmail || "din familie"}
+          {t("doneTitle", { recipient: invitedName || invitedEmail || familyName })}
         </h3>
         <p className="mt-1.5 text-sm leading-6 text-muted">
-          Vi har sendt en e-mail (hvis adressen blev udfyldt). Du kan også dele linket selv — det
-          virker i 14 dage.
+          {t("doneBody")}
         </p>
         <div className="mt-3 flex flex-col gap-2 sm:flex-row">
           <Input readOnly value={shareUrl} />
@@ -77,7 +81,7 @@ export function InviteForm({ familyName, onSubmit }: Props) {
             }}
           >
             <Copy size={13} weight="bold" aria-hidden="true" />
-            {copied ? "Kopieret!" : "Kopiér"}
+            {copied ? t("copied") : t("copy")}
           </Button>
         </div>
         <button
@@ -91,7 +95,7 @@ export function InviteForm({ familyName, onSubmit }: Props) {
           }}
           className="focus-ring mt-3 text-sm font-semibold text-warm-600 underline-offset-4 hover:underline"
         >
-          Inviter en til
+          {t("inviteAnother")}
         </button>
       </div>
     );
@@ -100,31 +104,31 @@ export function InviteForm({ familyName, onSubmit }: Props) {
   return (
     <form onSubmit={submit} className="rounded-card bg-sunken p-4 ring-1 ring-hairline">
       <p className="text-2xs font-bold uppercase tracking-[0.14em] text-warm-500">
-        Inviter til {familyName}
+        {t("eyebrow", { name: familyName })}
       </p>
       <h3 className="mt-0.5 font-display text-base font-semibold text-ink">
-        Tilføj bedsteforældre, dagplejer eller resten af familien
+        {t("title")}
       </h3>
       <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
         <label className="block">
           <span className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-            Navn
+            {t("nameLabel")}
           </span>
           <Input
             value={invitedName}
             onChange={(event) => setInvitedName(event.target.value)}
-            placeholder="Mormor"
+            placeholder={t("namePlaceholder")}
           />
         </label>
         <label className="block">
           <span className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-            E-mail
+            {t("emailLabel")}
           </span>
           <Input
             type="email"
             value={invitedEmail}
             onChange={(event) => setInvitedEmail(event.target.value)}
-            placeholder="mormor@example.dk"
+            placeholder="grandma@example.com"
             leadingIcon={<EnvelopeSimple size={13} weight="fill" aria-hidden="true" />}
           />
         </label>
@@ -132,10 +136,10 @@ export function InviteForm({ familyName, onSubmit }: Props) {
 
       <fieldset className="mt-3">
         <legend className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-          Rolle
+          {t("roleLegend")}
         </legend>
         <div className="grid grid-cols-3 gap-1.5">
-          {(Object.keys(ROLE_LABELS_DA) as FamilyRole[])
+          {(Object.keys(ROLE_LABELS_EN) as FamilyRole[])
             .filter((roleKey) => roleKey !== "owner")
             .map((roleKey) => (
               <button
@@ -148,7 +152,7 @@ export function InviteForm({ familyName, onSubmit }: Props) {
                     : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                 }`}
               >
-                {ROLE_LABELS_DA[roleKey]}
+                {tRoles(roleKey)}
               </button>
             ))}
         </div>
@@ -156,13 +160,13 @@ export function InviteForm({ familyName, onSubmit }: Props) {
 
       <label className="mt-3 block">
         <span className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-          Personlig hilsen (valgfri)
+          {t("personalMessage")}
         </span>
         <Textarea
           value={message}
           onChange={(event) => setMessage(event.target.value)}
           rows={3}
-          placeholder="Velkommen ind, mormor — så kan du følge med på Astas hverdag."
+          placeholder={t("messagePlaceholder")}
         />
       </label>
 
@@ -170,12 +174,12 @@ export function InviteForm({ familyName, onSubmit }: Props) {
         {status === "saving" ? (
           <>
             <CircleNotch size={13} weight="bold" className="animate-spin" aria-hidden="true" />
-            Sender invitation…
+            {t("submitting")}
           </>
         ) : (
           <>
             <PaperPlaneTilt size={13} weight="fill" aria-hidden="true" />
-            Send invitation
+            {t("submit")}
           </>
         )}
       </Button>

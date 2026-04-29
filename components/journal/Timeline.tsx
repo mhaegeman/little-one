@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Baby,
   Camera,
@@ -5,10 +7,11 @@ import {
   MapPin,
   Sparkle
 } from "@phosphor-icons/react/dist/ssr";
+import { useLocale, useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
 import type { TimelineItem, TimelineItemType } from "@/lib/types";
-import { formatDanishDate } from "@/lib/utils";
+import { formatLocalizedDate } from "@/lib/utils";
 
 const icons: Record<TimelineItemType, typeof Baby> = {
   milestone: Sparkle,
@@ -27,17 +30,20 @@ function monthKey(iso: string) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 }
 
-function monthLabel(iso: string) {
-  return formatDanishDate(iso, "MMMM yyyy");
-}
-
 export function Timeline({ items }: { items: TimelineItem[] }) {
+  const t = useTranslations("journal");
+  const locale = useLocale();
+
+  function monthLabel(iso: string) {
+    return formatLocalizedDate(iso, locale, "MMMM yyyy");
+  }
+
   if (items.length === 0) {
     return (
       <EmptyState
         icon={<Baby size={22} weight="duotone" aria-hidden="true" />}
-        title="Tidslinjen er klar"
-        description="Tilføj den første milepæl, når øjeblikket lander."
+        title={t("empty")}
+        description={t("emptyHint")}
       />
     );
   }
@@ -68,7 +74,7 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
             </h3>
             <span className="h-px flex-1 bg-hairline" />
             <span className="text-2xs font-semibold text-subtle">
-              {group.items.length} {group.items.length === 1 ? "indslag" : "indslag"}
+              {t("entryCount", { count: group.items.length })}
             </span>
           </div>
 
@@ -104,7 +110,7 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
                           ) : null}
                         </div>
                         <p className="mt-0.5 text-xs font-semibold text-subtle">
-                          {formatDanishDate(item.date)}
+                          {formatLocalizedDate(item.date, locale)}
                         </p>
                         {item.description ? (
                           <p className="mt-2 text-sm leading-6 text-muted">
@@ -135,7 +141,7 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
                         ) : (
                           <span className="mt-2 inline-flex items-center gap-1 text-2xs font-semibold text-subtle">
                             <Camera size={11} weight="fill" aria-hidden="true" />
-                            Ingen foto endnu
+                            {t("noPhoto")}
                           </span>
                         )}
                       </div>

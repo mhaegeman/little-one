@@ -9,10 +9,11 @@ import {
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
+import { getLocale, getTranslations } from "next-intl/server";
 import { PlanVisitButton } from "@/components/discover/PlanVisitButton";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { categoryBadgeVariant, categoryLabels } from "@/lib/data/taxonomy";
+import { categoryBadgeVariant } from "@/lib/data/taxonomy";
 import { getVenueById, venues } from "@/lib/data/venues";
 import { googleMapsUrl, monthRangeLabel } from "@/lib/utils";
 
@@ -43,6 +44,12 @@ export default async function VenuePage({ params }: VenuePageProps) {
     notFound();
   }
 
+  const [t, tTaxonomy, locale] = await Promise.all([
+    getTranslations("venuePage"),
+    getTranslations("taxonomy"),
+    getLocale()
+  ]);
+
   return (
     <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
       <article className="mx-auto max-w-5xl">
@@ -51,7 +58,7 @@ export default async function VenuePage({ params }: VenuePageProps) {
           className="focus-ring inline-flex h-9 items-center gap-1.5 rounded-pill bg-surface px-3 text-xs font-semibold text-muted ring-1 ring-hairline transition-colors hover:text-ink"
         >
           <ArrowLeft size={13} weight="bold" aria-hidden="true" />
-          Opdag
+          {t("backLabel")}
         </Link>
 
         <section className="mt-4 overflow-hidden rounded-card bg-surface ring-1 ring-hairline">
@@ -69,7 +76,7 @@ export default async function VenuePage({ params }: VenuePageProps) {
 
             <div className="p-5 sm:p-6">
               <Badge variant={categoryBadgeVariant[venue.category]}>
-                {categoryLabels[venue.category]}
+                {tTaxonomy(venue.category)}
               </Badge>
               <h1 className="mt-3 font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">
                 {venue.name}
@@ -77,18 +84,18 @@ export default async function VenuePage({ params }: VenuePageProps) {
               <p className="mt-3 text-sm leading-6 text-muted">{venue.description}</p>
 
               <div className="mt-5 grid gap-2 sm:grid-cols-2">
-                <InfoTile icon={<Baby size={14} weight="duotone" aria-hidden="true" />} label="Alder">
-                  {monthRangeLabel(venue.ageMinMonths, venue.ageMaxMonths)}
+                <InfoTile icon={<Baby size={14} weight="duotone" aria-hidden="true" />} label={t("ageLabel")}>
+                  {monthRangeLabel(venue.ageMinMonths, venue.ageMaxMonths, locale)}
                 </InfoTile>
-                <InfoTile icon={<MapPinArea size={14} weight="fill" aria-hidden="true" />} label="Bydel">
+                <InfoTile icon={<MapPinArea size={14} weight="fill" aria-hidden="true" />} label={t("neighbourhoodLabel")}>
                   {venue.neighbourhood}
                 </InfoTile>
-                <InfoTile icon={<CalendarBlank size={14} weight="fill" aria-hidden="true" />} label="Åbning">
+                <InfoTile icon={<CalendarBlank size={14} weight="fill" aria-hidden="true" />} label={t("openingLabel")}>
                   {venue.openingHours.summary}
                 </InfoTile>
                 <InfoTile
                   icon={<NavigationArrow size={14} weight="fill" aria-hidden="true" />}
-                  label="Adresse"
+                  label={t("addressLabel")}
                 >
                   {venue.address}
                 </InfoTile>

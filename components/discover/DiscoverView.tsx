@@ -24,9 +24,10 @@ import { Select } from "@/components/ui/Select";
 import { Sheet } from "@/components/ui/Sheet";
 import { useDiscoverParams } from "@/hooks/useDiscoverParams";
 import { useFavorites } from "@/hooks/useFavorites";
-import { categories, categoryLabels, neighbourhoods } from "@/lib/data/taxonomy";
+import { useLocale } from "next-intl";
+import { categories, neighbourhoods } from "@/lib/data/taxonomy";
 import type { FamilyEvent, IndoorOutdoor, Neighbourhood, Venue, VenueCategory } from "@/lib/types";
-import { cn, haversineKm } from "@/lib/utils";
+import { cn, haversineKm, monthRangeLabel } from "@/lib/utils";
 
 type DiscoverViewProps = {
   venues: Venue[];
@@ -37,6 +38,8 @@ type ViewMode = "split" | "list" | "map";
 
 export function DiscoverView({ venues, events }: DiscoverViewProps) {
   const t = useTranslations("discover");
+  const tTaxonomy = useTranslations("taxonomy");
+  const locale = useLocale();
   const { state, update, reset } = useDiscoverParams();
   const {
     categories: selectedCategories,
@@ -199,7 +202,7 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
                   <button
                     type="button"
                     onClick={() => setQuery("")}
-                    aria-label="Ryd søgning"
+                    aria-label={t("clearSearch")}
                     className="focus-ring grid h-5 w-5 place-items-center rounded-md hover:bg-sunken"
                   >
                     <X size={12} weight="bold" aria-hidden="true" />
@@ -220,14 +223,14 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
                 ? "bg-warm-50 text-warm-600 ring-warm-200"
                 : "bg-sunken text-muted ring-hairline hover:text-ink"
             )}
-            title={`${favorites.length} gemte`}
+            title={`${favorites.length} ${t("saved")}`}
           >
             <Heart
               size={14}
               weight={savedOnly ? "fill" : "regular"}
               aria-hidden="true"
             />
-            <span className="hidden sm:inline">Gemte</span>
+            <span className="hidden sm:inline">{t("saved")}</span>
             {favorites.length > 0 ? (
               <span
                 className={cn(
@@ -256,7 +259,7 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
 
           <div className="hidden lg:block">
             <SegmentedControl<ViewMode>
-              ariaLabel="Visning"
+              ariaLabel={t("viewMode")}
               value={viewMode}
               onChange={setViewMode}
               options={[
@@ -289,7 +292,7 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
         {activeFilterCount > 0 ? (
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
             {selectedCategories.map((c) => (
-              <ChipDismiss key={c} label={categoryLabels[c]} onClear={() => toggleCategory(c)} />
+              <ChipDismiss key={c} label={tTaxonomy(c)} onClear={() => toggleCategory(c)} />
             ))}
             {neighbourhood !== "all" ? (
               <ChipDismiss label={neighbourhood} onClear={() => setNeighbourhood("all")} />
@@ -301,12 +304,12 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
               />
             ) : null}
             {savedOnly ? (
-              <ChipDismiss label="Gemte steder" onClear={() => setSavedOnly(false)} />
+              <ChipDismiss label={t("saved")} onClear={() => setSavedOnly(false)} />
             ) : null}
             {openNow ? <ChipDismiss label={t("openNow")} onClear={() => setOpenNow(false)} /> : null}
             {(ageMin > 0 || ageMax < 72) ? (
               <ChipDismiss
-                label={`${ageMin}–${ageMax} mdr.`}
+                label={t("ageRange", { min: ageMin, max: ageMax })}
                 onClear={() => {
                   setAgeMin(0);
                   setAgeMax(72);
@@ -318,7 +321,7 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
               onClick={resetFilters}
               className="focus-ring ml-1 text-2xs font-bold uppercase tracking-wide text-warm-600 hover:text-warm-700"
             >
-              Nulstil alle
+              {t("resetAll")}
             </button>
           </div>
         ) : null}
@@ -334,7 +337,7 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
                 <p className="mt-1 text-sm text-muted">{t("noResultsHint")}</p>
                 <div className="mt-3">
                   <Button variant="secondary" size="sm" onClick={resetFilters}>
-                    {t("filters")} · Nulstil
+                    {t("filters")} · {t("reset")}
                   </Button>
                 </div>
               </div>
@@ -385,9 +388,9 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
         <div className="mt-6 flex items-center justify-between gap-2 border-t border-hairline pt-4">
           <Button variant="ghost" size="md" onClick={resetFilters}>
             <X size={14} weight="bold" aria-hidden="true" />
-            Nulstil
+            {t("reset")}
           </Button>
-          <Button onClick={() => setFiltersOpen(false)}>Vis {filteredVenues.length} steder</Button>
+          <Button onClick={() => setFiltersOpen(false)}>{t("showResults", { count: filteredVenues.length })}</Button>
         </div>
       </Sheet>
     </div>
@@ -395,13 +398,14 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
 }
 
 function ChipDismiss({ label, onClear }: { label: string; onClear: () => void }) {
+  const t = useTranslations("discover");
   return (
     <span className="inline-flex h-7 items-center gap-1 rounded-pill bg-sage-100 pl-2.5 pr-1 text-2xs font-semibold text-sage-700 ring-1 ring-sage-200">
       {label}
       <button
         type="button"
         onClick={onClear}
-        aria-label={`Fjern ${label}`}
+        aria-label={t("removeFilter", { label })}
         className="focus-ring grid h-5 w-5 place-items-center rounded-full hover:bg-sage-200"
       >
         <X size={11} weight="bold" aria-hidden="true" />
@@ -444,18 +448,20 @@ function FilterPanel({
   userLocation,
   setUserLocation
 }: FilterPanelProps) {
+  const t = useTranslations("discover");
+  const tTaxonomy = useTranslations("taxonomy");
   return (
     <div className="space-y-5">
       <div>
         <div className="mb-2 flex items-center justify-between text-xs font-bold uppercase tracking-wide text-muted">
-          <span>Alder</span>
+          <span>{t("age")}</span>
           <span className="font-semibold text-ink/80">
-            {ageMin}–{ageMax} mdr.
+            {t("ageRange", { min: ageMin, max: ageMax })}
           </span>
         </div>
         <div className="space-y-2 rounded-lg bg-sunken p-3 ring-1 ring-hairline">
           <input
-            aria-label="Minimum alder i måneder"
+            aria-label={t("ageMinLabel")}
             type="range"
             min={0}
             max={72}
@@ -464,7 +470,7 @@ function FilterPanel({
             className="w-full accent-sage-500"
           />
           <input
-            aria-label="Maksimum alder i måneder"
+            aria-label={t("ageMaxLabel")}
             type="range"
             min={0}
             max={72}
@@ -476,7 +482,7 @@ function FilterPanel({
       </div>
 
       <div>
-        <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">Kategori</p>
+        <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">{t("category")}</p>
         <div className="flex flex-wrap gap-1.5">
           {categories.map((category) => {
             const active = selectedCategories.includes(category);
@@ -492,7 +498,7 @@ function FilterPanel({
                     : "bg-surface text-ink ring-hairline hover:bg-sunken"
                 )}
               >
-                {categoryLabels[category]}
+                {tTaxonomy(category as VenueCategory)}
               </button>
             );
           })}
@@ -501,12 +507,12 @@ function FilterPanel({
 
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="block">
-          <span className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted">Bydel</span>
+          <span className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted">{t("neighbourhood")}</span>
           <Select
             value={neighbourhood}
             onChange={(event) => setNeighbourhood(event.target.value as Neighbourhood | "all")}
           >
-            <option value="all">Alle bydele</option>
+            <option value="all">{t("allNeighbourhoods")}</option>
             {neighbourhoods.map((item) => (
               <option key={item} value={item}>
                 {item}
@@ -516,20 +522,20 @@ function FilterPanel({
         </label>
 
         <label className="block">
-          <span className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted">Inde / ude</span>
+          <span className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-muted">{t("indoorOutdoor")}</span>
           <Select
             value={indoorOutdoor}
             onChange={(event) => setIndoorOutdoor(event.target.value as IndoorOutdoor | "all")}
           >
-            <option value="all">Alle</option>
-            <option value="indoor">Indendørs</option>
-            <option value="outdoor">Udendørs</option>
+            <option value="all">{t("all")}</option>
+            <option value="indoor">{t("indoor")}</option>
+            <option value="outdoor">{t("outdoor")}</option>
           </Select>
         </label>
       </div>
 
       <label className="flex items-center justify-between gap-3 rounded-lg bg-surface px-3 py-2.5 ring-1 ring-hairline">
-        <span className="text-sm font-semibold text-ink">Åbent nu</span>
+        <span className="text-sm font-semibold text-ink">{t("openNow")}</span>
         <input
           type="checkbox"
           checked={openNow}
@@ -539,7 +545,7 @@ function FilterPanel({
       </label>
 
       <div>
-        <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">Lokation</p>
+        <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted">{t("location")}</p>
         <LocationControl userLocation={userLocation} onChange={setUserLocation} />
       </div>
     </div>

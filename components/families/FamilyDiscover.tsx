@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/Input";
 import { Sheet } from "@/components/ui/Sheet";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useToast } from "@/components/ui/Toaster";
-import { categories, categoryLabels, neighbourhoods } from "@/lib/data/taxonomy";
+import { categories, neighbourhoods } from "@/lib/data/taxonomy";
 import {
   AGE_BAND_VALUES,
   discoverFamilies,
@@ -31,6 +31,7 @@ export function FamilyDiscover({ me, primaryFamily }: Props) {
   const t = useTranslations("families.discover");
   const tBands = useTranslations("families.ageBands");
   const tCommon = useTranslations("common");
+  const tTaxonomy = useTranslations("taxonomy");
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [results, setResults] = useState<FamilyPublicProfile[]>([]);
@@ -261,7 +262,7 @@ export function FamilyDiscover({ me, primaryFamily }: Props) {
                         : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                     )}
                   >
-                    {categoryLabels[category]}
+                    {tTaxonomy(category as VenueCategory)}
                   </button>
                 );
               })}

@@ -8,13 +8,14 @@ import {
   X
 } from "@phosphor-icons/react/dist/ssr";
 import { useEffect, useRef, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { useToast } from "@/components/ui/Toaster";
 import { usePlannedOutings } from "@/hooks/usePlannedOutings";
 import { trapFocus } from "@/lib/focus";
-import { formatDanishDate } from "@/lib/utils";
+import { formatLocalizedDate } from "@/lib/utils";
 
 export function PlanVisitButton({
   venueId,
@@ -25,6 +26,8 @@ export function PlanVisitButton({
   venueName: string;
   className?: string;
 }) {
+  const t = useTranslations("planVisit");
+  const locale = useLocale();
   const { toast } = useToast();
   const { outings, add, remove, isPlanned } = usePlannedOutings();
   const planned = isPlanned(venueId);
@@ -60,8 +63,8 @@ export function PlanVisitButton({
     setOpen(false);
     setNote("");
     toast({
-      title: "Tilføjet til planlagte ture",
-      description: `${venueName} · ${formatDanishDate(date)}`,
+      title: t("addedToast"),
+      description: `${venueName} · ${formatLocalizedDate(date, locale)}`,
       variant: "success"
     });
   }
@@ -70,7 +73,7 @@ export function PlanVisitButton({
     if (!existing) return;
     remove(existing.id);
     toast({
-      title: "Plan fjernet",
+      title: t("removedToast"),
       description: venueName,
       variant: "info",
       duration: 2200
@@ -83,11 +86,11 @@ export function PlanVisitButton({
         <div className="flex flex-col gap-2 sm:flex-row">
           <span className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-sage-100 px-3 text-sm font-semibold text-sage-700 ring-1 ring-sage-200">
             <CheckCircle size={14} weight="fill" aria-hidden="true" />
-            Planlagt {formatDanishDate(existing.date)}
+            {t("plannedLabel", { date: formatLocalizedDate(existing.date, locale) })}
           </span>
           <Button variant="ghost" onClick={handleCancel}>
             <X size={14} weight="bold" aria-hidden="true" />
-            Fjern plan
+            {t("removePlan")}
           </Button>
         </div>
       </div>
@@ -105,27 +108,27 @@ export function PlanVisitButton({
         className="w-full"
       >
         <CalendarPlus size={14} weight="fill" aria-hidden="true" />
-        Plan et besøg
+        {t("buttonLabel")}
       </Button>
 
       {open ? (
         <div
           ref={popoverRef}
           role="dialog"
-          aria-label={`Plan et besøg på ${venueName}`}
+          aria-label={t("dialogLabel", { name: venueName })}
           className="absolute left-0 right-0 top-12 z-30 rounded-card bg-surface p-3 shadow-lift ring-1 ring-hairline"
         >
           <div className="flex items-start justify-between gap-2">
             <div>
               <p className="text-2xs font-bold uppercase tracking-[0.14em] text-warm-500">
-                Planlæg
+                {t("planHeading")}
               </p>
               <p className="font-display text-sm font-semibold text-ink">{venueName}</p>
             </div>
             <button
               type="button"
               onClick={() => setOpen(false)}
-              aria-label="Luk"
+              aria-label={t("closeLabel")}
               className="focus-ring grid h-7 w-7 place-items-center rounded-md text-muted hover:bg-sunken hover:text-ink"
             >
               <X size={12} weight="bold" aria-hidden="true" />
@@ -134,7 +137,7 @@ export function PlanVisitButton({
 
           <label className="mt-3 block">
             <span className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-              Dato
+              {t("dateLabel")}
             </span>
             <Input
               type="date"
@@ -147,23 +150,23 @@ export function PlanVisitButton({
 
           <label className="mt-2 block">
             <span className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-              Note (valgfri)
+              {t("noteLabel")}
             </span>
             <Textarea
               value={note}
               onChange={(event) => setNote(event.target.value)}
               rows={2}
-              placeholder="Mød Mormor kl. 10 ved indgangen…"
+              placeholder={t("notePlaceholder")}
             />
           </label>
 
           <div className="mt-3 flex gap-2">
             <Button onClick={handleSave} className="flex-1">
               <CalendarCheck size={14} weight="fill" aria-hidden="true" />
-              Gem plan
+              {t("savePlan")}
             </Button>
             <Button variant="ghost" onClick={() => setOpen(false)}>
-              Annuller
+              {t("cancel")}
             </Button>
           </div>
         </div>

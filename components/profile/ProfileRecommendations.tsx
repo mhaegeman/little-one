@@ -2,14 +2,15 @@
 
 import { ArrowSquareOut, CalendarDots, Sparkle } from "@phosphor-icons/react/dist/ssr";
 import { useMemo } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { VenueCard } from "@/components/discover/VenueCard";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { categoryBadgeVariant, categoryLabels } from "@/lib/data/taxonomy";
+import { categoryBadgeVariant } from "@/lib/data/taxonomy";
 import { events as allEvents, venues as allVenues } from "@/lib/data/venues";
 import { recommendEvents, recommendVenues } from "@/lib/profile";
-import type { FamilyProfile } from "@/lib/types";
-import { formatDanishDate, monthRangeLabel } from "@/lib/utils";
+import type { FamilyProfile, VenueCategory } from "@/lib/types";
+import { formatLocalizedDate, monthRangeLabel } from "@/lib/utils";
 
 type Props = {
   profile: FamilyProfile | null;
@@ -17,6 +18,10 @@ type Props = {
 };
 
 export function ProfileRecommendations({ profile, onTunePreferences }: Props) {
+  const t = useTranslations("profileRecommendations");
+  const tTaxonomy = useTranslations("taxonomy");
+  const locale = useLocale();
+
   const venuePicks = useMemo(() => recommendVenues(profile, allVenues, 6), [profile]);
   const eventPicks = useMemo(() => recommendEvents(profile, allEvents, 4), [profile]);
 
@@ -31,20 +36,18 @@ export function ProfileRecommendations({ profile, onTunePreferences }: Props) {
       <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">For jer</p>
+            <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">{t("eyebrow")}</p>
             <h2 className="mt-0.5 font-display text-2xl font-semibold text-ink">
-              {hasAnyPrefs ? "Skræddersyede anbefalinger" : "Mest elskede steder"}
+              {hasAnyPrefs ? t("tailoredTitle") : t("popularTitle")}
             </h2>
             <p className="mt-1.5 max-w-xl text-sm leading-6 text-muted">
-              {hasAnyPrefs
-                ? "Vi blander interesser, bydele og barnets alder for at finde steder der passer til hverdagen."
-                : "Tilføj interesser, bydele og en alder, så vi kan personalisere listen for jer."}
+              {hasAnyPrefs ? t("tailoredBody") : t("popularBody")}
             </p>
           </div>
           {!hasAnyPrefs ? (
             <Button onClick={onTunePreferences}>
               <Sparkle size={14} weight="fill" aria-hidden="true" />
-              Tilpas mine anbefalinger
+              {t("tunePreferences")}
             </Button>
           ) : null}
         </div>
@@ -53,7 +56,7 @@ export function ProfileRecommendations({ profile, onTunePreferences }: Props) {
           <div className="mt-3 flex flex-wrap items-center gap-1">
             {profile?.interests.map((category) => (
               <Badge key={category} variant="sage">
-                {categoryLabels[category]}
+                {tTaxonomy(category as VenueCategory)}
               </Badge>
             ))}
             {profile?.neighbourhoods.map((hood) => (
@@ -65,7 +68,8 @@ export function ProfileRecommendations({ profile, onTunePreferences }: Props) {
               <Badge variant="neutral">
                 {monthRangeLabel(
                   profile?.childAgeMinMonths ?? 0,
-                  profile?.childAgeMaxMonths ?? 72
+                  profile?.childAgeMaxMonths ?? 72,
+                  locale
                 )}
               </Badge>
             ) : null}
@@ -76,7 +80,7 @@ export function ProfileRecommendations({ profile, onTunePreferences }: Props) {
       <section>
         <div className="mb-2 flex items-center gap-2">
           <Sparkle size={14} weight="fill" className="text-warm-500" aria-hidden="true" />
-          <h3 className="font-display text-lg font-semibold text-ink">Steder I vil elske</h3>
+          <h3 className="font-display text-lg font-semibold text-ink">{t("venuesTitle")}</h3>
         </div>
         <div className="grid gap-3 xl:grid-cols-2">
           {venuePicks.map((venue) => (
@@ -88,11 +92,11 @@ export function ProfileRecommendations({ profile, onTunePreferences }: Props) {
       <section>
         <div className="mb-2 flex items-center gap-2">
           <CalendarDots size={14} weight="fill" className="text-warm-500" aria-hidden="true" />
-          <h3 className="font-display text-lg font-semibold text-ink">Kommende begivenheder</h3>
+          <h3 className="font-display text-lg font-semibold text-ink">{t("eventsTitle")}</h3>
         </div>
         {eventPicks.length === 0 ? (
           <p className="rounded-card bg-surface p-4 text-sm text-muted ring-1 ring-hairline">
-            Ingen kommende begivenheder lige nu — kig forbi om et par dage.
+            {t("noEvents")}
           </p>
         ) : (
           <ul className="grid gap-2 sm:grid-cols-2">
@@ -103,14 +107,14 @@ export function ProfileRecommendations({ profile, onTunePreferences }: Props) {
               >
                 <div className="flex items-start justify-between gap-2">
                   <Badge variant={categoryBadgeVariant[event.category]}>
-                    {categoryLabels[event.category]}
+                    {tTaxonomy(event.category as VenueCategory)}
                   </Badge>
                   <span className="text-2xs font-semibold text-subtle">{event.neighbourhood}</span>
                 </div>
                 <h4 className="font-display text-base font-semibold text-ink">{event.title}</h4>
                 <p className="line-clamp-2 text-sm leading-5 text-muted">{event.description}</p>
                 <p className="text-xs font-semibold text-sage-700">
-                  {formatDanishDate(event.dateStart, "EEEE d. MMM yyyy 'kl.' HH:mm")}
+                  {formatLocalizedDate(event.dateStart, locale, t("eventDatePattern"))}
                 </p>
                 {event.bookingUrl ? (
                   <a
@@ -119,7 +123,7 @@ export function ProfileRecommendations({ profile, onTunePreferences }: Props) {
                     rel="noreferrer"
                     className="focus-ring inline-flex items-center gap-1 text-xs font-semibold text-warm-600 hover:text-warm-700"
                   >
-                    Læs mere
+                    {t("readMore")}
                     <ArrowSquareOut size={11} weight="bold" aria-hidden="true" />
                   </a>
                 ) : null}

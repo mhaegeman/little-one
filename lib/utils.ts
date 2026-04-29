@@ -31,7 +31,7 @@ export function ageInMonths(dateOfBirth: string) {
   return Math.max(0, differenceInMonths(new Date(), parseISO(dateOfBirth)));
 }
 
-export function formatChildAge(dateOfBirth: string) {
+export function formatChildAge(dateOfBirth: string, locale = "da") {
   const duration = intervalToDuration({
     start: parseISO(dateOfBirth),
     end: new Date()
@@ -39,18 +39,23 @@ export function formatChildAge(dateOfBirth: string) {
   const years = duration.years ?? 0;
   const months = duration.months ?? 0;
 
-  if (years === 0) {
-    return `${months} mdr.`;
+  if (locale === "en") {
+    if (years === 0) return `${months} mo.`;
+    if (months === 0) return `${years} yr`;
+    return `${years} yr ${months} mo.`;
   }
 
-  if (months === 0) {
-    return `${years} år`;
-  }
-
+  if (years === 0) return `${months} mdr.`;
+  if (months === 0) return `${years} år`;
   return `${years} år og ${months} mdr.`;
 }
 
-export function monthRangeLabel(min: number, max: number) {
+export function monthRangeLabel(min: number, max: number, locale = "da") {
+  if (locale === "en") {
+    const minLabel = min < 12 ? `${min} mo.` : `${Math.floor(min / 12)} yr`;
+    const maxLabel = max < 12 ? `${max} mo.` : `${Math.floor(max / 12)} yr`;
+    return `${minLabel}–${maxLabel}`;
+  }
   const minLabel = min < 12 ? `${min} mdr.` : `${Math.floor(min / 12)} år`;
   const maxLabel = max < 12 ? `${max} mdr.` : `${Math.floor(max / 12)} år`;
   return `${minLabel}-${maxLabel}`;

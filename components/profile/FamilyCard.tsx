@@ -2,11 +2,11 @@
 
 import { Crown, PencilSimple, Plus, Users } from "@phosphor-icons/react/dist/ssr";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { InviteForm } from "@/components/profile/InviteForm";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
-import { ROLE_LABELS_DA } from "@/lib/family";
 import type { Family, FamilyInvite, FamilyMember, FamilyRole } from "@/lib/types";
 
 type Props = {
@@ -33,6 +33,8 @@ export function FamilyCard({
   onCreateInvite,
   onRevokeInvite
 }: Props) {
+  const t = useTranslations("familyCard");
+  const tRoles = useTranslations("roles");
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(family.name);
   const [description, setDescription] = useState(family.description ?? "");
@@ -60,7 +62,7 @@ export function FamilyCard({
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-black/0" />
         <div className="absolute bottom-2.5 left-4 right-4 flex items-end justify-between text-white">
           <div>
-            <p className="text-2xs font-bold uppercase tracking-[0.16em] text-white/85">Familie</p>
+            <p className="text-2xs font-bold uppercase tracking-[0.16em] text-white/85">{t("eyebrow")}</p>
             <h2 className="font-display text-2xl font-semibold leading-tight drop-shadow-sm">
               {family.name}
             </h2>
@@ -72,7 +74,7 @@ export function FamilyCard({
               className="focus-ring flex h-8 items-center gap-1 rounded-pill bg-white/95 px-2.5 text-2xs font-semibold text-ink"
             >
               <PencilSimple size={12} weight="bold" aria-hidden="true" />
-              Rediger
+              {t("editButton")}
             </button>
           ) : null}
         </div>
@@ -83,24 +85,24 @@ export function FamilyCard({
           <div className="space-y-2.5">
             <label className="block">
               <span className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-                Familienavn
+                {t("familyNameLabel")}
               </span>
               <Input value={name} onChange={(event) => setName(event.target.value)} />
             </label>
             <label className="block">
               <span className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-                Beskrivelse
+                {t("descriptionLabel")}
               </span>
               <Textarea
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
                 rows={3}
-                placeholder="Vi er fire i alt — Asta, Theo og deres forældre."
+                placeholder={t("descriptionPlaceholder")}
               />
             </label>
             <label className="block">
               <span className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-                Forsidebillede (URL)
+                {t("coverLabel")}
               </span>
               <Input
                 value={coverUrl}
@@ -110,17 +112,16 @@ export function FamilyCard({
             </label>
             <div className="flex gap-2">
               <Button type="button" onClick={saveDetails}>
-                Gem familie
+                {t("saveFamily")}
               </Button>
               <Button type="button" variant="secondary" onClick={() => setEditing(false)}>
-                Annullér
+                {t("cancel")}
               </Button>
             </div>
           </div>
         ) : (
           <p className="text-sm leading-6 text-muted">
-            {family.description ??
-              "Tilføj en beskrivelse, så bedsteforældre og familie ved hvad I bruger Lille Liv til."}
+            {family.description ?? t("defaultDescription")}
           </p>
         )}
 
@@ -128,7 +129,7 @@ export function FamilyCard({
           <div className="flex items-center justify-between">
             <h3 className="flex items-center gap-1.5 font-display text-base font-semibold text-ink">
               <Users size={14} weight="fill" className="text-sage-700" aria-hidden="true" />
-              Medlemmer
+              {t("membersTitle")}
               <span className="text-xs font-semibold text-subtle">({members.length})</span>
             </h3>
             {isOwner ? (
@@ -139,14 +140,14 @@ export function FamilyCard({
                 onClick={() => setShowInvite((value) => !value)}
               >
                 <Plus size={12} weight="bold" aria-hidden="true" />
-                Inviter
+                {t("inviteButton")}
               </Button>
             ) : null}
           </div>
 
           <ul className="mt-2.5 space-y-1.5">
             {members.map((member) => {
-              const name = member.profile?.displayName ?? member.displayName ?? "Familie";
+              const name = member.profile?.displayName ?? member.displayName ?? t("fallbackMember");
               const initials = name
                 .split(/\s+/)
                 .map((part) => part[0]?.toUpperCase() ?? "")
@@ -185,7 +186,7 @@ export function FamilyCard({
                     {member.role === "owner" ? (
                       <Crown size={10} weight="fill" aria-hidden="true" />
                     ) : null}
-                    {ROLE_LABELS_DA[member.role]}
+                    {tRoles(member.role)}
                   </span>
                 </li>
               );
@@ -208,7 +209,7 @@ export function FamilyCard({
 
         {invites.filter((invite) => invite.status === "pending").length > 0 ? (
           <div className="mt-4">
-            <h3 className="font-display text-sm font-semibold text-ink">Afventer svar</h3>
+            <h3 className="font-display text-sm font-semibold text-ink">{t("pendingTitle")}</h3>
             <ul className="mt-1.5 space-y-1.5">
               {invites
                 .filter((invite) => invite.status === "pending")
@@ -219,10 +220,10 @@ export function FamilyCard({
                   >
                     <div>
                       <p className="text-sm font-semibold text-ink">
-                        {invite.invitedName ?? invite.invitedEmail ?? "Familiemedlem"}
+                        {invite.invitedName ?? invite.invitedEmail ?? t("fallbackMember")}
                       </p>
                       <p className="text-xs text-muted">
-                        {ROLE_LABELS_DA[invite.role]}
+                        {tRoles(invite.role)}
                         {invite.invitedEmail ? ` · ${invite.invitedEmail}` : ""}
                       </p>
                     </div>
@@ -232,7 +233,7 @@ export function FamilyCard({
                         onClick={() => onRevokeInvite(invite.id)}
                         className="focus-ring text-xs font-semibold text-warm-600 underline-offset-4 hover:underline"
                       >
-                        Træk tilbage
+                        {t("revoke")}
                       </button>
                     ) : null}
                   </li>

@@ -15,7 +15,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { categoryLabels } from "@/lib/data/taxonomy";
+import { useTranslations } from "next-intl";
 import { venues } from "@/lib/data/venues";
 import { cn } from "@/lib/utils";
 
@@ -127,6 +127,7 @@ export function CommandPalette({
   onClose: () => void;
 }) {
   const router = useRouter();
+  const tTaxonomy = useTranslations("taxonomy");
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
   const [recent, setRecent] = useState<string[]>([]);
@@ -164,7 +165,7 @@ export function CommandPalette({
         kind: "venue",
         id: v.id,
         label: v.name,
-        description: `${categoryLabels[v.category]} · ${v.neighbourhood}`,
+        description: `${tTaxonomy(v.category)} · ${v.neighbourhood}`,
         href: `/venues/${v.id}`
       }));
 
@@ -192,12 +193,12 @@ export function CommandPalette({
         kind: "venue" as const,
         id: v.id,
         label: v.name,
-        description: `${categoryLabels[v.category]} · ${v.neighbourhood}`,
+        description: `${tTaxonomy(v.category)} · ${v.neighbourhood}`,
         href: `/venues/${v.id}`
       }));
 
     return [...recentVenues, ...routeResults, ...actionResults, ...venueResults.slice(0, 6)];
-  }, [query, recent, venueIndex]);
+  }, [query, recent, venueIndex, tTaxonomy]);
 
   const sectionBoundaries = useMemo(() => {
     // Build labels for sections based on item position

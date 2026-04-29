@@ -13,8 +13,9 @@ import {
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
-import { categoryBadgeVariant, categoryLabels } from "@/lib/data/taxonomy";
+import { categoryBadgeVariant } from "@/lib/data/taxonomy";
 import { type FamilyConnection, type FamilyPublicProfile } from "@/lib/social";
+import type { VenueCategory } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -56,6 +57,7 @@ function StatusPill({ connection }: { connection?: FamilyConnection }) {
 export function FamilyPublicCard({ profile, connection, href }: Props) {
   const t = useTranslations("families.card");
   const tBands = useTranslations("families.ageBands");
+  const tTaxonomy = useTranslations("taxonomy");
   const target = href ?? `/families/${profile.familyId}`;
   const showAvatar = profile.visibility !== "minimal" && profile.coverUrl;
   const showDescription = profile.visibility !== "minimal" && profile.description;
@@ -120,7 +122,7 @@ export function FamilyPublicCard({ profile, connection, href }: Props) {
             ) : null}
             {profile.interests.slice(0, 2).map((interest) => (
               <Badge key={interest} variant={categoryBadgeVariant[interest]}>
-                {categoryLabels[interest]}
+                {tTaxonomy(interest as VenueCategory)}
               </Badge>
             ))}
           </div>

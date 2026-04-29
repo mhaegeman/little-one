@@ -12,7 +12,7 @@ import {
   UserPlus,
   X
 } from "@phosphor-icons/react/dist/ssr";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -41,46 +41,47 @@ const demoChild: Child = {
   photoUrl: "https://images.unsplash.com/photo-1546015720-b8b30df5aa27?auto=format&fit=crop&w=600&q=80"
 };
 
-const demoTimeline: TimelineItem[] = [
-  {
-    id: "demo-aula-1",
-    type: "aula",
-    title: "En blød formiddag i puderummet",
-    description: "Børnehaven delte et lille glimt fra dagens motorikleg.",
-    date: "2026-04-23",
-    badge: "Fra børnehaven"
-  },
-  {
-    id: "demo-activity-1",
-    type: "activity",
-    title: "Superkilen med løbecykel",
-    description: "Vi øvede stop og start ved den røde plads og spiste boller på vejen hjem.",
-    date: "2026-04-19"
-  },
-  {
-    id: "demo-milestone-1",
-    type: "milestone",
-    title: "Første hele sætning",
-    description: "“Mere vand, tak.” Meget bestemt og meget sødt.",
-    date: "2026-04-10"
-  }
-];
-
 type SheetMode = "milestone" | "activity" | "child" | null;
 
 export function JournalClient() {
   const t = useTranslations("journal");
+  const locale = useLocale();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [signedIn, setSignedIn] = useState(false);
   const [children, setChildren] = useState<Child[]>([]);
   const [activeChildId, setActiveChildId] = useState<string>(demoChild.id);
-  const [timeline, setTimeline] = useState<TimelineItem[]>(demoTimeline);
+  const [timeline, setTimeline] = useState<TimelineItem[]>([]);
   const [sheetMode, setSheetMode] = useState<SheetMode>(null);
   const [usingDemo, setUsingDemo] = useState(false);
   const [filterKind, setFilterKind] = useState<FilterKind>("all");
   const [filterTag, setFilterTag] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+
+  const demoTimeline: TimelineItem[] = useMemo(() => [
+    {
+      id: "demo-aula-1",
+      type: "aula",
+      title: t("demo.aula1Title"),
+      description: t("demo.aula1Description"),
+      date: "2026-04-23",
+      badge: t("aulaBadgeKindergarten")
+    },
+    {
+      id: "demo-activity-1",
+      type: "activity",
+      title: t("demo.activity1Title"),
+      description: t("demo.activity1Description"),
+      date: "2026-04-19"
+    },
+    {
+      id: "demo-milestone-1",
+      type: "milestone",
+      title: t("demo.milestone1Title"),
+      description: t("demo.milestone1Description"),
+      date: "2026-04-10"
+    }
+  ], [t]);
 
   useEffect(() => {
     const newParam = searchParams.get("new");
@@ -94,6 +95,7 @@ export function JournalClient() {
 
     if (!client) {
       setChildren([demoChild]);
+      setTimeline(demoTimeline);
       setUsingDemo(true);
       setLoading(false);
       return;
@@ -189,7 +191,7 @@ export function JournalClient() {
           description: item.content ?? undefined,
           date: item.posted_at,
           photos: item.photos ?? undefined,
-          badge: "Fra vuggestuen"
+          badge: t("aulaBadgeNursery")
         }))
       ];
 
@@ -210,6 +212,7 @@ export function JournalClient() {
     });
 
     return () => data.subscription.unsubscribe();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const activeChild = useMemo(
@@ -291,10 +294,10 @@ export function JournalClient() {
                   <Button
                     variant="ghost"
                     onClick={() => setSheetMode("child")}
-                    aria-label="Tilføj barn"
+                    aria-label={t("addChildTitle")}
                   >
                     <UserPlus size={14} weight="bold" aria-hidden="true" />
-                    Barn
+                    {t("addChildButton")}
                   </Button>
                 ) : null}
               </div>
@@ -321,7 +324,7 @@ export function JournalClient() {
                 {activeChild.name}
               </h2>
               <p className="text-xs font-semibold text-muted">
-                {formatChildAge(activeChild.dateOfBirth)}
+                {formatChildAge(activeChild.dateOfBirth, locale)}
               </p>
             </div>
 
@@ -372,35 +375,35 @@ export function JournalClient() {
         {/* Filter bar */}
         {timeline.length > 0 ? (
           <section
-            aria-label="Filtrér tidslinjen"
+            aria-label={t("filterLabel")}
             className="mt-4 flex flex-wrap items-center gap-2 rounded-card bg-surface p-2 ring-1 ring-hairline"
           >
             <div className="flex flex-wrap items-center gap-1">
               <FilterChip
                 active={filterKind === "all"}
                 onClick={() => setFilterKind("all")}
-                label="Alle"
+                label={t("filter.all")}
                 count={timeline.length}
               />
               <FilterChip
                 active={filterKind === "milestone"}
                 onClick={() => setFilterKind("milestone")}
                 icon={<Sparkle size={11} weight="fill" aria-hidden="true" />}
-                label="Milepæle"
+                label={t("filter.milestones")}
                 count={timeline.filter((i) => i.type === "milestone").length}
               />
               <FilterChip
                 active={filterKind === "activity"}
                 onClick={() => setFilterKind("activity")}
                 icon={<MapPin size={11} weight="fill" aria-hidden="true" />}
-                label="Ture"
+                label={t("filter.outings")}
                 count={timeline.filter((i) => i.type === "activity").length}
               />
               <FilterChip
                 active={filterKind === "aula"}
                 onClick={() => setFilterKind("aula")}
                 icon={<House size={11} weight="fill" aria-hidden="true" />}
-                label="Aula"
+                label={t("filter.aula")}
                 count={timeline.filter((i) => i.type === "aula").length}
               />
             </div>
@@ -408,14 +411,14 @@ export function JournalClient() {
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Søg i journalen…"
+                placeholder={t("filter.searchPlaceholder")}
                 leadingIcon={<MagnifyingGlass size={14} weight="bold" aria-hidden="true" />}
                 trailingIcon={
                   search ? (
                     <button
                       type="button"
                       onClick={() => setSearch("")}
-                      aria-label="Ryd søgning"
+                      aria-label={t("filter.clearSearch")}
                       className="focus-ring grid h-5 w-5 place-items-center rounded-md hover:bg-sunken"
                     >
                       <X size={11} weight="bold" aria-hidden="true" />
@@ -462,7 +465,7 @@ export function JournalClient() {
                     onClick={() => setFilterTag(null)}
                     className="focus-ring text-2xs font-bold uppercase tracking-wide text-warm-600 hover:text-warm-700"
                   >
-                    Ryd tag
+                    {t("filter.clearTag")}
                   </button>
                 ) : null}
               </div>
@@ -478,8 +481,8 @@ export function JournalClient() {
           {filteredTimeline.length === 0 && filtersActive ? (
             <EmptyState
               icon={<MagnifyingGlass size={20} weight="bold" aria-hidden="true" />}
-              title="Ingen indslag matcher"
-              description="Prøv at rydde søgningen eller skifte filter."
+              title={t("noEntriesMatch")}
+              description={t("noEntriesMatchHint")}
               action={
                 <Button
                   variant="secondary"
@@ -491,7 +494,7 @@ export function JournalClient() {
                   }}
                 >
                   <X size={12} weight="bold" aria-hidden="true" />
-                  Nulstil
+                  {t("resetFilter")}
                 </Button>
               }
             />
@@ -505,10 +508,9 @@ export function JournalClient() {
           <div className="flex items-start gap-2">
             <Sparkle size={16} weight="fill" className="mt-0.5 text-warm-500" aria-hidden="true" />
             <div>
-              <h3 className="font-display text-base font-semibold text-ink">Aula</h3>
+              <h3 className="font-display text-base font-semibold text-ink">{t("aulaSectionTitle")}</h3>
               <p className="mt-1 text-sm leading-6 text-muted">
-                Aula-forbindelse kommer snart som sikker MitID-baseret import. Lille Liv gemmer
-                ikke Aula-adgangskoder i MVP-demoen.
+                {t("aulaSectionBody")}
               </p>
             </div>
           </div>
@@ -527,16 +529,16 @@ export function JournalClient() {
             : sheetMode === "activity"
               ? t("addActivity")
               : sheetMode === "child"
-                ? "Tilføj barn"
+                ? t("addChildTitle")
                 : ""
         }
         description={
           sheetMode === "milestone"
-            ? "Marker en milepæl for senere."
+            ? t("sheetDescriptionMilestone")
             : sheetMode === "activity"
-              ? "Tilføj en lille tur eller hverdagsoplevelse."
+              ? t("sheetDescriptionActivity")
               : sheetMode === "child"
-                ? "Opret en profil for endnu et barn."
+                ? t("addChildDescription")
                 : ""
         }
       >

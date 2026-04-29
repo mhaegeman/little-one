@@ -7,8 +7,8 @@ import {
   SlidersHorizontal,
   UserCircle
 } from "@phosphor-icons/react/dist/ssr";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
-import { ROLE_LABELS_DA } from "@/lib/family";
 import { profileCompleteness } from "@/lib/profile";
 import type { FamilyProfile } from "@/lib/types";
 
@@ -21,8 +21,10 @@ type Props = {
 };
 
 export function ProfileHeader({ email, profile, familyCount, ownerCount, onEdit }: Props) {
+  const t = useTranslations("profileHeader");
+  const tRoles = useTranslations("roles");
   const completeness = profileCompleteness(profile);
-  const displayName = profile?.displayName ?? (email ? email.split("@")[0] : "Velkommen");
+  const displayName = profile?.displayName ?? (email ? email.split("@")[0] : t("eyebrow"));
   const initials = (profile?.displayName || email || "?")
     .split(/\s+/)
     .map((part) => part[0]?.toUpperCase() ?? "")
@@ -57,7 +59,7 @@ export function ProfileHeader({ email, profile, familyCount, ownerCount, onEdit 
 
           <div className="flex-1">
             <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">
-              Din profil
+              {t("eyebrow")}
             </p>
             <h1 className="mt-0.5 font-display text-2xl font-semibold leading-tight text-ink sm:text-3xl">
               {displayName}
@@ -68,7 +70,7 @@ export function ProfileHeader({ email, profile, familyCount, ownerCount, onEdit 
             <div className="mt-2 flex flex-wrap items-center gap-1.5">
               <span className="inline-flex items-center gap-1 rounded-pill bg-sunken px-2 py-0.5 text-2xs font-semibold text-muted ring-1 ring-hairline">
                 <UserCircle size={11} weight="fill" aria-hidden="true" />
-                {ROLE_LABELS_DA[role]}
+                {tRoles(role)}
               </span>
               <span className="inline-flex items-center gap-1 rounded-pill bg-sunken px-2 py-0.5 text-2xs font-semibold text-muted ring-1 ring-hairline">
                 <Globe size={11} weight="fill" aria-hidden="true" />
@@ -77,14 +79,14 @@ export function ProfileHeader({ email, profile, familyCount, ownerCount, onEdit 
               {ownerCount > 0 ? (
                 <span className="inline-flex items-center gap-1 rounded-pill bg-[#FBF1D9] px-2 py-0.5 text-2xs font-semibold text-warning ring-1 ring-[#F0DFB1]">
                   <Crown size={11} weight="fill" aria-hidden="true" />
-                  Familieejer
+                  {t("familyOwner")}
                 </span>
               ) : null}
               <span className="inline-flex items-center gap-1 rounded-pill bg-sky-100 px-2 py-0.5 text-2xs font-semibold text-info ring-1 ring-sky-200">
                 <ShieldCheck size={11} weight="fill" aria-hidden="true" />
                 {familyCount === 0
-                  ? "Ingen familie endnu"
-                  : `${familyCount} ${familyCount === 1 ? "familie" : "familier"}`}
+                  ? t("noFamily")
+                  : t("familyCount", { count: familyCount })}
               </span>
             </div>
           </div>
@@ -92,7 +94,7 @@ export function ProfileHeader({ email, profile, familyCount, ownerCount, onEdit 
           <div className="sm:self-end">
             <Button variant="secondary" onClick={onEdit} className="w-full sm:w-auto">
               <SlidersHorizontal size={14} weight="bold" aria-hidden="true" />
-              Rediger profil
+              {t("editProfile")}
             </Button>
           </div>
         </div>
@@ -101,14 +103,14 @@ export function ProfileHeader({ email, profile, familyCount, ownerCount, onEdit 
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
               <p className="text-2xs font-bold uppercase tracking-[0.14em] text-subtle">
-                Profilstyrke
+                {t("strengthLabel")}
               </p>
               <p className="font-display text-base font-semibold text-ink">
-                {completeness.percent}% færdig
+                {t("percentDone", { percent: completeness.percent })}
               </p>
             </div>
             <p className="text-xs font-semibold text-muted">
-              {completeness.score} af {completeness.total} felter udfyldt
+              {t("fieldsDone", { score: completeness.score, total: completeness.total })}
             </p>
           </div>
           <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-surface">

@@ -3,13 +3,14 @@
 import { CalendarBlank, NotePencil } from "@phosphor-icons/react/dist/ssr";
 import type { FormEvent } from "react";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { PhotoUploader } from "@/components/ui/PhotoUploader";
 import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
 import { useToast } from "@/components/ui/Toaster";
-import { milestoneLabels, milestoneTypes } from "@/lib/data/taxonomy";
+import { milestoneTypes } from "@/lib/data/taxonomy";
 import { createClient } from "@/lib/supabase/client";
 import type { MilestoneType, TimelineItem } from "@/lib/types";
 
@@ -19,6 +20,8 @@ type MilestoneFormProps = {
 };
 
 export function MilestoneForm({ childId, onAdd }: MilestoneFormProps) {
+  const t = useTranslations("journal.form");
+  const tTaxonomy = useTranslations("taxonomy");
   const { toast } = useToast();
   const [type, setType] = useState<MilestoneType>("first_smile");
   const [customTitle, setCustomTitle] = useState("");
@@ -33,7 +36,7 @@ export function MilestoneForm({ childId, onAdd }: MilestoneFormProps) {
     setSaving(true);
     setMessage("");
 
-    const title = type === "custom" && customTitle ? customTitle : milestoneLabels[type];
+    const title = type === "custom" && customTitle ? customTitle : tTaxonomy(type);
     const photoUrl = photos[0];
     const optimisticItem: TimelineItem = {
       id: crypto.randomUUID(),
@@ -57,7 +60,7 @@ export function MilestoneForm({ childId, onAdd }: MilestoneFormProps) {
 
       if (error) {
         setMessage(error.message);
-        toast({ title: "Kunne ikke gemme", description: error.message, variant: "danger" });
+        toast({ title: t("saveFailed"), description: error.message, variant: "danger" });
         setSaving(false);
         return;
       }
@@ -68,33 +71,33 @@ export function MilestoneForm({ childId, onAdd }: MilestoneFormProps) {
     setPhotos([]);
     setCustomTitle("");
     setMessage("");
-    toast({ title: "Milepælen er tilføjet", variant: "success" });
+    toast({ title: t("milestoneAdded"), variant: "success" });
     setSaving(false);
   }
 
   return (
     <form onSubmit={submitMilestone} className="space-y-3">
-      <FieldLabel label="Type">
+      <FieldLabel label={t("fieldType")}>
         <Select value={type} onChange={(event) => setType(event.target.value as MilestoneType)}>
           {milestoneTypes.map((item) => (
             <option key={item} value={item}>
-              {milestoneLabels[item]}
+              {tTaxonomy(item)}
             </option>
           ))}
         </Select>
       </FieldLabel>
 
       {type === "custom" ? (
-        <FieldLabel label="Titel">
+        <FieldLabel label={t("fieldTitle")}>
           <Input
             value={customTitle}
             onChange={(event) => setCustomTitle(event.target.value)}
-            placeholder="Første tur i ladcyklen"
+            placeholder={t("customTitlePlaceholder")}
           />
         </FieldLabel>
       ) : null}
 
-      <FieldLabel label="Dato">
+      <FieldLabel label={t("fieldDate")}>
         <Input
           type="date"
           required
@@ -104,21 +107,20 @@ export function MilestoneForm({ childId, onAdd }: MilestoneFormProps) {
         />
       </FieldLabel>
 
-      <FieldLabel label="Note">
+      <FieldLabel label={t("fieldNote")}>
         <Textarea
           value={notes}
           onChange={(event) => setNotes(event.target.value)}
           rows={3}
-          placeholder="Hvad skete der?"
+          placeholder={t("milestoneNotePlaceholder")}
         />
       </FieldLabel>
 
-      <PhotoUploader value={photos} onChange={setPhotos} label="Foto" />
-
+      <PhotoUploader value={photos} onChange={setPhotos} label={t("fieldPhoto")} />
 
       <Button type="submit" size="lg" className="w-full" disabled={saving}>
         <NotePencil size={14} weight="fill" aria-hidden="true" />
-        {saving ? "Gemmer…" : "Gem milepæl"}
+        {saving ? t("saving") : t("saveMilestone")}
       </Button>
       {message ? <p className="text-sm text-muted">{message}</p> : null}
     </form>

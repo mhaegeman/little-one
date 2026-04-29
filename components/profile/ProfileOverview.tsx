@@ -1,17 +1,14 @@
 "use client";
 
 import { ArrowRight, Heart, MapPinArea, Sparkle, Users } from "@phosphor-icons/react/dist/ssr";
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { categoryLabels } from "@/lib/data/taxonomy";
-import { ROLE_LABELS_DA } from "@/lib/family";
 import {
-  COMPLETENESS_LABELS_DA,
-  INDOOR_PREFERENCE_LABELS_DA,
   ageMonthsToLabel,
   profileCompleteness
 } from "@/lib/profile";
-import type { FamilyMember, FamilyProfile } from "@/lib/types";
+import type { FamilyMember, FamilyProfile, VenueCategory } from "@/lib/types";
 
 type Props = {
   profile: FamilyProfile | null;
@@ -20,6 +17,11 @@ type Props = {
 };
 
 export function ProfileOverview({ profile, members, onJumpTo }: Props) {
+  const t = useTranslations("profileOverview");
+  const tTaxonomy = useTranslations("taxonomy");
+  const tRoles = useTranslations("roles");
+  const tPrefs = useTranslations("prefs");
+
   const completeness = profileCompleteness(profile);
   const interests = profile?.interests ?? [];
   const neighbourhoods = profile?.neighbourhoods ?? [];
@@ -32,15 +34,15 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
       <section className="rounded-card bg-surface p-5 ring-1 ring-hairline lg:col-span-2">
         <div className="flex items-center gap-2">
           <Sparkle size={16} weight="fill" className="text-warm-500" aria-hidden="true" />
-          <h2 className="font-display text-xl font-semibold text-ink">Gør profilen klar</h2>
+          <h2 className="font-display text-xl font-semibold text-ink">{t("readyTitle")}</h2>
         </div>
         <p className="mt-1 text-sm leading-6 text-muted">
-          Jo mere du fortæller, jo bedre kuraterer vi steder, ture og begivenheder for jer.
+          {t("readyBody")}
         </p>
 
         {completeness.missing.length === 0 ? (
           <p className="mt-3 rounded-lg bg-sage-100 p-3 text-sm font-semibold text-sage-700 ring-1 ring-sage-200">
-            Din profil er fuldt udfyldt. Tjek anbefalingerne — vi har skræddersyet dem til jer.
+            {t("profileComplete")}
           </p>
         ) : (
           <ul className="mt-3 grid gap-1.5 sm:grid-cols-2">
@@ -50,14 +52,14 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
                 className="flex items-center justify-between gap-2 rounded-lg bg-sunken p-2.5 ring-1 ring-hairline"
               >
                 <span className="text-sm font-semibold text-ink">
-                  {COMPLETENESS_LABELS_DA[field]}
+                  {t(`completeness.${field}`)}
                 </span>
                 <button
                   type="button"
                   onClick={() => onJumpTo("preferences")}
                   className="focus-ring inline-flex items-center gap-1 rounded-md text-2xs font-bold uppercase tracking-wide text-warm-600 hover:text-warm-700"
                 >
-                  Tilføj
+                  {t("add")}
                   <ArrowRight size={11} weight="bold" aria-hidden="true" />
                 </button>
               </li>
@@ -68,7 +70,7 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div>
             <p className="text-2xs font-bold uppercase tracking-[0.14em] text-subtle">
-              Interesser
+              {t("interests")}
             </p>
             {interests.length === 0 ? (
               <button
@@ -77,13 +79,13 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
                 className="focus-ring mt-1.5 inline-flex items-center gap-1 rounded-pill bg-sunken px-2.5 py-1 text-xs font-semibold text-muted ring-1 ring-hairline hover:bg-sand-100"
               >
                 <Heart size={12} weight="fill" aria-hidden="true" />
-                Vælg jeres yndlingskategorier
+                {t("chooseCategories")}
               </button>
             ) : (
               <div className="mt-1.5 flex flex-wrap gap-1">
                 {interests.map((category) => (
                   <Badge key={category} variant="sage">
-                    {categoryLabels[category]}
+                    {tTaxonomy(category as VenueCategory)}
                   </Badge>
                 ))}
               </div>
@@ -92,7 +94,7 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
 
           <div>
             <p className="text-2xs font-bold uppercase tracking-[0.14em] text-subtle">
-              Bydele I færdes i
+              {t("yourNeighbourhoods")}
             </p>
             {neighbourhoods.length === 0 ? (
               <button
@@ -101,7 +103,7 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
                 className="focus-ring mt-1.5 inline-flex items-center gap-1 rounded-pill bg-sunken px-2.5 py-1 text-xs font-semibold text-muted ring-1 ring-hairline hover:bg-sand-100"
               >
                 <MapPinArea size={12} weight="fill" aria-hidden="true" />
-                Tilføj bydele
+                {t("addNeighbourhoods")}
               </button>
             ) : (
               <div className="mt-1.5 flex flex-wrap gap-1">
@@ -117,16 +119,20 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
 
           <div>
             <p className="text-2xs font-bold uppercase tracking-[0.14em] text-subtle">
-              Inde / ude
+              {t("indoorOutdoor")}
             </p>
             <p className="mt-1.5 text-sm font-semibold text-ink">
-              {INDOOR_PREFERENCE_LABELS_DA[indoorPreference]}
+              {indoorPreference === "any"
+                ? tPrefs("indoorAny")
+                : indoorPreference === "indoor"
+                  ? tPrefs("indoorIndoors")
+                  : tPrefs("indoorOutdoors")}
             </p>
           </div>
 
           <div>
             <p className="text-2xs font-bold uppercase tracking-[0.14em] text-subtle">
-              Barnets alder
+              {t("childAge")}
             </p>
             {childAgeMin === null || childAgeMax === null ? (
               <button
@@ -134,7 +140,7 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
                 onClick={() => onJumpTo("preferences")}
                 className="focus-ring mt-1.5 text-sm font-semibold text-warm-600 hover:text-warm-700"
               >
-                Sæt aldersinterval
+                {t("setAgeRange")}
               </button>
             ) : (
               <p className="mt-1.5 text-sm font-semibold text-ink">
@@ -147,11 +153,11 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
         <div className="mt-4 flex flex-wrap gap-2">
           <Button onClick={() => onJumpTo("recommendations")}>
             <Sparkle size={14} weight="fill" aria-hidden="true" />
-            Se anbefalinger
+            {t("seeRecommendations")}
           </Button>
           <Button variant="secondary" onClick={() => onJumpTo("preferences")}>
             <Heart size={14} weight="fill" aria-hidden="true" />
-            Tilpas præferencer
+            {t("customisePreferences")}
           </Button>
         </div>
       </section>
@@ -160,20 +166,20 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Users size={16} weight="fill" className="text-sage-700" aria-hidden="true" />
-            <h2 className="font-display text-lg font-semibold text-ink">Familien</h2>
+            <h2 className="font-display text-lg font-semibold text-ink">{t("familyTitle")}</h2>
           </div>
           <button
             type="button"
             onClick={() => onJumpTo("family")}
             className="focus-ring text-2xs font-bold uppercase tracking-wide text-warm-600 hover:text-warm-700"
           >
-            Se alle
+            {t("seeAll")}
           </button>
         </div>
 
         {members.length === 0 ? (
           <p className="mt-3 rounded-lg bg-sunken p-2.5 text-sm font-semibold text-muted ring-1 ring-hairline">
-            Når Supabase opretter familien for dig, dukker bedsteforældre, dagplejer og medforælder op her.
+            {t("noFamilyWaiting")}
           </p>
         ) : (
           <ul className="mt-3 space-y-1.5">
@@ -204,7 +210,7 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-semibold text-ink">{name}</p>
                     <p className="text-2xs font-semibold uppercase tracking-[0.12em] text-subtle">
-                      {ROLE_LABELS_DA[member.role]}
+                      {tRoles(member.role)}
                     </p>
                   </div>
                 </li>

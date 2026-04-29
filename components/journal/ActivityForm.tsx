@@ -3,6 +3,7 @@
 import { CalendarBlank, MapPin } from "@phosphor-icons/react/dist/ssr";
 import type { FormEvent } from "react";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { PhotoUploader } from "@/components/ui/PhotoUploader";
@@ -19,18 +20,8 @@ type ActivityFormProps = {
   onAdd: (item: TimelineItem) => void;
 };
 
-const SUGGESTED_TAGS = [
-  "udendørs",
-  "regnvejr",
-  "venner",
-  "bedsteforældre",
-  "morgen",
-  "frokost",
-  "stille",
-  "energisk"
-];
-
 export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
+  const t = useTranslations("journal.form");
   const { toast } = useToast();
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
@@ -80,7 +71,7 @@ export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
 
       if (error) {
         setMessage(error.message);
-        toast({ title: "Kunne ikke gemme", description: error.message, variant: "danger" });
+        toast({ title: t("saveFailed"), description: error.message, variant: "danger" });
         setSaving(false);
         return;
       }
@@ -93,22 +84,22 @@ export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
     setPhotos([]);
     setTags([]);
     setMessage("");
-    toast({ title: "Turen er tilføjet", variant: "success" });
+    toast({ title: t("outingAdded"), variant: "success" });
     setSaving(false);
   }
 
   return (
     <form onSubmit={submitActivity} className="space-y-3">
-      <FieldLabel label="Titel">
+      <FieldLabel label={t("fieldTitle")}>
         <Input
           required
           value={title}
           onChange={(event) => setTitle(event.target.value)}
-          placeholder="Formiddag i Fælledparken"
+          placeholder={t("titlePlaceholder")}
         />
       </FieldLabel>
 
-      <FieldLabel label="Dato">
+      <FieldLabel label={t("fieldDate")}>
         <Input
           type="date"
           required
@@ -118,9 +109,9 @@ export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
         />
       </FieldLabel>
 
-      <FieldLabel label="Sted">
+      <FieldLabel label={t("fieldPlace")}>
         <Select value={venueId} onChange={(event) => setVenueId(event.target.value)}>
-          <option value="">Frit sted</option>
+          <option value="">{t("freePlaceholder")}</option>
           {venues.map((venue) => (
             <option key={venue.id} value={venue.id}>
               {venue.name}
@@ -129,12 +120,12 @@ export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
         </Select>
       </FieldLabel>
 
-      <FieldLabel label="Note">
+      <FieldLabel label={t("fieldNote")}>
         <Textarea
           value={notes}
           onChange={(event) => setNotes(event.target.value)}
           rows={3}
-          placeholder="Hvad vil I huske?"
+          placeholder={t("notePlaceholder")}
         />
       </FieldLabel>
 
@@ -143,22 +134,21 @@ export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
         onChange={setPhotos}
         multiple
         max={4}
-        label="Fotos"
-        hint="Op til 4 — træk billeder hertil eller indsæt et link."
+        label={t("fieldPhotos")}
+        hint={t("photoHint")}
       />
 
-      <FieldLabel label="Tags">
+      <FieldLabel label={t("fieldTags")}>
         <TagInput
           value={tags}
           onChange={setTags}
-          suggestions={SUGGESTED_TAGS}
-          placeholder="Skriv et ord og tryk enter…"
+          placeholder={t("tagPlaceholder")}
         />
       </FieldLabel>
 
       <Button type="submit" size="lg" className="w-full" disabled={saving}>
         <MapPin size={14} weight="fill" aria-hidden="true" />
-        {saving ? "Gemmer…" : "Gem tur"}
+        {saving ? t("saving") : t("saveOuting")}
       </Button>
       {message ? <p className="text-sm text-muted">{message}</p> : null}
     </form>
