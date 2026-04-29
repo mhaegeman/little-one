@@ -166,7 +166,10 @@
     },
     "calendarEntryTooltip": "{day}. {monthYear}{countPart}",
     "calendarEntryCount": " · {count} {count, plural, one {indslag} other {indslag}}",
-    "calendarWeekdays": "M,T,O,T,F,L,S"
+    "calendarWeekdays": "M,T,O,T,F,L,S",
+    "calendarOverviewAria": "Månedsoversigt",
+    "calendarYearInJournal": "Året i journalen",
+    "calendarGoToMonth": "Gå til måned"
   },
   "profile": {
     "title": "Profil",

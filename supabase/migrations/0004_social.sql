@@ -48,20 +48,6 @@ $$;
 create schema if not exists private;
 grant usage on schema private to authenticated;
 
-create or replace function private.families_blocked(family_a uuid, family_b uuid)
-returns boolean
-language sql stable security definer set search_path = public
-as $$
-  select exists (
-    select 1 from public.family_blocks
-    where (family_id = family_a and blocked_family_id = family_b)
-       or (family_id = family_b and blocked_family_id = family_a)
-  );
-$$;
-
-revoke all on function private.families_blocked(uuid, uuid) from public;
-grant execute on function private.families_blocked(uuid, uuid) to authenticated;
-
 -- Used to validate that thread participants actually belong to the families
 -- on the parent connection.
 create or replace function private.user_in_family(target_user_id uuid, target_family_id uuid)
@@ -120,6 +106,24 @@ create table if not exists public.family_blocks (
   unique (family_id, blocked_family_id),
   check (family_id <> blocked_family_id)
 );
+
+create schema if not exists private;
+grant usage on schema private to authenticated;
+
+create or replace function private.families_blocked(family_a uuid, family_b uuid)
+returns boolean
+language sql stable security definer set search_path = public
+as $$
+  select exists (
+    select 1 from public.family_blocks
+    where (family_id = family_a and blocked_family_id = family_b)
+       or (family_id = family_b and blocked_family_id = family_a)
+  );
+$$;
+
+revoke all on function private.families_blocked(uuid, uuid) from public;
+grant execute on function private.families_blocked(uuid, uuid) to authenticated;
+
 
 -- ---------------------------------------------------------------------------
 -- family_connections

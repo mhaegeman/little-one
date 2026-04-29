@@ -166,7 +166,10 @@
     },
     "calendarEntryTooltip": "{day}. {monthYear}{countPart}",
     "calendarEntryCount": " · {count} {count, plural, one {entry} other {entries}}",
-    "calendarWeekdays": "Mo,Tu,We,Th,Fr,Sa,Su"
+    "calendarWeekdays": "Mo,Tu,We,Th,Fr,Sa,Su",
+    "calendarOverviewAria": "Monthly overview",
+    "calendarYearInJournal": "The year in your journal",
+    "calendarGoToMonth": "Go to month"
   },
   "profile": {
     "title": "Profile",
