@@ -109,11 +109,13 @@ export function JournalClient() {
       setSignedIn(Boolean(session));
 
       if (!session) {
-        setChildren([demoChild]);
-        setUsingDemo(true);
+        resetToDemo();
         setLoading(false);
         return;
       }
+
+      setUsingDemo(false);
+      setSheetMode(null);
 
       const { data: childRows } = await supabase
         .from("children")
@@ -122,6 +124,8 @@ export function JournalClient() {
 
       if (!childRows?.length) {
         setChildren([]);
+        setActiveChildId("");
+        setTimeline([]);
         setLoading(false);
         return;
       }
@@ -137,6 +141,14 @@ export function JournalClient() {
       setActiveChildId(loadedChildren[0].id);
       await loadTimeline(loadedChildren[0].id);
       setLoading(false);
+    }
+
+    function resetToDemo() {
+      setChildren([demoChild]);
+      setActiveChildId(demoChild.id);
+      setTimeline(demoTimeline);
+      setUsingDemo(true);
+      setSheetMode(null);
     }
 
     async function loadTimeline(childId: string) {
@@ -186,8 +198,15 @@ export function JournalClient() {
 
     loadSession();
 
-    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSignedIn(Boolean(session));
+    const { data } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_OUT") {
+        setSignedIn(false);
+        resetToDemo();
+        return;
+      }
+      if (event === "SIGNED_IN" || event === "USER_UPDATED") {
+        loadSession();
+      }
     });
 
     return () => data.subscription.unsubscribe();
