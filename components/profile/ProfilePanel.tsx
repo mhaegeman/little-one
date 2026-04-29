@@ -3,6 +3,7 @@
 import {
   CheckCircle,
   Compass,
+  Eye,
   Heart,
   Key,
   Sparkle,
@@ -21,6 +22,7 @@ import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ProfileOverview } from "@/components/profile/ProfileOverview";
 import { ProfilePreferences } from "@/components/profile/ProfilePreferences";
 import { ProfileRecommendations } from "@/components/profile/ProfileRecommendations";
+import { FamilyPublicEditor } from "@/components/profile/FamilyPublicEditor";
 import { ProfileSaved } from "@/components/profile/ProfileSaved";
 import { ProfileStats } from "@/components/profile/ProfileStats";
 import { Button } from "@/components/ui/Button";
@@ -56,6 +58,7 @@ type Section =
   | "overview"
   | "profile"
   | "family"
+  | "public"
   | "saved"
   | "recommendations"
   | "preferences"
@@ -84,6 +87,12 @@ const SECTIONS: {
     label: "Familie",
     description: "Medlemmer & invitationer",
     icon: Users
+  },
+  {
+    id: "public",
+    label: "Offentligt",
+    description: "Bliv synlig for andre familier",
+    icon: Eye
   },
   {
     id: "saved",
@@ -129,6 +138,7 @@ export function ProfilePanel() {
       sectionParam === "overview" ||
       sectionParam === "profile" ||
       sectionParam === "family" ||
+      sectionParam === "public" ||
       sectionParam === "saved" ||
       sectionParam === "recommendations" ||
       sectionParam === "preferences" ||
@@ -478,6 +488,21 @@ export function ProfilePanel() {
             ) : null}
 
             {section === "saved" ? <ProfileSaved /> : null}
+
+            {section === "public" ? (
+              familyViews[0] ? (
+                <FamilyPublicEditor primaryFamily={familyViews[0].family} />
+              ) : (
+                <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
+                  <h2 className="font-display text-xl font-semibold text-ink">
+                    Ingen familie endnu
+                  </h2>
+                  <p className="mt-2 text-sm text-muted">
+                    Opret en familie først, så kan I dele en offentlig profil.
+                  </p>
+                </section>
+              )
+            ) : null}
 
             {section === "recommendations" ? (
               <ProfileRecommendations
