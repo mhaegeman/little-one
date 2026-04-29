@@ -4,7 +4,8 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl, { LngLatBounds, type Map as MapLibreMap, type Marker } from "maplibre-gl";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { categoryColors, categoryLabels } from "@/lib/data/taxonomy";
+import { Badge } from "@/components/ui/Badge";
+import { categoryBadgeVariant, categoryLabels } from "@/lib/data/taxonomy";
 import type { Venue, VenueCategory } from "@/lib/types";
 import { cn, formatDistance, haversineKm } from "@/lib/utils";
 
@@ -165,9 +166,9 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
       wrapper.setAttribute("aria-label", "Din lokation");
       const dot = document.createElement("span");
       dot.className =
-        "relative grid h-5 w-5 place-items-center rounded-full bg-rust ring-4 ring-rust/30 shadow-soft";
+        "relative grid h-4 w-4 place-items-center rounded-full bg-warm-500 ring-[3px] ring-warm-500/30 shadow-sm";
       dot.innerHTML =
-        '<span class="absolute inset-0 -z-10 animate-ping rounded-full bg-rust/40"></span>';
+        '<span class="absolute inset-0 -z-10 animate-ping rounded-full bg-warm-500/40"></span>';
       wrapper.appendChild(dot);
       userMarkerRef.current = new maplibregl.Marker({ element: wrapper, anchor: "center" })
         .setLngLat([userLocation.lng, userLocation.lat])
@@ -203,7 +204,7 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
   const selected = venues.find((venue) => venue.id === selectedVenueId);
 
   return (
-    <div className="relative h-full min-h-[420px] w-full overflow-hidden rounded-card ring-1 ring-oat">
+    <div className="relative h-full min-h-[420px] w-full overflow-hidden rounded-card ring-1 ring-hairline">
       <div ref={containerRef} className="h-full w-full" />
       {hover ? <HoverCard hover={hover} /> : null}
       {selected ? <SelectedCard venue={selected} userLocation={userLocation} /> : null}
@@ -229,33 +230,31 @@ function HoverCard({ hover }: { hover: HoverState }) {
         width: cardWidth
       }}
     >
-      <div className="flex items-center gap-2 rounded-card bg-white/96 p-2 shadow-soft ring-1 ring-oat backdrop-blur">
+      <div className="flex items-center gap-2 rounded-card bg-surface/96 p-1.5 shadow-lift ring-1 ring-hairline backdrop-blur">
         {hover.venue.photos[0] ? (
           <img
             src={hover.venue.photos[0]}
             alt=""
-            className="h-14 w-14 shrink-0 rounded-xl object-cover"
+            className="h-12 w-12 shrink-0 rounded-lg object-cover"
             loading="lazy"
           />
         ) : (
-          <div className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-oat/60 text-ink/40">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-sunken text-subtle">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <rect x="3" y="3" width="18" height="18" rx="2" />
               <circle cx="9" cy="9" r="2" />
               <path d="m21 15-5-5L5 21" />
             </svg>
           </div>
         )}
-        <div className="min-w-0">
-          <p className="truncate text-[10px] font-bold uppercase tracking-wide text-ink/55">
+        <div className="min-w-0 pr-1">
+          <p className="truncate text-2xs font-bold uppercase tracking-[0.1em] text-subtle">
             {categoryLabels[hover.venue.category]}
           </p>
           <p className="truncate text-sm font-semibold leading-tight text-ink">
             {hover.venue.name}
           </p>
-          <p className="truncate text-[11px] font-medium text-ink/55">
-            {hover.venue.neighbourhood}
-          </p>
+          <p className="truncate text-2xs text-muted">{hover.venue.neighbourhood}</p>
         </div>
       </div>
     </div>
@@ -277,27 +276,24 @@ function SelectedCard({
     <div className="pointer-events-none absolute bottom-3 left-3 right-3 sm:right-auto sm:max-w-sm">
       <Link
         href={`/venues/${venue.id}`}
-        className="focus-ring pointer-events-auto flex gap-3 overflow-hidden rounded-card bg-white/96 p-2 shadow-soft ring-1 ring-oat backdrop-blur transition hover:ring-moss/30"
+        className="focus-ring pointer-events-auto flex gap-2 overflow-hidden rounded-card bg-surface/96 p-1.5 shadow-lift ring-1 ring-hairline backdrop-blur transition hover:ring-sage-300"
       >
         {venue.photos[0] ? (
           <img
             src={venue.photos[0]}
             alt=""
-            className="h-20 w-24 shrink-0 rounded-xl object-cover"
+            className="h-16 w-20 shrink-0 rounded-lg object-cover"
             loading="lazy"
           />
         ) : null}
         <div className="min-w-0 py-1 pr-2">
-          <span
-            className={cn(
-              "inline-flex rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ring-1",
-              categoryColors[venue.category]
-            )}
-          >
+          <Badge variant={categoryBadgeVariant[venue.category]}>
             {categoryLabels[venue.category]}
-          </span>
-          <h3 className="mt-1 truncate font-display text-base font-semibold text-ink">{venue.name}</h3>
-          <p className="truncate text-xs font-medium text-ink/62">
+          </Badge>
+          <h3 className="mt-0.5 truncate font-display text-sm font-semibold text-ink">
+            {venue.name}
+          </h3>
+          <p className="truncate text-2xs text-muted">
             {venue.neighbourhood}
             {distance !== null ? ` · ${formatDistance(distance)} herfra` : ""}
           </p>
@@ -350,33 +346,34 @@ function updatePinStyle(pin: HTMLElement, venue: Venue, selected: boolean) {
 
 function pinSvg(category: VenueCategory, selected: boolean) {
   const fill = categoryHex(category);
-  const ring = selected ? "#26312D" : "#FFFFFF";
-  const ringWidth = selected ? 2.5 : 2;
-  return `<svg viewBox="0 0 28 36" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" aria-hidden="true" style="display:block;filter:drop-shadow(0 4px 6px rgba(38,49,45,0.25));overflow:visible">
+  const ring = selected ? "#1F2A26" : "#FFFFFF";
+  const ringWidth = selected ? 2.5 : 1.75;
+  return `<svg viewBox="0 0 28 36" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" aria-hidden="true" style="display:block;filter:drop-shadow(0 3px 4px rgba(31,42,38,0.18));overflow:visible">
     <path d="M14 0.75C6.68 0.75 0.75 6.68 0.75 14c0 4.79 2.96 9.78 6.05 13.7 1.55 1.97 3.11 3.61 4.28 4.78a4.13 4.13 0 0 0 5.84 0c1.17-1.17 2.73-2.81 4.28-4.78 3.09-3.92 6.05-8.91 6.05-13.7 0-7.32-5.93-13.25-13.25-13.25Z" fill="${fill}" stroke="${ring}" stroke-width="${ringWidth}"/>
-    <circle cx="14" cy="14" r="5" fill="#FFFFFF"/>
+    <circle cx="14" cy="14" r="4.5" fill="#FFFFFF"/>
   </svg>`;
 }
 
 function categoryHex(category: VenueCategory) {
+  // Aligned with the new sage/warm palette
   switch (category) {
     case "cafe":
-      return "#C4623A";
+      return "#C46A40"; // warm
     case "playground":
-      return "#4A7C6F";
+      return "#5B8377"; // sage
     case "indoor_play":
-      return "#B8901C";
+      return "#B47A1F"; // warning
     case "cinema":
-      return "#3F6F77";
+      return "#3F6F84"; // info
     case "library":
-      return "#8C6B40";
+      return "#8C6B40"; // sand-700
     case "swimming":
-      return "#2D6670";
+      return "#2D6670"; // teal-info
     case "theatre":
-      return "#B05A37";
+      return "#A55432"; // warm-600
     case "event":
-      return "#C4623A";
+      return "#C46A40"; // warm
     default:
-      return "#2F5149";
+      return "#33554C"; // sage-700
   }
 }

@@ -11,7 +11,7 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { categoryLabels } from "@/lib/data/taxonomy";
+import { categoryBadgeVariant, categoryLabels } from "@/lib/data/taxonomy";
 import { getVenueById, venues } from "@/lib/data/venues";
 import { googleMapsUrl, monthRangeLabel } from "@/lib/utils";
 
@@ -67,7 +67,9 @@ export default async function VenuePage({ params }: VenuePageProps) {
             </div>
 
             <div className="p-5 sm:p-6">
-              <Badge variant="sage">{categoryLabels[venue.category]}</Badge>
+              <Badge variant={categoryBadgeVariant[venue.category]}>
+                {categoryLabels[venue.category]}
+              </Badge>
               <h1 className="mt-3 font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">
                 {venue.name}
               </h1>

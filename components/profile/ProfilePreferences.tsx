@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
+import { useToast } from "@/components/ui/Toaster";
 import { categories, categoryLabels, neighbourhoods } from "@/lib/data/taxonomy";
 import { ROLE_LABELS_DA } from "@/lib/family";
 import { INDOOR_PREFERENCE_LABELS_DA, ageMonthsToLabel } from "@/lib/profile";
@@ -35,6 +36,7 @@ type Props = {
 const SELECTABLE_ROLES: FamilyRole[] = ["parent", "family", "caregiver"];
 
 export function ProfilePreferences({ profile, onSave }: Props) {
+  const { toast } = useToast();
   const [displayName, setDisplayName] = useState("");
   const [pronouns, setPronouns] = useState("");
   const [bio, setBio] = useState("");
@@ -108,10 +110,21 @@ export function ProfilePreferences({ profile, onSave }: Props) {
         notifyEmail
       });
       setStatus("saved");
+      toast({
+        title: "Profil gemt",
+        description: "Dine præferencer er opdateret.",
+        variant: "success"
+      });
       setTimeout(() => setStatus("idle"), 2400);
     } catch (error) {
+      const message = error instanceof Error ? error.message : "Det gik ikke at gemme.";
       setStatus("error");
-      setErrorMessage(error instanceof Error ? error.message : "Det gik ikke at gemme.");
+      setErrorMessage(message);
+      toast({
+        title: "Kunne ikke gemme",
+        description: message,
+        variant: "danger"
+      });
     }
   }
 

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
+import { useToast } from "@/components/ui/Toaster";
 import { venues } from "@/lib/data/venues";
 import { createClient } from "@/lib/supabase/client";
 import type { TimelineItem } from "@/lib/types";
@@ -17,6 +18,7 @@ type ActivityFormProps = {
 };
 
 export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
+  const { toast } = useToast();
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [venueId, setVenueId] = useState("");
@@ -61,6 +63,7 @@ export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
 
       if (error) {
         setMessage(error.message);
+        toast({ title: "Kunne ikke gemme", description: error.message, variant: "danger" });
         setSaving(false);
         return;
       }
@@ -71,7 +74,8 @@ export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
     setVenueId("");
     setNotes("");
     setPhotoUrl("");
-    setMessage("Turen er tilføjet.");
+    setMessage("");
+    toast({ title: "Turen er tilføjet", variant: "success" });
     setSaving(false);
   }
 

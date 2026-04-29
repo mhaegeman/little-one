@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { VenueCard } from "@/components/discover/VenueCard";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { categoryLabels } from "@/lib/data/taxonomy";
+import { categoryBadgeVariant, categoryLabels } from "@/lib/data/taxonomy";
 import { events as allEvents, venues as allVenues } from "@/lib/data/venues";
 import { recommendEvents, recommendVenues } from "@/lib/profile";
 import type { FamilyProfile } from "@/lib/types";
@@ -102,7 +102,9 @@ export function ProfileRecommendations({ profile, onTunePreferences }: Props) {
                 className="flex flex-col gap-1.5 rounded-card bg-surface p-3.5 ring-1 ring-hairline"
               >
                 <div className="flex items-start justify-between gap-2">
-                  <Badge variant="sage">{categoryLabels[event.category]}</Badge>
+                  <Badge variant={categoryBadgeVariant[event.category]}>
+                    {categoryLabels[event.category]}
+                  </Badge>
                   <span className="text-2xs font-semibold text-subtle">{event.neighbourhood}</span>
                 </div>
                 <h4 className="font-display text-base font-semibold text-ink">{event.title}</h4>

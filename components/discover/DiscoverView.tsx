@@ -15,12 +15,12 @@ import { LocationControl, type UserLocation } from "@/components/discover/Locati
 import { VenueCard } from "@/components/discover/VenueCard";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { IconButton } from "@/components/ui/IconButton";
 import { Input } from "@/components/ui/Input";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { Select } from "@/components/ui/Select";
 import { Sheet } from "@/components/ui/Sheet";
+import { useDiscoverParams } from "@/hooks/useDiscoverParams";
 import { categories, categoryLabels, neighbourhoods } from "@/lib/data/taxonomy";
 import type { FamilyEvent, IndoorOutdoor, Neighbourhood, Venue, VenueCategory } from "@/lib/types";
 import { cn, haversineKm } from "@/lib/utils";
@@ -34,16 +34,28 @@ type ViewMode = "split" | "list" | "map";
 
 export function DiscoverView({ venues, events }: DiscoverViewProps) {
   const t = useTranslations("discover");
-  const [selectedCategories, setSelectedCategories] = useState<VenueCategory[]>([]);
-  const [neighbourhood, setNeighbourhood] = useState<Neighbourhood | "all">("all");
-  const [indoorOutdoor, setIndoorOutdoor] = useState<IndoorOutdoor | "all">("all");
-  const [openNow, setOpenNow] = useState(false);
-  const [ageMin, setAgeMin] = useState(0);
-  const [ageMax, setAgeMax] = useState(72);
-  const [query, setQuery] = useState("");
+  const { state, update, reset } = useDiscoverParams();
+  const {
+    categories: selectedCategories,
+    neighbourhood,
+    indoorOutdoor,
+    openNow,
+    ageMin,
+    ageMax,
+    query,
+    view: viewMode
+  } = state;
+
+  const setNeighbourhood = (next: Neighbourhood | "all") => update({ neighbourhood: next });
+  const setIndoorOutdoor = (next: IndoorOutdoor | "all") => update({ indoorOutdoor: next });
+  const setOpenNow = (next: boolean) => update({ openNow: next });
+  const setAgeMin = (next: number) => update({ ageMin: next });
+  const setAgeMax = (next: number) => update({ ageMax: next });
+  const setQuery = (next: string) => update({ query: next });
+  const setViewMode = (next: ViewMode) => update({ view: next });
+
   const [selectedVenueId, setSelectedVenueId] = useState<string | undefined>(venues[0]?.id);
   const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
-  const [viewMode, setViewMode] = useState<ViewMode>("split");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const filteredVenues = useMemo(() => {
@@ -103,21 +115,15 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
   const mapSelection = selectedVenueStillVisible ? selectedVenueId : filteredVenues[0]?.id;
 
   function toggleCategory(category: VenueCategory) {
-    setSelectedCategories((current) =>
-      current.includes(category)
-        ? current.filter((item) => item !== category)
-        : [...current, category]
-    );
+    update({
+      categories: selectedCategories.includes(category)
+        ? selectedCategories.filter((item) => item !== category)
+        : [...selectedCategories, category]
+    });
   }
 
   function resetFilters() {
-    setSelectedCategories([]);
-    setNeighbourhood("all");
-    setIndoorOutdoor("all");
-    setOpenNow(false);
-    setAgeMin(0);
-    setAgeMax(72);
-    setQuery("");
+    reset();
     setUserLocation(null);
   }
 

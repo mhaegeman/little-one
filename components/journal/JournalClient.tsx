@@ -7,6 +7,7 @@ import {
   Sparkle
 } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { ActivityForm } from "@/components/journal/ActivityForm";
@@ -57,6 +58,7 @@ type SheetMode = "milestone" | "activity" | null;
 
 export function JournalClient() {
   const t = useTranslations("journal");
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [signedIn, setSignedIn] = useState(false);
   const [children, setChildren] = useState<Child[]>([]);
@@ -64,6 +66,13 @@ export function JournalClient() {
   const [timeline, setTimeline] = useState<TimelineItem[]>(demoTimeline);
   const [sheetMode, setSheetMode] = useState<SheetMode>(null);
   const [usingDemo, setUsingDemo] = useState(false);
+
+  useEffect(() => {
+    const newParam = searchParams.get("new");
+    if (newParam === "milestone" || newParam === "activity") {
+      setSheetMode(newParam);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const client = createClient();

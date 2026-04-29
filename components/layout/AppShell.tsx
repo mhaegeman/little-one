@@ -11,6 +11,8 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { CommandPalette } from "@/components/layout/CommandPalette";
+import { Toaster } from "@/components/ui/Toaster";
+import { useViewTransitionRouter } from "@/hooks/useViewTransitionRouter";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -23,6 +25,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const t = useTranslations("nav");
   const tApp = useTranslations("app");
+  const transitionTo = useViewTransitionRouter();
   const [paletteOpen, setPaletteOpen] = useState(false);
 
   useEffect(() => {
@@ -37,7 +40,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div className="min-h-screen lg:grid lg:grid-cols-[232px_1fr]">
+    <Toaster>
+      <div className="min-h-screen lg:grid lg:grid-cols-[232px_1fr]">
       <a href="#main" className="skip-link">
         Spring til indhold
       </a>
@@ -90,18 +94,33 @@ export function AppShell({ children }: { children: ReactNode }) {
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
+                onClick={(event) => {
+                  if (
+                    event.metaKey ||
+                    event.ctrlKey ||
+                    event.shiftKey ||
+                    event.altKey ||
+                    event.button !== 0
+                  ) {
+                    return;
+                  }
+                  if (active) return;
+                  event.preventDefault();
+                  transitionTo(item.href);
+                }}
                 className={cn(
-                  "focus-ring flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-sm font-semibold transition-colors duration-150 ease-nordic",
-                  active
-                    ? "bg-sage-100 text-sage-700"
-                    : "text-muted hover:bg-sunken hover:text-ink"
+                  "focus-ring relative flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-sm font-semibold transition-colors duration-150 ease-nordic",
+                  active ? "text-sage-700" : "text-muted hover:bg-sunken hover:text-ink"
                 )}
               >
-                <Icon
-                  size={17}
-                  weight={active ? "fill" : "regular"}
-                  aria-hidden="true"
-                />
+                {active ? (
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-0 -z-10 rounded-lg bg-sage-100"
+                    style={{ viewTransitionName: "nav-active-desktop" }}
+                  />
+                ) : null}
+                <Icon size={17} weight={active ? "fill" : "regular"} aria-hidden="true" />
                 {t(item.key)}
               </Link>
             );
@@ -145,7 +164,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         aria-label="Hovednavigation"
         className="fixed bottom-0 left-0 right-0 z-30 border-t border-hairline bg-canvas/95 px-2 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-1.5 backdrop-blur lg:hidden"
       >
-        <div className="grid grid-cols-3 gap-1">
+        <div className="relative grid grid-cols-3 gap-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
@@ -154,16 +173,33 @@ export function AppShell({ children }: { children: ReactNode }) {
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
+                onClick={(event) => {
+                  if (
+                    event.metaKey ||
+                    event.ctrlKey ||
+                    event.shiftKey ||
+                    event.altKey ||
+                    event.button !== 0
+                  ) {
+                    return;
+                  }
+                  if (active) return;
+                  event.preventDefault();
+                  transitionTo(item.href);
+                }}
                 className={cn(
-                  "focus-ring flex flex-col items-center justify-center gap-0.5 rounded-lg py-1.5 text-2xs font-semibold transition-colors duration-150 ease-nordic",
+                  "focus-ring relative flex flex-col items-center justify-center gap-0.5 rounded-lg py-1.5 text-2xs font-semibold transition-colors duration-150 ease-nordic",
                   active ? "text-sage-700" : "text-subtle hover:text-ink"
                 )}
               >
-                <Icon
-                  size={20}
-                  weight={active ? "fill" : "regular"}
-                  aria-hidden="true"
-                />
+                {active ? (
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-0 -z-10 rounded-lg bg-sage-50"
+                    style={{ viewTransitionName: "nav-active-mobile" }}
+                  />
+                ) : null}
+                <Icon size={20} weight={active ? "fill" : "regular"} aria-hidden="true" />
                 {t(item.key)}
               </Link>
             );
@@ -172,6 +208,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </nav>
 
       <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
-    </div>
+      </div>
+    </Toaster>
   );
 }
