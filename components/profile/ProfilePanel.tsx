@@ -79,6 +79,8 @@ const SECTION_DEFS: { id: Section; icon: typeof SquaresFour }[] = [
 
 export function ProfilePanel() {
   const tSections = useTranslations("profile.sections");
+  const tPage = useTranslations("profilePage");
+  const tAccount = useTranslations("accountSection");
   const searchParams = useSearchParams();
   const router = useRouter();
   const rawNext = searchParams.get("next");
@@ -113,14 +115,15 @@ export function ProfilePanel() {
       setSection(sectionParam);
     }
     if (searchParams.get("invite_accepted") === "1") {
-      setBanner({ type: "success", text: "Du er nu med i familien." });
+      setBanner({ type: "success", text: tPage("inviteAccepted") });
       setSection("family");
     } else if (searchParams.get("invite_error")) {
       setBanner({
         type: "error",
-        text: `Invitation kunne ikke aktiveres: ${searchParams.get("invite_error")}`
+        text: tPage("inviteError", { error: searchParams.get("invite_error") ?? "" })
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   async function refresh() {
@@ -182,16 +185,17 @@ export function ProfilePanel() {
       }
     });
     return () => data.subscription.unsubscribe();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   async function logout() {
     const supabase = createClient();
     if (!supabase) {
-      setLogoutMessage("Supabase er ikke konfigureret i denne lokale demo.");
+      setLogoutMessage(tAccount("notConfigured"));
       return;
     }
     await supabase.auth.signOut();
-    setLogoutMessage("Du er logget ud.");
+    setLogoutMessage(tAccount("signedOut"));
     setSignedIn(false);
     setUser(null);
     setProfile(null);
@@ -200,7 +204,7 @@ export function ProfilePanel() {
 
   async function handleProfileSave(patch: Omit<FamilyProfile, "userId">) {
     const supabase = createClient();
-    if (!supabase || !user) throw new Error("Ikke logget ind.");
+    if (!supabase || !user) throw new Error("Not logged in.");
     const next = await upsertOwnProfile(supabase, user.id, patch);
     setProfile(next);
   }
@@ -210,7 +214,7 @@ export function ProfilePanel() {
     patch: Partial<Pick<Family, "name" | "description" | "coverUrl">>
   ) {
     const supabase = createClient();
-    if (!supabase) throw new Error("Ikke konfigureret.");
+    if (!supabase) throw new Error("Not configured.");
     const next = await updateFamily(supabase, familyId, patch);
     setFamilyViews((current) =>
       current.map((view) => (view.family.id === familyId ? { ...view, family: next } : view))
@@ -227,13 +231,13 @@ export function ProfilePanel() {
     }
   ) {
     const supabase = createClient();
-    if (!supabase || !user) throw new Error("Ikke logget ind.");
+    if (!supabase || !user) throw new Error("Not logged in.");
     const invite = await createFamilyInvite(supabase, user.id, { familyId, ...input });
 
     if (input.invitedEmail) {
-      const inviter = profile?.displayName ?? user.email ?? "Et familiemedlem";
+      const inviter = profile?.displayName ?? user.email ?? "A family member";
       const familyName =
-        familyViews.find((view) => view.family.id === familyId)?.family.name ?? "din familie";
+        familyViews.find((view) => view.family.id === familyId)?.family.name ?? "your family";
       const origin = window.location.origin;
       await supabase.auth.signInWithOtp({
         email: input.invitedEmail,
@@ -241,7 +245,7 @@ export function ProfilePanel() {
           emailRedirectTo: `${origin}/auth/callback?invite=${invite.token}&next=/journal`,
           data: {
             app_name: "Lille Liv",
-            app_tagline: "Familieliv i København, samlet og roligt.",
+            app_tagline: "Copenhagen family life, gently organized.",
             display_name: input.invitedName ?? null,
             preferred_role: input.role,
             preferred_locale: profile?.preferredLocale ?? "da",
@@ -264,7 +268,7 @@ export function ProfilePanel() {
 
   async function handleRevokeInvite(familyId: string, inviteId: string) {
     const supabase = createClient();
-    if (!supabase) throw new Error("Ikke konfigureret.");
+    if (!supabase) throw new Error("Not configured.");
     await revokeFamilyInvite(supabase, inviteId);
     setFamilyViews((current) =>
       current.map((view) =>
@@ -306,39 +310,40 @@ export function ProfilePanel() {
       <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
         <div className="mx-auto grid max-w-5xl gap-4 lg:grid-cols-[1fr_420px]">
           <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
-            <p className="text-2xs font-bold uppercase tracking-[0.18em] text-warm-500">Profil</p>
+            <p className="text-2xs font-bold uppercase tracking-[0.18em] text-warm-500">
+              {tPage("loggedOutEyebrow")}
+            </p>
             <h1 className="mt-1 font-display text-3xl font-semibold leading-tight text-ink">
-              En personlig plads til familien
+              {tPage("loggedOutTitle")}
             </h1>
             <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
-              Log ind med et magisk link og åbn en privat hub: profil, præferencer, anbefalinger og
-              en delt familieplads.
+              {tPage("loggedOutBody")}
             </p>
             <ul className="mt-4 grid gap-2 sm:grid-cols-2">
               <FeaturePoint
                 icon={<Sparkle size={14} weight="fill" className="text-warm-500" aria-hidden="true" />}
-                title="Skræddersyet feed"
-                body="Anbefalinger der lytter til interesser, bydele og barnets alder."
+                title={tPage("tailoredFeed")}
+                body={tPage("tailoredFeedBody")}
               />
               <FeaturePoint
                 icon={<Compass size={14} weight="fill" className="text-warm-500" aria-hidden="true" />}
-                title="Kuraterede ture"
-                body="Caféer, legepladser og oplevelser i København 0-6 år."
+                title={tPage("curatedOutings")}
+                body={tPage("curatedOutingsBody")}
               />
               <FeaturePoint
                 icon={<ShieldCheck size={14} weight="fill" className="text-warm-500" aria-hidden="true" />}
-                title="Familiens delte rum"
-                body="Inviter bedsteforældre, dagplejer eller medforælder ind."
+                title={tPage("sharedFamilySpace")}
+                body={tPage("sharedFamilySpaceBody")}
               />
               <FeaturePoint
                 icon={<Key size={14} weight="fill" className="text-warm-500" aria-hidden="true" />}
-                title="Sikkert magisk link"
-                body="Ingen kodeord. EU-hosted. Du bestemmer hvem der ser hvad."
+                title={tPage("magicLink")}
+                body={tPage("magicLinkBody")}
               />
             </ul>
             {!supabaseAvailable ? (
               <p className="mt-4 rounded-lg bg-[#FBF1D9] p-2.5 text-xs text-warning ring-1 ring-[#F0DFB1]">
-                Login virker, når Supabase-miljøvariabler er sat. Indtil da er journalen tilgængelig som demo.
+                {tPage("supabaseNotice")}
               </p>
             ) : null}
           </section>
@@ -351,7 +356,11 @@ export function ProfilePanel() {
   return (
     <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
       <div className="mx-auto max-w-6xl">
-        <PageHeader eyebrow="Profil" title="Indstillinger" description="Din konto, familie og personlige præferencer." />
+        <PageHeader
+          eyebrow={tPage("settingsEyebrow")}
+          title={tPage("settingsTitle")}
+          description={tPage("settingsDescription")}
+        />
 
         {banner ? (
           <div
@@ -484,10 +493,11 @@ export function ProfilePanel() {
               <div className="space-y-4">
                 {familyViews.length === 0 ? (
                   <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
-                    <h2 className="font-display text-xl font-semibold text-ink">Ingen familie endnu</h2>
+                    <h2 className="font-display text-xl font-semibold text-ink">
+                      {tPage("noFamilyTitle")}
+                    </h2>
                     <p className="mt-2 text-sm text-muted">
-                      Næste gang du logger ind, opretter vi automatisk en familie til dig. Du kan
-                      altid invitere flere ind.
+                      {tPage("noFamilyBody")}
                     </p>
                   </section>
                 ) : (
@@ -520,23 +530,21 @@ export function ProfilePanel() {
                   />
                   <div>
                     <h2 className="font-display text-lg font-semibold text-ink">
-                      Konto og privatliv
+                      {tAccount("title")}
                     </h2>
                     <p className="mt-1 text-sm leading-6 text-muted">
-                      Data gemmes i Supabase i EU-region med RLS-politikker, så hver familie kun
-                      ser sin egen. Du kan logge ud her — alle dine præferencer ligger sikkert klar
-                      igen næste gang.
+                      {tAccount("body")}
                     </p>
                   </div>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
                   <Button variant="secondary" onClick={() => setSection("preferences")}>
                     <Heart size={14} weight="fill" aria-hidden="true" />
-                    Mine præferencer
+                    {tAccount("myPreferences")}
                   </Button>
                   <Button variant="danger" onClick={logout}>
                     <SignOut size={14} weight="bold" aria-hidden="true" />
-                    Log ud
+                    {tAccount("signOut")}
                   </Button>
                 </div>
                 {logoutMessage ? (

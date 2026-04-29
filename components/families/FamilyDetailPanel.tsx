@@ -27,7 +27,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
 import { useToast } from "@/components/ui/Toaster";
-import { categoryBadgeVariant, categoryLabels } from "@/lib/data/taxonomy";
+import { categoryBadgeVariant } from "@/lib/data/taxonomy";
 import { loadFamiliesForUser, loadFamilyMembers } from "@/lib/family";
 import {
   blockFamily,
@@ -42,7 +42,7 @@ import {
   type FamilyPublicProfile
 } from "@/lib/social";
 import { createClient } from "@/lib/supabase/client";
-import type { Family, FamilyMember } from "@/lib/types";
+import type { Family, FamilyMember, VenueCategory } from "@/lib/types";
 
 type Props = {
   familyId: string;
@@ -59,6 +59,7 @@ export function FamilyDetailPanel({ familyId }: Props) {
   const tCommon = useTranslations("common");
   const tBands = useTranslations("families.ageBands");
   const tReasons = useTranslations("families.detail.reasons");
+  const tTaxonomy = useTranslations("taxonomy");
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
   const { toast } = useToast();
@@ -360,7 +361,7 @@ export function FamilyDetailPanel({ familyId }: Props) {
                   <div className="mt-1 flex flex-wrap gap-1">
                     {profile.interests.map((interest) => (
                       <Badge key={interest} variant={categoryBadgeVariant[interest]}>
-                        {categoryLabels[interest]}
+                        {tTaxonomy(interest as VenueCategory)}
                       </Badge>
                     ))}
                   </div>

@@ -5,8 +5,9 @@ import maplibregl, { LngLatBounds, type Map as MapLibreMap, type Marker } from "
 import Link from "next/link";
 import Supercluster from "supercluster";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/Badge";
-import { categoryBadgeVariant, categoryLabels } from "@/lib/data/taxonomy";
+import { categoryBadgeVariant } from "@/lib/data/taxonomy";
 import type { Venue, VenueCategory } from "@/lib/types";
 import { cn, formatDistance, haversineKm } from "@/lib/utils";
 
@@ -54,6 +55,7 @@ const mapStyle = {
 };
 
 export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }: DiscoverMapProps) {
+  const t = useTranslations("discover");
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const markersRef = useRef<Map<string, Marker>>(new Map());
@@ -160,7 +162,7 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
           continue;
         }
 
-        const element = createClusterElement(count, () => {
+        const element = createClusterElement(count, t("clusterPlaces", { count }), () => {
           const target = Math.min(cluster.getClusterExpansionZoom(clusterId), 16);
           map.flyTo({ center: [lng, lat], zoom: target, duration: 500 });
         });
@@ -228,7 +230,7 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
 
     if (!userMarkerRef.current) {
       const wrapper = document.createElement("div");
-      wrapper.setAttribute("aria-label", "Din lokation");
+      wrapper.setAttribute("aria-label", t("yourLocation"));
       const dot = document.createElement("span");
       dot.className =
         "relative grid h-4 w-4 place-items-center rounded-full bg-warm-500 ring-[3px] ring-warm-500/30 shadow-sm";
@@ -278,6 +280,7 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
 }
 
 function HoverCard({ hover }: { hover: HoverState }) {
+  const tTaxonomy = useTranslations("taxonomy");
   const cardWidth = 220;
   const cardHeight = 76;
   const offset = 16;
@@ -314,7 +317,7 @@ function HoverCard({ hover }: { hover: HoverState }) {
         )}
         <div className="min-w-0 pr-1">
           <p className="truncate text-2xs font-bold uppercase tracking-[0.1em] text-subtle">
-            {categoryLabels[hover.venue.category]}
+            {tTaxonomy(hover.venue.category as VenueCategory)}
           </p>
           <p className="truncate text-sm font-semibold leading-tight text-ink">
             {hover.venue.name}
@@ -333,6 +336,8 @@ function SelectedCard({
   venue: Venue;
   userLocation?: { lat: number; lng: number } | null;
 }) {
+  const t = useTranslations("discover");
+  const tTaxonomy = useTranslations("taxonomy");
   const distance = userLocation
     ? haversineKm(userLocation.lat, userLocation.lng, venue.lat, venue.lng)
     : null;
@@ -353,14 +358,14 @@ function SelectedCard({
         ) : null}
         <div className="min-w-0 py-1 pr-2">
           <Badge variant={categoryBadgeVariant[venue.category]}>
-            {categoryLabels[venue.category]}
+            {tTaxonomy(venue.category as VenueCategory)}
           </Badge>
           <h3 className="mt-0.5 truncate font-display text-sm font-semibold text-ink">
             {venue.name}
           </h3>
           <p className="truncate text-2xs text-muted">
             {venue.neighbourhood}
-            {distance !== null ? ` · ${formatDistance(distance)} herfra` : ""}
+            {distance !== null ? ` · ${formatDistance(distance)} ${t("fromHere")}` : ""}
           </p>
         </div>
       </Link>
@@ -398,10 +403,10 @@ function createMarkerElement(venue: Venue, selected: boolean, handlers: MarkerHa
   return wrapper;
 }
 
-function createClusterElement(count: number, onExpand: () => void) {
+function createClusterElement(count: number, ariaLabel: string, onExpand: () => void) {
   const wrapper = document.createElement("button");
   wrapper.type = "button";
-  wrapper.setAttribute("aria-label", `${count} steder · klik for at zoome ind`);
+  wrapper.setAttribute("aria-label", ariaLabel);
   wrapper.style.cssText =
     "background:transparent;border:0;padding:0;margin:0;cursor:pointer;display:block;line-height:0;";
 

@@ -12,14 +12,14 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { PhotoUploader } from "@/components/ui/PhotoUploader";
 import { Textarea } from "@/components/ui/Textarea";
 import { useToast } from "@/components/ui/Toaster";
-import { categories, categoryLabels, neighbourhoods } from "@/lib/data/taxonomy";
-import { ROLE_LABELS_DA } from "@/lib/family";
-import { INDOOR_PREFERENCE_LABELS_DA, ageMonthsToLabel } from "@/lib/profile";
+import { categories, neighbourhoods } from "@/lib/data/taxonomy";
+import { ageMonthsToLabel } from "@/lib/profile";
 import type {
   FamilyProfile,
   FamilyRole,
@@ -34,8 +34,12 @@ type Props = {
 };
 
 const SELECTABLE_ROLES: FamilyRole[] = ["parent", "family", "caregiver"];
+const INDOOR_OPTIONS: IndoorPreference[] = ["any", "indoor", "outdoor"];
 
 export function ProfilePreferences({ profile, onSave }: Props) {
+  const t = useTranslations("prefs");
+  const tRoles = useTranslations("roles");
+  const tTaxonomy = useTranslations("taxonomy");
   const { toast } = useToast();
   const [displayName, setDisplayName] = useState("");
   const [pronouns, setPronouns] = useState("");
@@ -53,6 +57,12 @@ export function ProfilePreferences({ profile, onSave }: Props) {
 
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+
+  const indoorLabels: Record<IndoorPreference, string> = {
+    any: t("indoorAny"),
+    indoor: t("indoorIndoors"),
+    outdoor: t("indoorOutdoors")
+  };
 
   useEffect(() => {
     setDisplayName(profile?.displayName ?? "");
@@ -111,17 +121,17 @@ export function ProfilePreferences({ profile, onSave }: Props) {
       });
       setStatus("saved");
       toast({
-        title: "Profil gemt",
-        description: "Dine præferencer er opdateret.",
+        title: t("profileSaved"),
+        description: t("profileSavedBody"),
         variant: "success"
       });
       setTimeout(() => setStatus("idle"), 2400);
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Det gik ikke at gemme.";
+      const message = error instanceof Error ? error.message : t("saveFailed");
       setStatus("error");
       setErrorMessage(message);
       toast({
-        title: "Kunne ikke gemme",
+        title: t("saveFailed"),
         description: message,
         variant: "danger"
       });
@@ -132,22 +142,22 @@ export function ProfilePreferences({ profile, onSave }: Props) {
     <form onSubmit={submit} className="space-y-4">
       <SectionCard
         icon={<UserCircle size={16} weight="fill" className="text-sage-700" aria-hidden="true" />}
-        title="Personlig info"
-        subtitle="Det her ser bedsteforældre, dagplejer og medforælder, når I deler journalen."
+        title={t("personalInfo")}
+        subtitle={t("personalInfoSubtitle")}
       >
         <div className="grid gap-3 sm:grid-cols-2">
-          <Field label="Visningsnavn">
+          <Field label={t("displayName")}>
             <Input
               value={displayName}
               onChange={(event) => setDisplayName(event.target.value)}
               placeholder="Sofie"
             />
           </Field>
-          <Field label="Pronominer">
+          <Field label={t("pronouns")}>
             <Input
               value={pronouns}
               onChange={(event) => setPronouns(event.target.value)}
-              placeholder="hun, han, de"
+              placeholder="she/her, he/him, they/them"
             />
           </Field>
         </div>
@@ -155,23 +165,23 @@ export function ProfilePreferences({ profile, onSave }: Props) {
         <PhotoUploader
           value={avatarUrl ? [avatarUrl] : []}
           onChange={(next) => setAvatarUrl(next[0] ?? "")}
-          label="Profilbillede"
+          label={t("avatar")}
         />
 
-        <Field label="Lille beskrivelse">
+        <Field label={t("bio")}>
           <Textarea
             value={bio}
             onChange={(event) => setBio(event.target.value)}
             rows={3}
-            placeholder="Mor til Asta og Theo, elsker brunch på Nørrebro."
+            placeholder="Mum to Asta and Theo, loves brunch in Nørrebro."
           />
         </Field>
       </SectionCard>
 
       <SectionCard
         icon={<Heart size={16} weight="fill" className="text-warm-500" aria-hidden="true" />}
-        title="Interesser"
-        subtitle="Vi bruger dem til at samle anbefalinger på Opdag-fanen og i din profilfeed."
+        title={t("interests")}
+        subtitle={t("interestsSubtitle")}
       >
         <div className="flex flex-wrap gap-1.5">
           {categories.map((category) => {
@@ -187,14 +197,14 @@ export function ProfilePreferences({ profile, onSave }: Props) {
                     : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                 }`}
               >
-                {categoryLabels[category]}
+                {tTaxonomy(category)}
               </button>
             );
           })}
         </div>
 
         <div className="mt-4 grid gap-2 sm:grid-cols-3">
-          {(["any", "indoor", "outdoor"] as IndoorPreference[]).map((value) => {
+          {INDOOR_OPTIONS.map((value) => {
             const active = indoorPreference === value;
             return (
               <button
@@ -207,7 +217,7 @@ export function ProfilePreferences({ profile, onSave }: Props) {
                     : "bg-surface text-ink ring-hairline hover:bg-sunken"
                 }`}
               >
-                {INDOOR_PREFERENCE_LABELS_DA[value]}
+                {indoorLabels[value]}
               </button>
             );
           })}
@@ -216,8 +226,8 @@ export function ProfilePreferences({ profile, onSave }: Props) {
 
       <SectionCard
         icon={<MapPinArea size={16} weight="fill" className="text-info" aria-hidden="true" />}
-        title="Yndlingsbydele"
-        subtitle="Vælg de bydele I færdes i, så vi prioriterer ture i kort afstand."
+        title={t("neighbourhoods")}
+        subtitle={t("neighbourhoodsSubtitle")}
       >
         <div className="flex flex-wrap gap-1.5">
           {neighbourhoods.map((hood) => {
@@ -242,12 +252,12 @@ export function ProfilePreferences({ profile, onSave }: Props) {
 
       <SectionCard
         icon={<Sparkle size={16} weight="fill" className="text-warm-500" aria-hidden="true" />}
-        title="Barnets alder"
-        subtitle="Bruges til at filtrere steder og begivenheder, så det passer til den lille."
+        title={t("childAge")}
+        subtitle={t("childAgeSubtitle")}
       >
         <label className="flex items-center justify-between gap-3 rounded-lg bg-sunken p-2.5 ring-1 ring-hairline">
           <span className="text-sm font-semibold text-ink">
-            Tilpas anbefalinger til et aldersinterval
+            {t("customiseByAge")}
           </span>
           <input
             type="checkbox"
@@ -260,13 +270,13 @@ export function ProfilePreferences({ profile, onSave }: Props) {
         {trackChild ? (
           <div className="mt-3 space-y-2 rounded-lg bg-sunken p-3 ring-1 ring-hairline">
             <div className="flex items-center justify-between text-xs font-semibold text-muted">
-              <span>Aldersinterval</span>
+              <span>{t("ageRange")}</span>
               <span className="text-ink">
                 {ageMonthsToLabel(ageMin)} – {ageMonthsToLabel(ageMax)}
               </span>
             </div>
             <input
-              aria-label="Minimum alder i måneder"
+              aria-label={t("ageRange")}
               type="range"
               min={0}
               max={72}
@@ -275,7 +285,7 @@ export function ProfilePreferences({ profile, onSave }: Props) {
               className="w-full accent-sage-500"
             />
             <input
-              aria-label="Maksimum alder i måneder"
+              aria-label={t("ageRange")}
               type="range"
               min={0}
               max={72}
@@ -289,12 +299,12 @@ export function ProfilePreferences({ profile, onSave }: Props) {
 
       <SectionCard
         icon={<SlidersHorizontal size={16} weight="bold" className="text-sage-700" aria-hidden="true" />}
-        title="Konto"
-        subtitle="Rolle, sprog og beskeder. Du kan altid ændre det her senere."
+        title={t("accountSection")}
+        subtitle={t("accountSubtitle")}
       >
         <fieldset>
           <legend className="mb-1.5 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-            Rolle
+            {t("roleLegend")}
           </legend>
           <div className="grid grid-cols-3 gap-1.5">
             {SELECTABLE_ROLES.map((roleKey) => {
@@ -310,7 +320,7 @@ export function ProfilePreferences({ profile, onSave }: Props) {
                       : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                   }`}
                 >
-                  {ROLE_LABELS_DA[roleKey]}
+                  {tRoles(roleKey)}
                 </button>
               );
             })}
@@ -319,7 +329,7 @@ export function ProfilePreferences({ profile, onSave }: Props) {
 
         <fieldset className="mt-3">
           <legend className="mb-1.5 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-            Sprog
+            {t("languageLegend")}
           </legend>
           <div className="grid grid-cols-2 gap-1.5">
             {(["da", "en"] as const).map((value) => {
@@ -345,7 +355,7 @@ export function ProfilePreferences({ profile, onSave }: Props) {
         <label className="mt-3 flex items-center justify-between gap-3 rounded-lg bg-sunken p-2.5 ring-1 ring-hairline">
           <span className="flex items-start gap-1.5 text-sm font-semibold text-ink">
             <BellRinging size={14} weight="fill" className="mt-0.5 text-warm-500" aria-hidden="true" />
-            E-mailbeskeder om nye anbefalinger og familieaktivitet
+            {t("notifications")}
           </span>
           <input
             type="checkbox"
@@ -361,16 +371,16 @@ export function ProfilePreferences({ profile, onSave }: Props) {
           {status === "saving" ? (
             <>
               <CircleNotch size={14} weight="bold" className="animate-spin" aria-hidden="true" />
-              Gemmer…
+              {t("savingIndicator")}
             </>
           ) : (
-            "Gem ændringer"
+            t("saveChanges")
           )}
         </Button>
         {status === "saved" ? (
           <span className="flex items-center gap-1 text-sm font-semibold text-sage-700">
             <CheckCircle size={14} weight="fill" aria-hidden="true" />
-            Gemt
+            {t("savedIndicator")}
           </span>
         ) : null}
         {status === "error" ? (

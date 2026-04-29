@@ -6,17 +6,18 @@ import {
   CalendarDots,
   X
 } from "@phosphor-icons/react/dist/ssr";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useMemo } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toaster";
 import { usePlannedOutings, type PlannedOuting } from "@/hooks/usePlannedOutings";
-import { categoryBadgeVariant, categoryLabels } from "@/lib/data/taxonomy";
+import { categoryBadgeVariant } from "@/lib/data/taxonomy";
 import { venues } from "@/lib/data/venues";
 import { createClient } from "@/lib/supabase/client";
-import type { TimelineItem, Venue } from "@/lib/types";
-import { formatDanishDate } from "@/lib/utils";
+import type { TimelineItem, VenueCategory, Venue } from "@/lib/types";
+import { formatLocalizedDate } from "@/lib/utils";
 
 type Props = {
   childId: string;
@@ -30,24 +31,27 @@ function makeId() {
   return `act-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-function relativeLabel(iso: string) {
-  const target = new Date(iso);
-  const today = new Date();
-  target.setHours(0, 0, 0, 0);
-  today.setHours(0, 0, 0, 0);
-  const diffDays = Math.round((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) return "I dag";
-  if (diffDays === 1) return "I morgen";
-  if (diffDays === -1) return "I går";
-  if (diffDays > 1 && diffDays <= 7) return `Om ${diffDays} dage`;
-  if (diffDays < -1) return `${Math.abs(diffDays)} dage forsinket`;
-  return formatDanishDate(iso);
-}
-
 export function PlannedOutings({ childId, onAdd }: Props) {
+  const t = useTranslations("journal.plannedOutings");
+  const tTaxonomy = useTranslations("taxonomy");
+  const locale = useLocale();
   const { outings, remove } = usePlannedOutings();
   const { toast } = useToast();
+
+  function relativeLabel(iso: string) {
+    const target = new Date(iso);
+    const today = new Date();
+    target.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+    const diffDays = Math.round((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return t("today");
+    if (diffDays === 1) return t("tomorrow");
+    if (diffDays === -1) return t("yesterday");
+    if (diffDays > 1 && diffDays <= 7) return t("inDays", { days: diffDays });
+    if (diffDays < -1) return t("daysLate", { days: Math.abs(diffDays) });
+    return formatLocalizedDate(iso, locale);
+  }
 
   const upcoming = useMemo(() => {
     const venueIndex = new Map<string, Venue>(venues.map((venue) => [venue.id, venue]));
@@ -63,7 +67,7 @@ export function PlannedOutings({ childId, onAdd }: Props) {
     const optimistic: TimelineItem = {
       id: makeId(),
       type: "activity",
-      title: `Besøgte ${venue.name}`,
+      title: t("visitedPrefix", { name: venue.name }),
       description: outing.note,
       date: outing.date,
       photos: undefined
@@ -89,7 +93,7 @@ export function PlannedOutings({ childId, onAdd }: Props) {
         tags: venue.tags
       });
       if (error) {
-        toast({ title: "Kunne ikke logge", description: error.message, variant: "danger" });
+        toast({ title: t("couldNotLog"), description: error.message, variant: "danger" });
         return;
       }
     }
@@ -97,7 +101,7 @@ export function PlannedOutings({ childId, onAdd }: Props) {
     onAdd(optimistic);
     remove(outing.id);
     toast({
-      title: "Besøget er logget",
+      title: t("visitedToast"),
       description: venue.name,
       variant: "success"
     });
@@ -105,7 +109,7 @@ export function PlannedOutings({ childId, onAdd }: Props) {
 
   return (
     <section
-      aria-label="Planlagte ture"
+      aria-label={t("ariaLabel")}
       className="mt-4 rounded-card bg-surface p-3.5 ring-1 ring-hairline"
     >
       <div className="flex items-center justify-between">
@@ -116,7 +120,7 @@ export function PlannedOutings({ childId, onAdd }: Props) {
             className="text-warm-500"
             aria-hidden="true"
           />
-          <h2 className="font-display text-sm font-semibold text-ink">Planlagte ture</h2>
+          <h2 className="font-display text-sm font-semibold text-ink">{t("title")}</h2>
           <span className="text-2xs font-semibold text-subtle">
             ({upcoming.length})
           </span>
@@ -142,7 +146,7 @@ export function PlannedOutings({ childId, onAdd }: Props) {
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
                   <Badge variant={categoryBadgeVariant[venue.category]}>
-                    {categoryLabels[venue.category]}
+                    {tTaxonomy(venue.category as VenueCategory)}
                   </Badge>
                   <span className="truncate text-2xs font-semibold text-subtle">
                     {relativeLabel(outing.date)}
@@ -165,23 +169,23 @@ export function PlannedOutings({ childId, onAdd }: Props) {
                 size="sm"
                 variant="primary"
                 onClick={() => markVisited(outing, venue)}
-                aria-label={`Markér ${venue.name} som besøgt`}
+                aria-label={t("markVisited", { name: venue.name })}
               >
                 <CalendarCheck size={12} weight="fill" aria-hidden="true" />
-                Besøgt
+                {t("visited")}
               </Button>
               <button
                 type="button"
                 onClick={() => {
                   remove(outing.id);
                   toast({
-                    title: "Plan fjernet",
+                    title: t("removedToast"),
                     description: venue.name,
                     variant: "info",
                     duration: 2200
                   });
                 }}
-                aria-label={`Fjern plan for ${venue.name}`}
+                aria-label={t("removePlan", { name: venue.name })}
                 className="focus-ring grid h-8 w-8 place-items-center rounded-md text-muted hover:bg-sand-100 hover:text-warm-600"
               >
                 <X size={12} weight="bold" aria-hidden="true" />

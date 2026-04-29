@@ -3,11 +3,12 @@
 import { Baby, Heart, MapPin, Star } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import type { MouseEvent } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/Badge";
 import { useToast } from "@/components/ui/Toaster";
 import { useFavorites } from "@/hooks/useFavorites";
-import { categoryBadgeVariant, categoryLabels } from "@/lib/data/taxonomy";
-import type { Venue } from "@/lib/types";
+import { categoryBadgeVariant } from "@/lib/data/taxonomy";
+import type { Venue, VenueCategory } from "@/lib/types";
 import { cn, formatDistance, monthRangeLabel } from "@/lib/utils";
 
 type Layout = "row" | "compact" | "tile";
@@ -19,6 +20,7 @@ function FavoriteButton({
   venue: Venue;
   size?: "sm" | "md";
 }) {
+  const t = useTranslations("discover");
   const { isFavorite, toggleFavorite } = useFavorites();
   const { toast } = useToast();
   const saved = isFavorite(venue.id);
@@ -28,7 +30,7 @@ function FavoriteButton({
     event.stopPropagation();
     const next = toggleFavorite(venue.id);
     toast({
-      title: next ? "Gemt til favoritter" : "Fjernet fra favoritter",
+      title: next ? t("savedFavoriteToast") : t("removedFavoriteToast"),
       description: venue.name,
       variant: next ? "success" : "info",
       duration: 2200
@@ -42,7 +44,7 @@ function FavoriteButton({
     <button
       type="button"
       onClick={onClick}
-      aria-label={saved ? `Fjern ${venue.name} fra favoritter` : `Gem ${venue.name} til favoritter`}
+      aria-label={saved ? t("removeFavorite", { name: venue.name }) : t("saveFavorite", { name: venue.name })}
       aria-pressed={saved}
       className={cn(
         "focus-ring grid place-items-center rounded-full bg-surface/95 shadow-sm ring-1 backdrop-blur transition-colors",
@@ -74,6 +76,9 @@ export function VenueCard({
   active?: boolean;
   onHover?: () => void;
 }) {
+  const tTaxonomy = useTranslations("taxonomy");
+  const locale = useLocale();
+
   if (layout === "compact") {
     return (
       <Link
@@ -113,10 +118,10 @@ export function VenueCard({
           </p>
           <div className="mt-1.5 flex flex-wrap items-center gap-1">
             <Badge variant={categoryBadgeVariant[venue.category]}>
-              {categoryLabels[venue.category]}
+              {tTaxonomy(venue.category as VenueCategory)}
             </Badge>
             <Badge variant="neutral">
-              {monthRangeLabel(venue.ageMinMonths, venue.ageMaxMonths)}
+              {monthRangeLabel(venue.ageMinMonths, venue.ageMaxMonths, locale)}
             </Badge>
           </div>
         </div>
@@ -142,7 +147,7 @@ export function VenueCard({
           />
           <div className="absolute left-2 top-2">
             <Badge variant={categoryBadgeVariant[venue.category]}>
-              {categoryLabels[venue.category]}
+              {tTaxonomy(venue.category as VenueCategory)}
             </Badge>
           </div>
           <div className="absolute right-2 top-2">
@@ -185,7 +190,7 @@ export function VenueCard({
         />
         <div className="absolute left-2 top-2">
           <Badge variant={categoryBadgeVariant[venue.category]}>
-            {categoryLabels[venue.category]}
+            {tTaxonomy(venue.category as VenueCategory)}
           </Badge>
         </div>
         <div className="absolute right-2 top-2">
@@ -211,7 +216,7 @@ export function VenueCard({
         <div className="mt-2.5 flex flex-wrap items-center gap-1">
           <Badge variant="sky">
             <Baby size={11} weight="fill" aria-hidden="true" />
-            {monthRangeLabel(venue.ageMinMonths, venue.ageMaxMonths)}
+            {monthRangeLabel(venue.ageMinMonths, venue.ageMaxMonths, locale)}
           </Badge>
           {venue.tags.slice(0, 2).map((tag) => (
             <Badge key={tag} variant="neutral">
