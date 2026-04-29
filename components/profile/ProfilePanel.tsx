@@ -1,18 +1,18 @@
 "use client";
 
 import {
-  CheckCircle2,
+  CheckCircle,
   Compass,
   Heart,
-  KeyRound,
-  LayoutGrid,
-  Loader2,
-  LogOut,
-  Settings2,
+  Key,
+  Sparkle,
   ShieldCheck,
-  Sparkles,
+  SignOut,
+  SlidersHorizontal,
+  SquaresFour,
+  UserCircle,
   Users
-} from "lucide-react";
+} from "@phosphor-icons/react/dist/ssr";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { LoginForm } from "@/components/auth/LoginForm";
@@ -22,6 +22,8 @@ import { ProfileOverview } from "@/components/profile/ProfileOverview";
 import { ProfilePreferences } from "@/components/profile/ProfilePreferences";
 import { ProfileRecommendations } from "@/components/profile/ProfileRecommendations";
 import { Button } from "@/components/ui/Button";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Skeleton } from "@/components/ui/Skeleton";
 import {
   createFamilyInvite,
   loadFamilyInvites,
@@ -48,13 +50,50 @@ type SessionUser = {
   email: string | null;
 };
 
-type Tab = "overview" | "recommendations" | "preferences" | "family";
+type Section = "overview" | "profile" | "family" | "recommendations" | "preferences" | "account";
 
-const TABS: { id: Tab; label: string; icon: typeof LayoutGrid }[] = [
-  { id: "overview", label: "Oversigt", icon: LayoutGrid },
-  { id: "recommendations", label: "Anbefalinger", icon: Sparkles },
-  { id: "preferences", label: "Indstillinger", icon: Settings2 },
-  { id: "family", label: "Familie", icon: Users }
+const SECTIONS: {
+  id: Section;
+  label: string;
+  description: string;
+  icon: typeof SquaresFour;
+}[] = [
+  {
+    id: "overview",
+    label: "Oversigt",
+    description: "Dit hjem her",
+    icon: SquaresFour
+  },
+  {
+    id: "profile",
+    label: "Profil",
+    description: "Navn, billede, bio",
+    icon: UserCircle
+  },
+  {
+    id: "family",
+    label: "Familie",
+    description: "Medlemmer & invitationer",
+    icon: Users
+  },
+  {
+    id: "recommendations",
+    label: "Anbefalinger",
+    description: "Tilpasset feed",
+    icon: Sparkle
+  },
+  {
+    id: "preferences",
+    label: "Præferencer",
+    description: "Sprog, alder, notifikationer",
+    icon: SlidersHorizontal
+  },
+  {
+    id: "account",
+    label: "Konto",
+    description: "Privatliv & log ud",
+    icon: ShieldCheck
+  }
 ];
 
 export function ProfilePanel() {
@@ -67,12 +106,12 @@ export function ProfilePanel() {
   const [familyViews, setFamilyViews] = useState<FamilyView[]>([]);
   const [logoutMessage, setLogoutMessage] = useState("");
   const [banner, setBanner] = useState<{ type: "success" | "error"; text: string } | null>(null);
-  const [tab, setTab] = useState<Tab>("overview");
+  const [section, setSection] = useState<Section>("overview");
 
   useEffect(() => {
     if (searchParams.get("invite_accepted") === "1") {
       setBanner({ type: "success", text: "Du er nu med i familien." });
-      setTab("family");
+      setSection("family");
     } else if (searchParams.get("invite_error")) {
       setBanner({
         type: "error",
@@ -246,10 +285,11 @@ export function ProfilePanel() {
 
   if (loading) {
     return (
-      <div className="px-4 pt-24 sm:px-6 lg:px-8 lg:pt-8">
-        <div className="mx-auto flex max-w-3xl items-center gap-2 text-sm font-bold text-ink/60">
-          <Loader2 className="animate-spin" size={18} aria-hidden="true" />
-          Henter profil...
+      <div className="px-4 pt-20 sm:px-6 lg:px-8 lg:pt-6">
+        <div className="mx-auto max-w-5xl space-y-3">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-32 w-full" />
+          <Skeleton className="h-32 w-full" />
         </div>
       </div>
     );
@@ -257,41 +297,41 @@ export function ProfilePanel() {
 
   if (!signedIn) {
     return (
-      <div className="px-4 pt-20 sm:px-6 lg:px-8 lg:pt-10">
-        <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[1fr_440px]">
-          <section className="rounded-card bg-white p-6 shadow-soft ring-1 ring-oat">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-rust">Profil</p>
-            <h1 className="mt-2 font-display text-4xl font-semibold leading-tight text-ink">
+      <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+        <div className="mx-auto grid max-w-5xl gap-4 lg:grid-cols-[1fr_420px]">
+          <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
+            <p className="text-2xs font-bold uppercase tracking-[0.18em] text-warm-500">Profil</p>
+            <h1 className="mt-1 font-display text-3xl font-semibold leading-tight text-ink">
               En personlig plads til familien
             </h1>
-            <p className="mt-3 max-w-xl text-base leading-7 text-ink/70">
-              Log ind med et magisk link og åbn en privat hub: profil, præferencer, anbefalinger
-              og en delt familieplads.
+            <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
+              Log ind med et magisk link og åbn en privat hub: profil, præferencer, anbefalinger og
+              en delt familieplads.
             </p>
-            <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+            <ul className="mt-4 grid gap-2 sm:grid-cols-2">
               <FeaturePoint
-                icon={<Sparkles size={17} className="text-rust" aria-hidden="true" />}
+                icon={<Sparkle size={14} weight="fill" className="text-warm-500" aria-hidden="true" />}
                 title="Skræddersyet feed"
                 body="Anbefalinger der lytter til interesser, bydele og barnets alder."
               />
               <FeaturePoint
-                icon={<Compass size={17} className="text-rust" aria-hidden="true" />}
+                icon={<Compass size={14} weight="fill" className="text-warm-500" aria-hidden="true" />}
                 title="Kuraterede ture"
                 body="Caféer, legepladser og oplevelser i København 0-6 år."
               />
               <FeaturePoint
-                icon={<ShieldCheck size={17} className="text-rust" aria-hidden="true" />}
+                icon={<ShieldCheck size={14} weight="fill" className="text-warm-500" aria-hidden="true" />}
                 title="Familiens delte rum"
                 body="Inviter bedsteforældre, dagplejer eller medforælder ind."
               />
               <FeaturePoint
-                icon={<KeyRound size={17} className="text-rust" aria-hidden="true" />}
+                icon={<Key size={14} weight="fill" className="text-warm-500" aria-hidden="true" />}
                 title="Sikkert magisk link"
                 body="Ingen kodeord. EU-hosted. Du bestemmer hvem der ser hvad."
               />
             </ul>
             {!supabaseAvailable ? (
-              <p className="mt-5 rounded-xl bg-butter/40 p-3 text-sm font-semibold text-ink/75">
+              <p className="mt-4 rounded-lg bg-[#FBF1D9] p-2.5 text-xs text-warning ring-1 ring-[#F0DFB1]">
                 Login virker, når Supabase-miljøvariabler er sat. Indtil da er journalen tilgængelig som demo.
               </p>
             ) : null}
@@ -303,129 +343,191 @@ export function ProfilePanel() {
   }
 
   return (
-    <div className="px-4 pt-20 sm:px-6 lg:px-8 lg:pt-10">
-      <div className="mx-auto max-w-6xl space-y-6">
+    <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+      <div className="mx-auto max-w-6xl">
+        <PageHeader eyebrow="Profil" title="Indstillinger" description="Din konto, familie og personlige præferencer." />
+
         {banner ? (
           <div
-            className={`flex items-start gap-2 rounded-card p-4 ring-1 ${
+            className={cn(
+              "mt-4 flex items-start gap-2 rounded-card p-3 ring-1",
               banner.type === "success"
-                ? "bg-mossDark/95 text-white ring-mossDark"
-                : "bg-rust/95 text-white ring-rust"
-            }`}
+                ? "bg-sage-100 text-sage-700 ring-sage-200"
+                : "bg-warm-50 text-danger ring-warm-100"
+            )}
           >
-            <CheckCircle2 size={18} aria-hidden="true" className="mt-0.5" />
+            <CheckCircle size={16} weight="fill" aria-hidden="true" className="mt-0.5" />
             <p className="text-sm font-semibold">{banner.text}</p>
           </div>
         ) : null}
 
-        <ProfileHeader
-          email={user?.email ?? null}
-          profile={profile}
-          familyCount={familyViews.length}
-          ownerCount={ownerCount}
-          onEdit={() => setTab("preferences")}
-        />
-
-        <nav
-          aria-label="Profilsektioner"
-          className="sticky top-16 z-20 -mx-4 overflow-x-auto bg-linen/95 px-4 py-3 backdrop-blur lg:top-0 lg:mx-0 lg:rounded-card lg:bg-white lg:px-3 lg:shadow-soft lg:ring-1 lg:ring-oat"
-        >
-          <div className="flex items-center gap-2">
-            {TABS.map((entry) => {
-              const Icon = entry.icon;
-              const active = tab === entry.id;
-              return (
-                <button
-                  key={entry.id}
-                  type="button"
-                  onClick={() => setTab(entry.id)}
-                  aria-pressed={active}
-                  className={cn(
-                    "focus-ring inline-flex h-11 shrink-0 items-center gap-2 rounded-full px-4 text-sm font-bold transition",
-                    active
-                      ? "bg-moss text-white"
-                      : "bg-white text-ink/72 ring-1 ring-oat hover:bg-[#FFFDF8]"
-                  )}
-                >
-                  <Icon size={16} aria-hidden="true" />
-                  {entry.label}
-                </button>
-              );
-            })}
-          </div>
-        </nav>
-
-        {tab === "overview" ? (
-          <ProfileOverview
-            profile={profile}
-            members={allMembers}
-            onJumpTo={(target) => setTab(target)}
-          />
-        ) : null}
-
-        {tab === "recommendations" ? (
-          <ProfileRecommendations
-            profile={profile}
-            onTunePreferences={() => setTab("preferences")}
-          />
-        ) : null}
-
-        {tab === "preferences" ? (
-          <ProfilePreferences profile={profile} onSave={handleProfileSave} />
-        ) : null}
-
-        {tab === "family" ? (
-          <div className="space-y-5">
-            {familyViews.length === 0 ? (
-              <section className="rounded-card bg-white p-6 shadow-soft ring-1 ring-oat">
-                <h2 className="font-display text-2xl font-semibold">Ingen familie endnu</h2>
-                <p className="mt-2 text-sm leading-6 text-ink/70">
-                  Næste gang du logger ind, opretter vi automatisk en familie til dig. Du kan altid
-                  invitere flere ind.
-                </p>
-              </section>
-            ) : (
-              <div className="grid gap-6 lg:grid-cols-2">
-                {familyViews.map((view) => (
-                  <FamilyCard
-                    key={view.family.id}
-                    family={view.family}
-                    members={view.members}
-                    invites={view.invites}
-                    isOwner={view.isOwner}
-                    onUpdateFamily={(patch) => handleFamilyUpdate(view.family.id, patch)}
-                    onCreateInvite={(input) => handleCreateInvite(view.family.id, input)}
-                    onRevokeInvite={(inviteId) => handleRevokeInvite(view.family.id, inviteId)}
-                  />
-                ))}
+        <div className="mt-5 grid gap-5 lg:grid-cols-[220px_1fr]">
+          {/* Sub-nav */}
+          <aside aria-label="Profilsektioner">
+            {/* Mobile horizontal scroll */}
+            <div className="-mx-4 overflow-x-auto px-4 lg:hidden">
+              <div className="flex gap-1.5">
+                {SECTIONS.map((entry) => {
+                  const Icon = entry.icon;
+                  const active = section === entry.id;
+                  return (
+                    <button
+                      key={entry.id}
+                      type="button"
+                      onClick={() => setSection(entry.id)}
+                      aria-pressed={active}
+                      className={cn(
+                        "focus-ring inline-flex h-9 shrink-0 items-center gap-1.5 rounded-pill px-3 text-xs font-semibold transition-colors",
+                        active
+                          ? "bg-sage-500 text-white"
+                          : "bg-surface text-muted ring-1 ring-hairline hover:bg-sunken hover:text-ink"
+                      )}
+                    >
+                      <Icon size={14} weight={active ? "fill" : "regular"} aria-hidden="true" />
+                      {entry.label}
+                    </button>
+                  );
+                })}
               </div>
-            )}
-          </div>
-        ) : null}
+            </div>
 
-        <section className="rounded-card bg-white p-6 shadow-soft ring-1 ring-oat">
-          <div className="flex items-start gap-2 text-rust">
-            <ShieldCheck size={18} aria-hidden="true" />
-            <h2 className="font-display text-2xl font-semibold text-ink">Konto og privatliv</h2>
+            {/* Desktop vertical list */}
+            <nav className="hidden lg:flex lg:flex-col lg:gap-0.5">
+              {SECTIONS.map((entry) => {
+                const Icon = entry.icon;
+                const active = section === entry.id;
+                return (
+                  <button
+                    key={entry.id}
+                    type="button"
+                    onClick={() => setSection(entry.id)}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "focus-ring flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm font-semibold transition-colors",
+                      active
+                        ? "bg-sage-100 text-sage-700"
+                        : "text-muted hover:bg-sunken hover:text-ink"
+                    )}
+                  >
+                    <Icon size={15} weight={active ? "fill" : "regular"} aria-hidden="true" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate">{entry.label}</span>
+                      <span
+                        className={cn(
+                          "block truncate text-2xs font-normal",
+                          active ? "text-sage-700/70" : "text-subtle"
+                        )}
+                      >
+                        {entry.description}
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
+            </nav>
+          </aside>
+
+          {/* Main content */}
+          <div className="min-w-0 space-y-4">
+            {section === "overview" ? (
+              <ProfileOverview
+                profile={profile}
+                members={allMembers}
+                onJumpTo={(target) => {
+                  if (target === "family" || target === "preferences" || target === "recommendations") {
+                    setSection(target);
+                  }
+                }}
+              />
+            ) : null}
+
+            {section === "profile" ? (
+              <ProfileHeader
+                email={user?.email ?? null}
+                profile={profile}
+                familyCount={familyViews.length}
+                ownerCount={ownerCount}
+                onEdit={() => setSection("preferences")}
+              />
+            ) : null}
+
+            {section === "recommendations" ? (
+              <ProfileRecommendations
+                profile={profile}
+                onTunePreferences={() => setSection("preferences")}
+              />
+            ) : null}
+
+            {section === "preferences" ? (
+              <ProfilePreferences profile={profile} onSave={handleProfileSave} />
+            ) : null}
+
+            {section === "family" ? (
+              <div className="space-y-4">
+                {familyViews.length === 0 ? (
+                  <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
+                    <h2 className="font-display text-xl font-semibold text-ink">Ingen familie endnu</h2>
+                    <p className="mt-2 text-sm text-muted">
+                      Næste gang du logger ind, opretter vi automatisk en familie til dig. Du kan
+                      altid invitere flere ind.
+                    </p>
+                  </section>
+                ) : (
+                  <div className="grid gap-4 xl:grid-cols-2">
+                    {familyViews.map((view) => (
+                      <FamilyCard
+                        key={view.family.id}
+                        family={view.family}
+                        members={view.members}
+                        invites={view.invites}
+                        isOwner={view.isOwner}
+                        onUpdateFamily={(patch) => handleFamilyUpdate(view.family.id, patch)}
+                        onCreateInvite={(input) => handleCreateInvite(view.family.id, input)}
+                        onRevokeInvite={(inviteId) => handleRevokeInvite(view.family.id, inviteId)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : null}
+
+            {section === "account" ? (
+              <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
+                <div className="flex items-start gap-2">
+                  <ShieldCheck
+                    size={16}
+                    weight="fill"
+                    className="mt-0.5 text-sage-500"
+                    aria-hidden="true"
+                  />
+                  <div>
+                    <h2 className="font-display text-lg font-semibold text-ink">
+                      Konto og privatliv
+                    </h2>
+                    <p className="mt-1 text-sm leading-6 text-muted">
+                      Data gemmes i Supabase i EU-region med RLS-politikker, så hver familie kun
+                      ser sin egen. Du kan logge ud her — alle dine præferencer ligger sikkert klar
+                      igen næste gang.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <Button variant="secondary" onClick={() => setSection("preferences")}>
+                    <Heart size={14} weight="fill" aria-hidden="true" />
+                    Mine præferencer
+                  </Button>
+                  <Button variant="danger" onClick={logout}>
+                    <SignOut size={14} weight="bold" aria-hidden="true" />
+                    Log ud
+                  </Button>
+                </div>
+                {logoutMessage ? (
+                  <p className="mt-3 text-sm font-semibold text-muted">{logoutMessage}</p>
+                ) : null}
+              </section>
+            ) : null}
           </div>
-          <p className="mt-2 text-sm leading-6 text-ink/70">
-            Data gemmes i Supabase i EU-region med RLS-politikker, så hver familie kun ser sin
-            egen. Du kan logge ud her — alle dine præferencer ligger sikkert klar igen næste gang.
-          </p>
-          <div className="mt-4 flex flex-wrap gap-3">
-            <Button variant="secondary" onClick={() => setTab("preferences")}>
-              <Heart size={16} aria-hidden="true" />
-              Mine præferencer
-            </Button>
-            <Button variant="danger" onClick={logout}>
-              <LogOut size={16} aria-hidden="true" />
-              Log ud
-            </Button>
-          </div>
-          {logoutMessage ? (
-            <p className="mt-3 text-sm font-semibold text-ink/70">{logoutMessage}</p>
-          ) : null}
-        </section>
+        </div>
       </div>
     </div>
   );
@@ -441,12 +543,12 @@ function FeaturePoint({
   body: string;
 }) {
   return (
-    <li className="rounded-2xl bg-linen p-3 ring-1 ring-oat">
-      <div className="flex items-center gap-2">
+    <li className="rounded-lg bg-sunken p-2.5 ring-1 ring-hairline">
+      <div className="flex items-center gap-1.5">
         {icon}
-        <p className="font-display text-lg font-semibold">{title}</p>
+        <p className="font-display text-sm font-semibold text-ink">{title}</p>
       </div>
-      <p className="mt-1 text-sm leading-5 text-ink/70">{body}</p>
+      <p className="mt-1 text-xs leading-5 text-muted">{body}</p>
     </li>
   );
 }

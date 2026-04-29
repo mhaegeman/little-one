@@ -1,19 +1,21 @@
 "use client";
 
 import {
-  BellRing,
+  BellRinging,
   Camera,
-  CheckCircle2,
+  CheckCircle,
+  CircleNotch,
   Heart,
-  Loader2,
-  MapPinned,
-  Settings2,
-  Sparkles,
-  UserRound
-} from "lucide-react";
+  MapPinArea,
+  Sparkle,
+  SlidersHorizontal,
+  UserCircle
+} from "@phosphor-icons/react/dist/ssr";
 import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
 import { categories, categoryLabels, neighbourhoods } from "@/lib/data/taxonomy";
 import { ROLE_LABELS_DA } from "@/lib/family";
 import { INDOOR_PREFERENCE_LABELS_DA, ageMonthsToLabel } from "@/lib/profile";
@@ -114,60 +116,54 @@ export function ProfilePreferences({ profile, onSave }: Props) {
   }
 
   return (
-    <form onSubmit={submit} className="space-y-5">
+    <form onSubmit={submit} className="space-y-4">
       <SectionCard
-        icon={<UserRound size={18} aria-hidden="true" />}
+        icon={<UserCircle size={16} weight="fill" className="text-sage-700" aria-hidden="true" />}
         title="Personlig info"
         subtitle="Det her ser bedsteforældre, dagplejer og medforælder, når I deler journalen."
       >
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2">
           <Field label="Visningsnavn">
-            <input
+            <Input
               value={displayName}
               onChange={(event) => setDisplayName(event.target.value)}
               placeholder="Sofie"
-              className="focus-ring h-12 w-full rounded-xl bg-linen px-3 text-sm font-semibold ring-1 ring-oat"
             />
           </Field>
           <Field label="Pronominer">
-            <input
+            <Input
               value={pronouns}
               onChange={(event) => setPronouns(event.target.value)}
               placeholder="hun, han, de"
-              className="focus-ring h-12 w-full rounded-xl bg-linen px-3 text-sm font-semibold ring-1 ring-oat"
             />
           </Field>
         </div>
 
         <Field label="Profilbillede (URL)">
-          <span className="flex h-12 items-center gap-2 rounded-xl bg-linen px-3 ring-1 ring-oat">
-            <Camera size={17} className="text-ink/45" aria-hidden="true" />
-            <input
-              value={avatarUrl}
-              onChange={(event) => setAvatarUrl(event.target.value)}
-              placeholder="https://res.cloudinary.com/..."
-              className="w-full bg-transparent text-sm font-semibold outline-none"
-            />
-          </span>
+          <Input
+            value={avatarUrl}
+            onChange={(event) => setAvatarUrl(event.target.value)}
+            placeholder="https://res.cloudinary.com/…"
+            leadingIcon={<Camera size={14} weight="fill" aria-hidden="true" />}
+          />
         </Field>
 
         <Field label="Lille beskrivelse">
-          <textarea
+          <Textarea
             value={bio}
             onChange={(event) => setBio(event.target.value)}
             rows={3}
             placeholder="Mor til Asta og Theo, elsker brunch på Nørrebro."
-            className="focus-ring w-full rounded-xl bg-linen p-3 text-sm font-semibold ring-1 ring-oat"
           />
         </Field>
       </SectionCard>
 
       <SectionCard
-        icon={<Heart size={18} aria-hidden="true" />}
+        icon={<Heart size={16} weight="fill" className="text-warm-500" aria-hidden="true" />}
         title="Interesser"
         subtitle="Vi bruger dem til at samle anbefalinger på Opdag-fanen og i din profilfeed."
       >
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {categories.map((category) => {
             const active = interests.includes(category);
             return (
@@ -175,10 +171,10 @@ export function ProfilePreferences({ profile, onSave }: Props) {
                 key={category}
                 type="button"
                 onClick={() => toggleCategory(category)}
-                className={`focus-ring rounded-full px-3 py-2 text-xs font-bold ring-1 transition ${
+                className={`focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors ${
                   active
-                    ? "bg-moss text-white ring-moss"
-                    : "bg-linen text-ink/72 ring-oat hover:bg-white"
+                    ? "bg-sage-500 text-white ring-sage-500"
+                    : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                 }`}
               >
                 {categoryLabels[category]}
@@ -187,7 +183,7 @@ export function ProfilePreferences({ profile, onSave }: Props) {
           })}
         </div>
 
-        <div className="mt-5 grid gap-3 sm:grid-cols-3">
+        <div className="mt-4 grid gap-2 sm:grid-cols-3">
           {(["any", "indoor", "outdoor"] as IndoorPreference[]).map((value) => {
             const active = indoorPreference === value;
             return (
@@ -195,8 +191,10 @@ export function ProfilePreferences({ profile, onSave }: Props) {
                 key={value}
                 type="button"
                 onClick={() => setIndoorPreference(value)}
-                className={`focus-ring rounded-2xl px-3 py-3 text-sm font-bold ring-1 transition ${
-                  active ? "bg-moss text-white ring-moss" : "bg-linen text-ink/75 ring-oat hover:bg-white"
+                className={`focus-ring rounded-lg px-3 py-2.5 text-sm font-semibold ring-1 transition-colors ${
+                  active
+                    ? "bg-sage-500 text-white ring-sage-500"
+                    : "bg-surface text-ink ring-hairline hover:bg-sunken"
                 }`}
               >
                 {INDOOR_PREFERENCE_LABELS_DA[value]}
@@ -207,11 +205,11 @@ export function ProfilePreferences({ profile, onSave }: Props) {
       </SectionCard>
 
       <SectionCard
-        icon={<MapPinned size={18} aria-hidden="true" />}
+        icon={<MapPinArea size={16} weight="fill" className="text-info" aria-hidden="true" />}
         title="Yndlingsbydele"
         subtitle="Vælg de bydele I færdes i, så vi prioriterer ture i kort afstand."
       >
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {neighbourhoods.map((hood) => {
             const active = neighbourhoodPicks.includes(hood);
             return (
@@ -219,10 +217,10 @@ export function ProfilePreferences({ profile, onSave }: Props) {
                 key={hood}
                 type="button"
                 onClick={() => toggleNeighbourhood(hood)}
-                className={`focus-ring rounded-full px-3 py-2 text-xs font-bold ring-1 transition ${
+                className={`focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors ${
                   active
-                    ? "bg-mossDark text-white ring-mossDark"
-                    : "bg-linen text-ink/72 ring-oat hover:bg-white"
+                    ? "bg-sage-700 text-white ring-sage-700"
+                    : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                 }`}
               >
                 {hood}
@@ -233,27 +231,27 @@ export function ProfilePreferences({ profile, onSave }: Props) {
       </SectionCard>
 
       <SectionCard
-        icon={<Sparkles size={18} aria-hidden="true" />}
+        icon={<Sparkle size={16} weight="fill" className="text-warm-500" aria-hidden="true" />}
         title="Barnets alder"
         subtitle="Bruges til at filtrere steder og begivenheder, så det passer til den lille."
       >
-        <label className="flex items-center justify-between gap-4 rounded-2xl bg-linen p-3 ring-1 ring-oat">
-          <span className="text-sm font-bold text-ink/72">
+        <label className="flex items-center justify-between gap-3 rounded-lg bg-sunken p-2.5 ring-1 ring-hairline">
+          <span className="text-sm font-semibold text-ink">
             Tilpas anbefalinger til et aldersinterval
           </span>
           <input
             type="checkbox"
             checked={trackChild}
             onChange={(event) => setTrackChild(event.target.checked)}
-            className="h-5 w-5 accent-moss"
+            className="h-4 w-4 accent-sage-500"
           />
         </label>
 
         {trackChild ? (
-          <div className="mt-4 space-y-3 rounded-2xl bg-linen p-4 ring-1 ring-oat">
-            <div className="flex items-center justify-between text-sm font-bold text-ink/72">
+          <div className="mt-3 space-y-2 rounded-lg bg-sunken p-3 ring-1 ring-hairline">
+            <div className="flex items-center justify-between text-xs font-semibold text-muted">
               <span>Aldersinterval</span>
-              <span>
+              <span className="text-ink">
                 {ageMonthsToLabel(ageMin)} – {ageMonthsToLabel(ageMax)}
               </span>
             </div>
@@ -263,10 +261,8 @@ export function ProfilePreferences({ profile, onSave }: Props) {
               min={0}
               max={72}
               value={ageMin}
-              onChange={(event) =>
-                setAgeMin(Math.min(Number(event.target.value), ageMax))
-              }
-              className="w-full accent-moss"
+              onChange={(event) => setAgeMin(Math.min(Number(event.target.value), ageMax))}
+              className="w-full accent-sage-500"
             />
             <input
               aria-label="Maksimum alder i måneder"
@@ -274,25 +270,23 @@ export function ProfilePreferences({ profile, onSave }: Props) {
               min={0}
               max={72}
               value={ageMax}
-              onChange={(event) =>
-                setAgeMax(Math.max(Number(event.target.value), ageMin))
-              }
-              className="w-full accent-rust"
+              onChange={(event) => setAgeMax(Math.max(Number(event.target.value), ageMin))}
+              className="w-full accent-sage-500"
             />
           </div>
         ) : null}
       </SectionCard>
 
       <SectionCard
-        icon={<Settings2 size={18} aria-hidden="true" />}
+        icon={<SlidersHorizontal size={16} weight="bold" className="text-sage-700" aria-hidden="true" />}
         title="Konto"
         subtitle="Rolle, sprog og beskeder. Du kan altid ændre det her senere."
       >
         <fieldset>
-          <legend className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-ink/60">
+          <legend className="mb-1.5 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
             Rolle
           </legend>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-1.5">
             {SELECTABLE_ROLES.map((roleKey) => {
               const active = role === roleKey;
               return (
@@ -300,10 +294,10 @@ export function ProfilePreferences({ profile, onSave }: Props) {
                   key={roleKey}
                   type="button"
                   onClick={() => setRole(roleKey)}
-                  className={`focus-ring rounded-xl px-2 py-2 text-xs font-bold ring-1 transition ${
+                  className={`focus-ring rounded-lg px-2 py-2 text-xs font-semibold ring-1 transition-colors ${
                     active
-                      ? "bg-moss text-white ring-moss"
-                      : "bg-linen text-ink/70 ring-oat hover:bg-white"
+                      ? "bg-sage-500 text-white ring-sage-500"
+                      : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                   }`}
                 >
                   {ROLE_LABELS_DA[roleKey]}
@@ -313,11 +307,11 @@ export function ProfilePreferences({ profile, onSave }: Props) {
           </div>
         </fieldset>
 
-        <fieldset className="mt-4">
-          <legend className="mb-2 block text-xs font-bold uppercase tracking-[0.14em] text-ink/60">
+        <fieldset className="mt-3">
+          <legend className="mb-1.5 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
             Sprog
           </legend>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-1.5">
             {(["da", "en"] as const).map((value) => {
               const active = locale === value;
               return (
@@ -325,10 +319,10 @@ export function ProfilePreferences({ profile, onSave }: Props) {
                   key={value}
                   type="button"
                   onClick={() => setLocale(value)}
-                  className={`focus-ring rounded-xl px-2 py-2 text-xs font-bold uppercase tracking-[0.18em] ring-1 transition ${
+                  className={`focus-ring rounded-lg px-2 py-2 text-xs font-semibold uppercase tracking-[0.16em] ring-1 transition-colors ${
                     active
-                      ? "bg-moss text-white ring-moss"
-                      : "bg-linen text-ink/70 ring-oat hover:bg-white"
+                      ? "bg-sage-500 text-white ring-sage-500"
+                      : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                   }`}
                 >
                   {value === "da" ? "Dansk" : "English"}
@@ -338,39 +332,39 @@ export function ProfilePreferences({ profile, onSave }: Props) {
           </div>
         </fieldset>
 
-        <label className="mt-4 flex items-center justify-between gap-4 rounded-2xl bg-linen p-3 ring-1 ring-oat">
-          <span className="flex items-start gap-2 text-sm font-bold text-ink/72">
-            <BellRing size={16} className="mt-0.5 text-rust" aria-hidden="true" />
+        <label className="mt-3 flex items-center justify-between gap-3 rounded-lg bg-sunken p-2.5 ring-1 ring-hairline">
+          <span className="flex items-start gap-1.5 text-sm font-semibold text-ink">
+            <BellRinging size={14} weight="fill" className="mt-0.5 text-warm-500" aria-hidden="true" />
             E-mailbeskeder om nye anbefalinger og familieaktivitet
           </span>
           <input
             type="checkbox"
             checked={notifyEmail}
             onChange={(event) => setNotifyEmail(event.target.checked)}
-            className="h-5 w-5 accent-moss"
+            className="h-4 w-4 accent-sage-500"
           />
         </label>
       </SectionCard>
 
-      <div className="sticky bottom-4 flex flex-wrap items-center gap-3 rounded-card bg-white/95 p-4 shadow-soft ring-1 ring-oat backdrop-blur">
+      <div className="sticky bottom-3 flex flex-wrap items-center gap-3 rounded-card bg-surface/95 p-3 shadow-soft ring-1 ring-hairline backdrop-blur">
         <Button type="submit" disabled={status === "saving"}>
           {status === "saving" ? (
             <>
-              <Loader2 size={17} className="animate-spin" aria-hidden="true" />
-              Gemmer...
+              <CircleNotch size={14} weight="bold" className="animate-spin" aria-hidden="true" />
+              Gemmer…
             </>
           ) : (
             "Gem ændringer"
           )}
         </Button>
         {status === "saved" ? (
-          <span className="flex items-center gap-1 text-sm font-bold text-mossDark">
-            <CheckCircle2 size={17} aria-hidden="true" />
+          <span className="flex items-center gap-1 text-sm font-semibold text-sage-700">
+            <CheckCircle size={14} weight="fill" aria-hidden="true" />
             Gemt
           </span>
         ) : null}
         {status === "error" ? (
-          <span className="text-sm font-semibold text-rust">{errorMessage}</span>
+          <span className="text-sm font-semibold text-danger">{errorMessage}</span>
         ) : null}
       </div>
     </form>
@@ -389,15 +383,13 @@ function SectionCard({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-card bg-white p-5 shadow-soft ring-1 ring-oat sm:p-6">
-      <div className="flex items-center gap-2 text-rust">
+    <section className="rounded-card bg-surface p-4 ring-1 ring-hairline sm:p-5">
+      <div className="flex items-center gap-2">
         {icon}
-        <h2 className="font-display text-2xl font-semibold text-ink">{title}</h2>
+        <h2 className="font-display text-lg font-semibold text-ink">{title}</h2>
       </div>
-      {subtitle ? (
-        <p className="mt-1 text-sm leading-6 text-ink/70">{subtitle}</p>
-      ) : null}
-      <div className="mt-4 space-y-4">{children}</div>
+      {subtitle ? <p className="mt-1 text-sm leading-6 text-muted">{subtitle}</p> : null}
+      <div className="mt-3 space-y-3">{children}</div>
     </section>
   );
 }
@@ -405,7 +397,7 @@ function SectionCard({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-xs font-bold uppercase tracking-[0.14em] text-ink/60">
+      <span className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
         {label}
       </span>
       {children}

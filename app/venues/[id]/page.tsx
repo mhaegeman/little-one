@@ -1,10 +1,17 @@
-import { ArrowLeft, Baby, CalendarClock, ExternalLink, MapPinned, Navigation } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowSquareOut,
+  Baby,
+  CalendarBlank,
+  MapPinArea,
+  NavigationArrow
+} from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { categoryColors, categoryLabels } from "@/lib/data/taxonomy";
+import { categoryLabels } from "@/lib/data/taxonomy";
 import { getVenueById, venues } from "@/lib/data/venues";
 import { googleMapsUrl, monthRangeLabel } from "@/lib/utils";
 
@@ -36,68 +43,66 @@ export default async function VenuePage({ params }: VenuePageProps) {
   }
 
   return (
-    <div className="px-4 pt-20 sm:px-6 lg:px-8 lg:pt-8">
+    <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
       <article className="mx-auto max-w-5xl">
         <Link
           href="/"
-          className="focus-ring inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-sm font-bold text-ink/72 ring-1 ring-oat transition hover:text-mossDark"
+          className="focus-ring inline-flex h-9 items-center gap-1.5 rounded-pill bg-surface px-3 text-xs font-semibold text-muted ring-1 ring-hairline transition-colors hover:text-ink"
         >
-          <ArrowLeft size={16} aria-hidden="true" />
+          <ArrowLeft size={13} weight="bold" aria-hidden="true" />
           Opdag
         </Link>
 
-        <section className="mt-5 overflow-hidden rounded-card bg-white shadow-soft ring-1 ring-oat/70">
-          <div className="grid gap-0 lg:grid-cols-[1.1fr_.9fr]">
-            <div className="flex snap-x gap-2 overflow-x-auto bg-linen p-2">
+        <section className="mt-4 overflow-hidden rounded-card bg-surface ring-1 ring-hairline">
+          <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="flex snap-x gap-1.5 overflow-x-auto bg-sunken p-1.5 thin-scroll">
               {venue.photos.map((photo) => (
                 <img
                   key={photo}
                   src={photo}
                   alt=""
-                  className="h-[320px] min-w-full snap-center rounded-xl object-cover sm:h-[420px]"
+                  className="h-[280px] min-w-full snap-center rounded-lg object-cover sm:h-[380px]"
                 />
               ))}
             </div>
 
-            <div className="p-5 sm:p-7">
-              <Badge className={categoryColors[venue.category]}>
-                {categoryLabels[venue.category]}
-              </Badge>
-              <h1 className="mt-4 font-display text-4xl font-semibold text-ink sm:text-5xl">
+            <div className="p-5 sm:p-6">
+              <Badge variant="sage">{categoryLabels[venue.category]}</Badge>
+              <h1 className="mt-3 font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">
                 {venue.name}
               </h1>
-              <p className="mt-4 text-base leading-7 text-ink/72">{venue.description}</p>
+              <p className="mt-3 text-sm leading-6 text-muted">{venue.description}</p>
 
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                <InfoTile icon={<Baby size={18} />} label="Alder">
+              <div className="mt-5 grid gap-2 sm:grid-cols-2">
+                <InfoTile icon={<Baby size={14} weight="duotone" aria-hidden="true" />} label="Alder">
                   {monthRangeLabel(venue.ageMinMonths, venue.ageMaxMonths)}
                 </InfoTile>
-                <InfoTile icon={<MapPinned size={18} />} label="Bydel">
+                <InfoTile icon={<MapPinArea size={14} weight="fill" aria-hidden="true" />} label="Bydel">
                   {venue.neighbourhood}
                 </InfoTile>
-                <InfoTile icon={<CalendarClock size={18} />} label="Åbning">
+                <InfoTile icon={<CalendarBlank size={14} weight="fill" aria-hidden="true" />} label="Åbning">
                   {venue.openingHours.summary}
                 </InfoTile>
-                <InfoTile icon={<Navigation size={18} />} label="Adresse">
+                <InfoTile
+                  icon={<NavigationArrow size={14} weight="fill" aria-hidden="true" />}
+                  label="Adresse"
+                >
                   {venue.address}
                 </InfoTile>
               </div>
 
-              <div className="mt-6 flex flex-wrap gap-2">
+              <div className="mt-4 flex flex-wrap gap-1">
                 {venue.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full bg-linen px-3 py-1.5 text-xs font-bold text-ink/68"
-                  >
+                  <Badge key={tag} variant="neutral">
                     {tag}
-                  </span>
+                  </Badge>
                 ))}
               </div>
 
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-5 flex flex-col gap-2 sm:flex-row">
                 <Link href="/journal" className="sm:flex-1">
                   <Button className="w-full">
-                    <Baby size={17} aria-hidden="true" />
+                    <Baby size={14} weight="duotone" aria-hidden="true" />
                     Tilføj til journal
                   </Button>
                 </Link>
@@ -107,13 +112,13 @@ export default async function VenuePage({ params }: VenuePageProps) {
                   className="sm:flex-1"
                 >
                   <Button variant="secondary" className="w-full">
-                    <Navigation size={17} aria-hidden="true" />
+                    <NavigationArrow size={14} weight="fill" aria-hidden="true" />
                     Google Maps
                   </Button>
                 </Link>
                 <Link href={venue.website ?? "#"} target="_blank" className="sm:flex-1">
                   <Button variant="ghost" className="w-full">
-                    <ExternalLink size={17} aria-hidden="true" />
+                    <ArrowSquareOut size={14} weight="bold" aria-hidden="true" />
                     Website
                   </Button>
                 </Link>
@@ -126,14 +131,22 @@ export default async function VenuePage({ params }: VenuePageProps) {
   );
 }
 
-function InfoTile({ icon, label, children }: { icon: ReactNode; label: string; children: ReactNode }) {
+function InfoTile({
+  icon,
+  label,
+  children
+}: {
+  icon: ReactNode;
+  label: string;
+  children: ReactNode;
+}) {
   return (
-    <div className="rounded-xl bg-linen p-3 ring-1 ring-oat">
-      <div className="mb-2 flex items-center gap-2 text-rust">
+    <div className="rounded-lg bg-sunken p-2.5 ring-1 ring-hairline">
+      <div className="mb-1 flex items-center gap-1.5 text-warm-500">
         {icon}
-        <span className="text-xs font-bold uppercase tracking-[0.14em]">{label}</span>
+        <span className="text-2xs font-bold uppercase tracking-[0.12em]">{label}</span>
       </div>
-      <p className="text-sm font-semibold leading-5 text-ink/74">{children}</p>
+      <p className="text-sm font-semibold leading-5 text-ink">{children}</p>
     </div>
   );
 }
