@@ -48,6 +48,20 @@ as $$
   );
 $$;
 
+-- Helper: is `target_user_id` a member of `target_family_id`?
+-- Used to validate that thread participants actually belong to the families
+-- on the parent connection.
+create or replace function public.user_in_family(target_user_id uuid, target_family_id uuid)
+returns boolean
+language sql stable security definer set search_path = public
+as $$
+  select exists (
+    select 1 from public.family_members
+    where user_id = target_user_id
+      and family_id = target_family_id
+  );
+$$;
+
 -- ---------------------------------------------------------------------------
 -- family_public_profiles
 -- ---------------------------------------------------------------------------
@@ -99,7 +113,6 @@ create table if not exists public.family_connections (
   responded_by_user_id uuid references auth.users(id),
   responded_at timestamptz,
   created_at timestamptz not null default now(),
-  unique (requester_family_id, addressee_family_id),
   check (requester_family_id <> addressee_family_id)
 );
 
@@ -107,6 +120,17 @@ create index if not exists family_connections_requester_idx
   on public.family_connections (requester_family_id);
 create index if not exists family_connections_addressee_idx
   on public.family_connections (addressee_family_id);
+
+-- At most one *active* connection per unordered family pair, regardless of
+-- direction. Allows a fresh request after a previous one was declined or
+-- cancelled, but prevents A→B and B→A from being pending/accepted/blocked
+-- simultaneously (which would break loadConnectionBetween).
+create unique index if not exists family_connections_active_pair_unique
+  on public.family_connections (
+    least(requester_family_id, addressee_family_id),
+    greatest(requester_family_id, addressee_family_id)
+  )
+  where status in ('pending', 'accepted', 'blocked');
 
 -- ---------------------------------------------------------------------------
 -- direct_threads (1:1 user-to-user, gated by an accepted family_connection)
@@ -120,6 +144,10 @@ create table if not exists public.direct_threads (
   family_b_id uuid not null references public.families(id) on delete cascade,
   created_at timestamptz not null default now(),
   last_message_at timestamptz,
+  -- Per-side last-read timestamps. Updated only via mark_thread_read() so
+  -- column-level write rules don't have to be expressed in RLS.
+  user_a_last_read_at timestamptz,
+  user_b_last_read_at timestamptz,
   unique (connection_id, user_a_id, user_b_id),
   check (user_a_id <> user_b_id),
   -- canonicalize order so the unique constraint catches both directions
@@ -140,13 +168,45 @@ create table if not exists public.direct_messages (
   body text not null check (char_length(body) between 1 and 4000),
   created_at timestamptz not null default now(),
   edited_at timestamptz,
-  deleted_at timestamptz,
-  read_by_a_at timestamptz,
-  read_by_b_at timestamptz
+  deleted_at timestamptz
 );
 
 create index if not exists direct_messages_thread_id_idx
   on public.direct_messages (thread_id, created_at desc);
+
+-- Mark the calling user's side of a thread as read. SECURITY DEFINER so we
+-- can write only the per-side column without exposing a generic UPDATE
+-- policy on direct_threads (which would also let users edit family ids,
+-- last_message_at, etc.).
+create or replace function public.mark_thread_read(target_thread_id uuid)
+returns void
+language plpgsql security definer set search_path = public
+as $$
+declare
+  thread_row public.direct_threads%rowtype;
+begin
+  select * into thread_row
+  from public.direct_threads
+  where id = target_thread_id;
+
+  if not found then
+    return;
+  end if;
+
+  if auth.uid() = thread_row.user_a_id then
+    update public.direct_threads
+       set user_a_last_read_at = now()
+     where id = target_thread_id;
+  elsif auth.uid() = thread_row.user_b_id then
+    update public.direct_threads
+       set user_b_last_read_at = now()
+     where id = target_thread_id;
+  end if;
+end;
+$$;
+
+revoke all on function public.mark_thread_read(uuid) from public;
+grant execute on function public.mark_thread_read(uuid) to authenticated;
 
 -- Update the parent thread's last_message_at on insert.
 create or replace function public.touch_direct_thread()
@@ -269,20 +329,23 @@ create policy "insert_thread_for_connected_pair"
   on public.direct_threads for insert
   to authenticated
   with check (
+    -- The caller must be one of the two thread participants.
     auth.uid() in (user_a_id, user_b_id)
+    -- Each declared participant must actually belong to the family declared
+    -- on their side. Without this a connected user could pin an arbitrary
+    -- auth.users id into user_b_id and grant them read access via
+    -- select_own_thread.
+    and public.user_in_family(user_a_id, family_a_id)
+    and public.user_in_family(user_b_id, family_b_id)
+    -- The two families must be the two on an accepted connection record,
+    -- in either ordering.
     and exists (
       select 1 from public.family_connections fc
       where fc.id = connection_id
         and fc.status = 'accepted'
-        and (
-          (public.is_family_member(fc.requester_family_id)
-           and family_a_id in (fc.requester_family_id, fc.addressee_family_id)
-           and family_b_id in (fc.requester_family_id, fc.addressee_family_id))
-          or
-          (public.is_family_member(fc.addressee_family_id)
-           and family_a_id in (fc.requester_family_id, fc.addressee_family_id)
-           and family_b_id in (fc.requester_family_id, fc.addressee_family_id))
-        )
+        and family_a_id in (fc.requester_family_id, fc.addressee_family_id)
+        and family_b_id in (fc.requester_family_id, fc.addressee_family_id)
+        and family_a_id <> family_b_id
     )
   );
 
@@ -318,24 +381,12 @@ drop policy if exists "update_message_in_own_thread" on public.direct_messages;
 create policy "update_message_in_own_thread"
   on public.direct_messages for update
   to authenticated
-  using (
-    exists (
-      select 1 from public.direct_threads t
-      where t.id = direct_messages.thread_id
-        and auth.uid() in (t.user_a_id, t.user_b_id)
-    )
-  )
-  with check (
-    -- Only the original sender can mutate body / mark deleted/edited.
-    -- read_by_*_at can be updated by any participant (handled in the same
-    -- policy — application code only ever writes its own side's flag).
-    sender_user_id = auth.uid()
-    or exists (
-      select 1 from public.direct_threads t
-      where t.id = direct_messages.thread_id
-        and auth.uid() in (t.user_a_id, t.user_b_id)
-    )
-  );
+  using (sender_user_id = auth.uid())
+  with check (sender_user_id = auth.uid());
+
+-- Read receipts live on direct_threads (user_a_last_read_at / user_b_last_read_at)
+-- and are mutated only by the SECURITY DEFINER function mark_thread_read(),
+-- so direct_messages itself never needs a participant-wide UPDATE policy.
 
 -- family_blocks: only the blocking family can see / write.
 drop policy if exists "select_own_blocks" on public.family_blocks;

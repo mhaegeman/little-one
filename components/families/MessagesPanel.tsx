@@ -144,12 +144,10 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
   // Mark thread read on open.
   useEffect(() => {
     if (!supabase || !activeThreadId) return;
-    const thread = threads.find((t) => t.id === activeThreadId);
-    if (!thread) return;
-    markThreadRead(supabase, thread, me.userId).catch(() => {
+    markThreadRead(supabase, activeThreadId).catch(() => {
       /* non-critical */
     });
-  }, [supabase, activeThreadId, threads, me.userId]);
+  }, [supabase, activeThreadId]);
 
   // Realtime subscription for new messages on the active thread.
   useEffect(() => {
@@ -173,9 +171,7 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
             body: row.body as string,
             createdAt: row.created_at as string,
             editedAt: (row.edited_at as string | null) ?? null,
-            deletedAt: (row.deleted_at as string | null) ?? null,
-            readByAAt: (row.read_by_a_at as string | null) ?? null,
-            readByBAt: (row.read_by_b_at as string | null) ?? null
+            deletedAt: (row.deleted_at as string | null) ?? null
           };
           setMessages((current) => {
             if (current.some((existing) => existing.id === message.id)) return current;
