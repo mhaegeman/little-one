@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
+import { useToast } from "@/components/ui/Toaster";
 import { milestoneLabels, milestoneTypes } from "@/lib/data/taxonomy";
 import { createClient } from "@/lib/supabase/client";
 import type { MilestoneType, TimelineItem } from "@/lib/types";
@@ -17,6 +18,7 @@ type MilestoneFormProps = {
 };
 
 export function MilestoneForm({ childId, onAdd }: MilestoneFormProps) {
+  const { toast } = useToast();
   const [type, setType] = useState<MilestoneType>("first_smile");
   const [customTitle, setCustomTitle] = useState("");
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
@@ -53,6 +55,7 @@ export function MilestoneForm({ childId, onAdd }: MilestoneFormProps) {
 
       if (error) {
         setMessage(error.message);
+        toast({ title: "Kunne ikke gemme", description: error.message, variant: "danger" });
         setSaving(false);
         return;
       }
@@ -62,7 +65,8 @@ export function MilestoneForm({ childId, onAdd }: MilestoneFormProps) {
     setNotes("");
     setPhotoUrl("");
     setCustomTitle("");
-    setMessage("Milepælen er tilføjet.");
+    setMessage("");
+    toast({ title: "Milepælen er tilføjet", variant: "success" });
     setSaving(false);
   }
 

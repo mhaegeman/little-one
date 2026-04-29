@@ -1,22 +1,11 @@
 import { Baby, MapPin, Star } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
-import { categoryLabels } from "@/lib/data/taxonomy";
+import { categoryBadgeVariant, categoryLabels } from "@/lib/data/taxonomy";
 import type { Venue } from "@/lib/types";
 import { cn, formatDistance, monthRangeLabel } from "@/lib/utils";
 
 type Layout = "row" | "compact" | "tile";
-
-const categoryBadgeVariant = {
-  cafe: "warm" as const,
-  playground: "sage" as const,
-  indoor_play: "warning" as const,
-  cinema: "sky" as const,
-  library: "sand" as const,
-  swimming: "sky" as const,
-  theatre: "warm" as const,
-  event: "warm" as const
-};
 
 export function VenueCard({
   venue,

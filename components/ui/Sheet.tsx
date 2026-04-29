@@ -1,7 +1,8 @@
 "use client";
 
 import { X } from "@phosphor-icons/react/dist/ssr";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
+import { trapFocus } from "@/lib/focus";
 import { cn } from "@/lib/utils";
 
 type SheetSide = "right" | "bottom";
@@ -25,16 +26,28 @@ export function Sheet({
   className?: string;
   size?: "sm" | "md" | "lg";
 }) {
+  const panelRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!open) return;
+
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
     }
     window.addEventListener("keydown", onKey);
+
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+
+    let releaseFocus: (() => void) | null = null;
+    if (panelRef.current) {
+      releaseFocus = trapFocus(panelRef.current);
+    }
+
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
+      releaseFocus?.();
     };
   }, [open, onClose]);
 
@@ -62,13 +75,16 @@ export function Sheet({
     <div className="fixed inset-0 z-50 flex" role="dialog" aria-modal="true">
       <button
         type="button"
-        aria-label="Close"
+        aria-label="Luk"
         onClick={onClose}
         className="absolute inset-0 bg-ink/30 backdrop-blur-sm transition-opacity"
+        tabIndex={-1}
       />
       <div
+        ref={panelRef}
+        tabIndex={-1}
         className={cn(
-          "absolute flex flex-col bg-canvas shadow-lift",
+          "absolute flex flex-col bg-canvas shadow-lift outline-none",
           positionClass,
           side === "right" ? sizeClass : `w-full ${sizeClass}`,
           className

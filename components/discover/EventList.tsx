@@ -1,20 +1,9 @@
 import { CalendarDots, Ticket } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
-import { categoryLabels } from "@/lib/data/taxonomy";
+import { categoryBadgeVariant, categoryLabels } from "@/lib/data/taxonomy";
 import type { FamilyEvent } from "@/lib/types";
 import { formatDanishDate, monthRangeLabel } from "@/lib/utils";
-
-const categoryBadgeVariant = {
-  cafe: "warm" as const,
-  playground: "sage" as const,
-  indoor_play: "warning" as const,
-  cinema: "sky" as const,
-  library: "sand" as const,
-  swimming: "sky" as const,
-  theatre: "warm" as const,
-  event: "warm" as const
-};
 
 export function EventList({ events }: { events: FamilyEvent[] }) {
   const sorted = [...events].sort(

@@ -22,15 +22,18 @@ export const categoryDescriptions: Record<VenueCategory, string> = {
   event: "Sæsonoplevelser, festivaler og særlige dage."
 };
 
-export const categoryColors: Record<VenueCategory, string> = {
-  cafe: "bg-rust/10 text-rust ring-rust/20",
-  playground: "bg-moss/10 text-mossDark ring-moss/20",
-  indoor_play: "bg-butter/20 text-[#775A11] ring-butter/30",
-  cinema: "bg-[#D7E5E4] text-mossDark ring-moss/20",
-  library: "bg-[#ECE4D2] text-[#6C5538] ring-oat",
-  swimming: "bg-[#D9EEF2] text-[#2D6670] ring-[#BCDCE2]",
-  theatre: "bg-clay/20 text-rust ring-clay/30",
-  event: "bg-[#F3D8C9] text-rust ring-clay/30"
+export const categoryBadgeVariant: Record<
+  VenueCategory,
+  "warm" | "sage" | "warning" | "sky" | "sand"
+> = {
+  cafe: "warm",
+  playground: "sage",
+  indoor_play: "warning",
+  cinema: "sky",
+  library: "sand",
+  swimming: "sky",
+  theatre: "warm",
+  event: "warm"
 };
 
 export const categories = Object.keys(categoryLabels) as VenueCategory[];
