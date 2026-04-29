@@ -10,22 +10,69 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Surfaces — softer Nordic neutrals
-        canvas: "#FBF8F2",
+        // Pastel Toy-Box neutrals (warm bone canvas)
+        canvas: "#FBF6EE",
         surface: "#FFFFFF",
         elevated: "#FFFFFF",
-        sunken: "#F4EFE6",
+        sunken: "#F4ECDD",
 
-        // Borders & dividers
-        hairline: "#ECE4D2",
-        border: "#E2D9C4",
+        // Borders & dividers — Pastel
+        hairline: "#EADFCB",
+        border: "#DCCEB2",
 
-        // Text
-        ink: "#1F2A26",
-        muted: "#5C6661",
-        subtle: "#8C918C",
+        // Text — Pastel
+        ink: "#2A2723",
+        muted: "#6B655C",
+        subtle: "#9A938A",
 
-        // Sage (primary action) — softer than the old moss
+        // Pastel Toy-Box tint scales ──────────────────────────────────
+        // Mint — primary action
+        mint: {
+          DEFAULT: "#79B98A",
+          50: "#DDEFE3",
+          100: "#C2E1CB",
+          200: "#9DCFAB",
+          300: "#79B98A",
+          ink: "#1F4D32"
+        },
+
+        // Peach — accent
+        peach: {
+          DEFAULT: "#E89A75",
+          50: "#FBE7DC",
+          100: "#F7D2BE",
+          200: "#F2B79A",
+          300: "#E89A75",
+          ink: "#7A3A1E"
+        },
+
+        // Butter — warm highlight
+        butter: {
+          DEFAULT: "#E5B441",
+          50: "#FBEBC4",
+          100: "#F7DC9C",
+          200: "#F0C76A",
+          300: "#E5B441",
+          ink: "#6E4F0D"
+        },
+
+        // Sky — calm info
+        sky: {
+          DEFAULT: "#74A4BF",
+          50: "#DDEAF1",
+          100: "#C2D8E5",
+          200: "#9CC0D5",
+          300: "#74A4BF",
+          ink: "#1F4254"
+        },
+
+        // Semantic shortcuts (Pastel)
+        primary: { DEFAULT: "#79B98A", ink: "#1F4D32" },
+        accent: { DEFAULT: "#E89A75", ink: "#7A3A1E" },
+
+        // ─────────────────────────────────────────────────────────────
+        // Legacy scales — kept until components migrate to mint/peach.
+        // Do not use for new work.
         sage: {
           DEFAULT: "#5B8377",
           50: "#EFF4F2",
@@ -39,8 +86,6 @@ const config: Config = {
           800: "#243C36",
           900: "#172521"
         },
-
-        // Warm accent (single warm — used sparingly)
         warm: {
           DEFAULT: "#C46A40",
           50: "#FAEFE8",
@@ -52,8 +97,6 @@ const config: Config = {
           600: "#A55432",
           700: "#7E3F25"
         },
-
-        // Sand / bone for soft fills
         sand: {
           50: "#FBF7EF",
           100: "#F4EFE2",
@@ -61,35 +104,27 @@ const config: Config = {
           300: "#D8C8A0"
         },
 
-        // Calm sky tint (used as quiet info chips)
-        sky: {
-          100: "#E1ECEC",
-          200: "#C7DDDD",
-          300: "#A6C8C8"
-        },
+        // Status (kept; could be re-keyed to Pastel inks later)
+        success: "#1F4D32",
+        warning: "#6E4F0D",
+        danger: "#7A3A1E",
+        info: "#1F4254",
 
-        // Semantic
-        success: "#3F7B5F",
-        warning: "#B47A1F",
-        danger: "#B6492C",
-        info: "#3F6F84",
-
-        // Legacy aliases (keep so we don't have to touch every file at once)
-        linen: "#FBF8F2",
+        // Legacy single-hex aliases — do not use for new work.
+        linen: "#FBF6EE",
         moss: "#5B8377",
         mossDark: "#33554C",
         rust: "#C46A40",
-        oat: "#E2D9C4",
+        oat: "#DCCEB2",
         clay: "#D88E69",
-        skywash: "#E1ECEC",
-        butter: "#F1D78D"
+        skywash: "#DDEAF1"
       },
       fontFamily: {
         display: ["Fraunces", "Georgia", "serif"],
         sans: ["DM Sans", "Inter", "system-ui", "sans-serif"]
       },
       fontSize: {
-        // Tighter, denser type scale
+        // Existing UI numeric scale — unchanged so component callsites stay stable.
         "2xs": ["0.6875rem", { lineHeight: "1rem", letterSpacing: "0.02em" }],
         xs: ["0.75rem", { lineHeight: "1.1rem" }],
         sm: ["0.8125rem", { lineHeight: "1.25rem" }],
@@ -99,20 +134,38 @@ const config: Config = {
         "2xl": ["1.4375rem", { lineHeight: "1.85rem" }],
         "3xl": ["1.75rem", { lineHeight: "2.1rem" }],
         "4xl": ["2.125rem", { lineHeight: "2.4rem", letterSpacing: "-0.01em" }],
-        "5xl": ["2.625rem", { lineHeight: "2.85rem", letterSpacing: "-0.015em" }]
+        "5xl": ["2.625rem", { lineHeight: "2.85rem", letterSpacing: "-0.015em" }],
+
+        // Pastel Toy-Box display ramp — Fraunces for display-*, DM Sans for body/eyebrow.
+        eyebrow: ["0.6875rem", { lineHeight: "1.2", letterSpacing: "0.18em" }],
+        "body-lg": ["1.25rem", { lineHeight: "1.5", letterSpacing: "-0.025em" }],
+        "card-title": ["1.5rem", { lineHeight: "1.3", letterSpacing: "-0.02em" }],
+        "display-2xs": ["2rem", { lineHeight: "1.15", letterSpacing: "-0.02em" }],
+        "display-xs": ["2.5rem", { lineHeight: "1.15", letterSpacing: "-0.02em" }],
+        "display-sm": ["3.5rem", { lineHeight: "1.05", letterSpacing: "-0.02em" }],
+        "display-md": ["4.5rem", { lineHeight: "1.05", letterSpacing: "-0.02em" }],
+        "display-lg": ["6rem", { lineHeight: "1.0", letterSpacing: "-0.02em" }],
+        "display-xl": ["7.5rem", { lineHeight: "1.0", letterSpacing: "-0.02em" }]
+      },
+      letterSpacing: {
+        display: "-0.02em",
+        body: "-0.025em",
+        eyebrow: "0.18em"
       },
       boxShadow: {
-        soft: "0 1px 2px rgba(31, 42, 38, 0.04), 0 8px 24px rgba(31, 42, 38, 0.06)",
-        lift: "0 2px 4px rgba(31, 42, 38, 0.05), 0 16px 36px rgba(31, 42, 38, 0.1)",
-        ring: "0 0 0 1px rgba(226, 217, 196, 0.9)",
-        focus: "0 0 0 3px rgba(91, 131, 119, 0.25)"
+        // Pastel shadows — warmer ink (#1F1C16 ≈ rgba(31,28,22))
+        soft: "0 1px 2px rgba(31, 28, 22, 0.04), 0 8px 24px rgba(31, 28, 22, 0.05)",
+        lift: "0 2px 4px rgba(31, 28, 22, 0.05), 0 18px 40px rgba(31, 28, 22, 0.09)",
+        ring: "0 0 0 1px rgba(220, 206, 178, 0.7)",
+        focus: "0 0 0 3px rgba(121, 185, 138, 0.35)"
       },
       borderRadius: {
-        sm: "6px",
-        md: "8px",
-        lg: "10px",
-        xl: "12px",
-        "2xl": "16px",
+        // Pastel Toy-Box radii
+        sm: "10px",
+        md: "14px",
+        lg: "20px",
+        xl: "28px",
+        "2xl": "36px",
         card: "14px",
         pill: "999px"
       },

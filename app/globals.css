@@ -5,18 +5,38 @@
 
 :root {
   color-scheme: light;
-  --bg-canvas: #fbf8f2;
+
+  /* Pastel Toy-Box neutrals */
+  --bg-canvas: #fbf6ee;
   --bg-surface: #ffffff;
-  --bg-sunken: #f4efe6;
-  --fg-ink: #1f2a26;
-  --fg-muted: #5c6661;
-  --fg-subtle: #8c918c;
-  --border-hairline: #ece4d2;
-  --border-strong: #e2d9c4;
+  --bg-sunken: #f4ecdd;
+  --fg-ink: #2a2723;
+  --fg-muted: #6b655c;
+  --fg-subtle: #9a938a;
+  --border-hairline: #eadfcb;
+  --border-strong: #dcceb2;
+
+  /* Pastel tints — primary = mint, accent = peach */
+  --color-mint: #79b98a;
+  --color-mint-ink: #1f4d32;
+  --color-peach: #e89a75;
+  --color-peach-ink: #7a3a1e;
+  --color-butter: #e5b441;
+  --color-butter-ink: #6e4f0d;
+  --color-sky: #74a4bf;
+  --color-sky-ink: #1f4254;
+
+  --color-primary: var(--color-mint);
+  --color-primary-ink: var(--color-mint-ink);
+  --color-accent: var(--color-peach);
+  --color-accent-ink: var(--color-peach-ink);
+
+  --focus-ring: rgba(121, 185, 138, 0.35);
+
+  /* Legacy aliases — kept until components migrate. */
   --accent-sage: #5b8377;
   --accent-sage-strong: #33554c;
   --accent-warm: #c46a40;
-  --focus-ring: rgba(91, 131, 119, 0.32);
 }
 
 * {
@@ -38,7 +58,7 @@ body {
   font-family: "DM Sans", system-ui, sans-serif;
   font-size: 15px;
   line-height: 1.5;
-  letter-spacing: 0;
+  letter-spacing: -0.025em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -57,7 +77,7 @@ textarea {
 }
 
 ::selection {
-  background: rgba(91, 131, 119, 0.18);
+  background: rgba(121, 185, 138, 0.22);
   color: var(--fg-ink);
 }
 
@@ -147,10 +167,10 @@ textarea {
   position: absolute;
   left: -9999px;
   top: 0;
-  background: var(--accent-sage);
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-primary-ink);
   padding: 0.5rem 0.875rem;
-  border-radius: 8px;
+  border-radius: 999px;
   font-size: 0.8125rem;
   font-weight: 600;
   z-index: 100;
