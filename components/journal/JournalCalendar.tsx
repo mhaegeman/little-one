@@ -92,12 +92,12 @@ export function JournalCalendar({
 
   return (
     <section
-      aria-label="Måneds-oversigt"
+      aria-label={t("calendarOverviewAria")}
       className="mt-4 rounded-card bg-surface p-3 ring-1 ring-hairline"
     >
       <div className="mb-2 flex items-center gap-1.5 text-2xs font-bold uppercase tracking-[0.12em] text-muted">
         <CalendarBlank size={11} weight="fill" aria-hidden="true" />
-        Året i journalen
+        {t("calendarYearInJournal")}
       </div>
       <div className="flex gap-1.5 overflow-x-auto pb-1 thin-scroll">
         {buckets.map((bucket) => {
@@ -144,7 +144,7 @@ export function JournalCalendar({
         <div className="mt-3 rounded-lg bg-sunken p-3 ring-1 ring-hairline">
           <div className="mb-2 flex items-center justify-between">
             <p className="text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-              {expanded.label} · {expanded.count} indslag
+              {expanded.label} · {t("entryCount", { count: expanded.count })}
             </p>
             <button
               type="button"
@@ -154,10 +154,10 @@ export function JournalCalendar({
               }}
               className="focus-ring text-2xs font-bold uppercase tracking-wide text-warm-600 hover:text-warm-700"
             >
-              Gå til måned
+              {t("calendarGoToMonth")}
             </button>
           </div>
-          <DayGrid year={expanded.year} month={expanded.month} dayCounts={dayCounts} />
+          <DayGrid year={expanded.year} month={expanded.month} dayCounts={dayCounts} weekdayLabels={weekdayLabels} />
         </div>
       ) : null}
     </section>
@@ -167,12 +167,16 @@ export function JournalCalendar({
 function DayGrid({
   year,
   month,
-  dayCounts
+  dayCounts,
+  weekdayLabels
 }: {
   year: number;
   month: number;
   dayCounts: Map<string, number>;
+  weekdayLabels: string[];
 }) {
+  const t = useTranslations("journal");
+  const locale = useLocale();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   // Compute leading blank cells. JS getDay(): Sun=0..Sat=6. Monday-first → shift.
   const firstWeekday = new Date(year, month, 1).getDay();
