@@ -49,6 +49,8 @@ export type DirectThread = {
   familyBId: string;
   createdAt: string;
   lastMessageAt: string | null;
+  userALastReadAt: string | null;
+  userBLastReadAt: string | null;
 };
 
 export type DirectMessage = {
@@ -59,8 +61,6 @@ export type DirectMessage = {
   createdAt: string;
   editedAt: string | null;
   deletedAt: string | null;
-  readByAAt: string | null;
-  readByBAt: string | null;
 };
 
 // Age bands in months. Labels are localized at render time via the
@@ -114,7 +114,9 @@ function rowToThread(row: Record<string, unknown>): DirectThread {
     familyAId: row.family_a_id as string,
     familyBId: row.family_b_id as string,
     createdAt: row.created_at as string,
-    lastMessageAt: (row.last_message_at as string | null) ?? null
+    lastMessageAt: (row.last_message_at as string | null) ?? null,
+    userALastReadAt: (row.user_a_last_read_at as string | null) ?? null,
+    userBLastReadAt: (row.user_b_last_read_at as string | null) ?? null
   };
 }
 
@@ -126,9 +128,7 @@ function rowToMessage(row: Record<string, unknown>): DirectMessage {
     body: row.body as string,
     createdAt: row.created_at as string,
     editedAt: (row.edited_at as string | null) ?? null,
-    deletedAt: (row.deleted_at as string | null) ?? null,
-    readByAAt: (row.read_by_a_at as string | null) ?? null,
-    readByBAt: (row.read_by_b_at as string | null) ?? null
+    deletedAt: (row.deleted_at as string | null) ?? null
   };
 }
 
@@ -254,6 +254,11 @@ export async function loadConnectionsForFamily(
   return (data as Record<string, unknown>[]).map(rowToConnection);
 }
 
+// The schema enforces at most one *active* (pending/accepted/blocked) row per
+// unordered family pair, so this filter combined with .maybeSingle() returns
+// either that active row or null. Declined/cancelled rows are ignored.
+const ACTIVE_CONNECTION_STATUSES = ["pending", "accepted", "blocked"] as const;
+
 export async function loadConnectionBetween(
   client: SupabaseClient,
   familyA: string,
@@ -265,6 +270,7 @@ export async function loadConnectionBetween(
     .or(
       `and(requester_family_id.eq.${familyA},addressee_family_id.eq.${familyB}),and(requester_family_id.eq.${familyB},addressee_family_id.eq.${familyA})`
     )
+    .in("status", ACTIVE_CONNECTION_STATUSES as unknown as string[])
     .maybeSingle();
   if (error) throw error;
   return data ? rowToConnection(data as Record<string, unknown>) : null;
@@ -331,9 +337,9 @@ export async function cancelOutgoingConnection(
 // ---------------------------------------------------------------------------
 
 const THREAD_COLUMNS =
-  "id,connection_id,user_a_id,user_b_id,family_a_id,family_b_id,created_at,last_message_at";
+  "id,connection_id,user_a_id,user_b_id,family_a_id,family_b_id,created_at,last_message_at,user_a_last_read_at,user_b_last_read_at";
 const MESSAGE_COLUMNS =
-  "id,thread_id,sender_user_id,body,created_at,edited_at,deleted_at,read_by_a_at,read_by_b_at";
+  "id,thread_id,sender_user_id,body,created_at,edited_at,deleted_at";
 
 export async function loadThreadsForUser(
   client: SupabaseClient,
@@ -426,20 +432,16 @@ export async function sendMessage(
   return rowToMessage(data as Record<string, unknown>);
 }
 
+// Marks the calling user's side of the thread as read. Routed through the
+// SECURITY DEFINER RPC so we don't need a column-restricted UPDATE policy on
+// direct_threads — the function picks the correct side from auth.uid().
 export async function markThreadRead(
   client: SupabaseClient,
-  thread: DirectThread,
-  userId: string
+  threadId: string
 ): Promise<void> {
-  const isA = thread.userAId === userId;
-  const column = isA ? "read_by_a_at" : "read_by_b_at";
-  const now = new Date().toISOString();
-  const { error } = await client
-    .from("direct_messages")
-    .update({ [column]: now })
-    .eq("thread_id", thread.id)
-    .is(column, null)
-    .neq("sender_user_id", userId);
+  const { error } = await client.rpc("mark_thread_read", {
+    target_thread_id: threadId
+  });
   if (error) throw error;
 }
 
