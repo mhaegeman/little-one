@@ -8,7 +8,7 @@ import {
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { LoginForm } from "@/components/auth/LoginForm";
+import { LockedPreview } from "@/components/auth/LockedPreview";
 import { ConnectionsInbox } from "@/components/families/ConnectionsInbox";
 import { FamilyDiscover } from "@/components/families/FamilyDiscover";
 import { MessagesPanel } from "@/components/families/MessagesPanel";
@@ -101,18 +101,14 @@ export function FamiliesPanel() {
 
   if (!signedIn || !me) {
     return (
-      <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
-        <div className="mx-auto grid max-w-5xl gap-4 lg:grid-cols-[1fr_420px]">
-          <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
-            <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">{t("eyebrow")}</p>
-            <h1 className="mt-1 font-display text-3xl font-semibold leading-tight text-ink">
-              {t("signInTitle")}
-            </h1>
-            <p className="mt-2 max-w-xl text-sm leading-6 text-muted">{t("signInBody")}</p>
-          </section>
-          <LoginForm redirectTo="/families" />
-        </div>
-      </div>
+      <LockedPreview
+        eyebrow={t("eyebrow")}
+        title={t("locked.title")}
+        description={t("locked.description")}
+        bullets={[t("locked.bullet1"), t("locked.bullet2"), t("locked.bullet3")]}
+        cta={t("locked.cta")}
+        redirectTo="/families"
+      />
     );
   }
 

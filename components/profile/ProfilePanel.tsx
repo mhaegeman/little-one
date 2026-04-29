@@ -15,8 +15,8 @@ import {
   Users
 } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { FamilyCard } from "@/components/profile/FamilyCard";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
@@ -80,6 +80,14 @@ const SECTION_DEFS: { id: Section; icon: typeof SquaresFour }[] = [
 export function ProfilePanel() {
   const tSections = useTranslations("profile.sections");
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const rawNext = searchParams.get("next");
+  const safeNext =
+    rawNext && rawNext.startsWith("/") && !rawNext.startsWith("//") ? rawNext : null;
+  const safeNextRef = useRef(safeNext);
+  useEffect(() => {
+    safeNextRef.current = safeNext;
+  }, [safeNext]);
   const [loading, setLoading] = useState(true);
   const [signedIn, setSignedIn] = useState(false);
   const [supabaseAvailable, setSupabaseAvailable] = useState(true);
@@ -167,11 +175,14 @@ export function ProfilePanel() {
     refresh();
     const supabase = createClient();
     if (!supabase) return;
-    const { data } = supabase.auth.onAuthStateChange(() => {
+    const { data } = supabase.auth.onAuthStateChange((event) => {
       refresh();
+      if (event === "SIGNED_IN" && safeNextRef.current) {
+        router.push(safeNextRef.current);
+      }
     });
     return () => data.subscription.unsubscribe();
-  }, []);
+  }, [router]);
 
   async function logout() {
     const supabase = createClient();
@@ -331,7 +342,7 @@ export function ProfilePanel() {
               </p>
             ) : null}
           </section>
-          <LoginForm redirectTo="/profile" />
+          <LoginForm redirectTo={safeNext ?? "/profile"} />
         </div>
       </div>
     );

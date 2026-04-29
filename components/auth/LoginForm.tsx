@@ -5,7 +5,6 @@ import {
   CircleNotch,
   EnvelopeSimple,
   HandHeart,
-  Sparkle,
   UserCircle
 } from "@phosphor-icons/react/dist/ssr";
 import { useLocale } from "next-intl";
@@ -35,14 +34,6 @@ const APP_NAME = "Lille Liv";
 
 const COPY = {
   da: {
-    eyebrow: "Velkommen",
-    title: "Et roligt rum til hele familien",
-    body: "Lille Liv samler milepæle, hverdagsglimt og udflugter for jer og dem, I deler hverdagen med — bedsteforældre, dagplejere, søskende.",
-    bullets: [
-      "Privat journal med fotos og milepæle",
-      "Kuraterede ture i København 0-6 år",
-      "Plads til hele familien — sammen"
-    ],
     nameLabel: "Dit navn",
     namePlaceholder: "Fx Sofie",
     nameHelp: "Vises i e-mailen og i jeres familie.",
@@ -69,14 +60,6 @@ const COPY = {
     } as Record<FamilyRole, string>
   },
   en: {
-    eyebrow: "Welcome",
-    title: "A calm space for the whole family",
-    body: "Lille Liv gathers milestones, everyday glimpses and outings for you and the people who share your days — grandparents, caregivers, siblings.",
-    bullets: [
-      "Private journal with photos and milestones",
-      "Curated outings in Copenhagen for 0-6 yrs",
-      "Room for the whole family — together"
-    ],
     nameLabel: "Your name",
     namePlaceholder: "e.g. Sofie",
     nameHelp: "Shown in the email and in your family.",
@@ -229,30 +212,7 @@ export function LoginForm({ invite, redirectTo = "/journal", locale }: LoginForm
             </p>
           ) : null}
         </div>
-      ) : (
-        <div className="mb-4">
-          <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">
-            {copy.eyebrow}
-          </p>
-          <h2 className="mt-1 font-display text-2xl font-semibold leading-tight text-ink">
-            {copy.title}
-          </h2>
-          <p className="mt-1.5 text-sm leading-6 text-muted">{copy.body}</p>
-          <ul className="mt-2.5 space-y-1">
-            {copy.bullets.map((bullet) => (
-              <li key={bullet} className="flex items-start gap-1.5 text-sm text-ink/80">
-                <Sparkle
-                  size={13}
-                  weight="fill"
-                  className="mt-1 shrink-0 text-warm-500"
-                  aria-hidden="true"
-                />
-                <span>{bullet}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      ) : null}
 
       <div className="space-y-3">
         <label className="block">

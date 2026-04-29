@@ -71,7 +71,9 @@
     "emptyHint": "Tilføj den første milepæl, når øjeblikket lander.",
     "private": "Privat",
     "loginRequired": "Login påkrævet",
-    "loginRequiredBody": "Journalen kræver login, fordi børns billeder, milepæle og institutionsglimt er private."
+    "loginRequiredBody": "Journalen kræver login, fordi børns billeder, milepæle og institutionsglimt er private.",
+    "demoBanner": "Du ser en demojournal. Log ind for at starte din egen.",
+    "demoBannerCta": "Log ind"
   },
   "profile": {
     "title": "Profil",
@@ -145,8 +147,14 @@
     "description": "Forbind med andre familier og planlæg fælles ture i jeres bydel.",
     "loginRequiredTitle": "Login påkrævet",
     "loginRequiredBody": "Familiefællesskabet kræver Supabase. Sæt miljøvariablerne for at tage det i brug.",
-    "signInTitle": "Mød andre familier i jeres bydel",
-    "signInBody": "Lille Liv lader jer dele en lille familieprofil — bydel, alder og interesser — og forbinde med andre familier i nabolaget. Når en forbindelse er accepteret, kan I skrive sammen og planlægge legeaftaler. Børnenes navne og billeder forbliver private medmindre I selv vælger at dele dem.",
+    "locked": {
+      "title": "Mød andre familier i jeres bydel",
+      "description": "Log ind for at dele en lille familieprofil og forbinde med familier i nabolaget. Når en anmodning er accepteret, kan I skrive sammen og planlægge legeaftaler.",
+      "bullet1": "Find familier efter bydel, alder og interesser",
+      "bullet2": "Send og acceptér forbindelsesanmodninger",
+      "bullet3": "Privat chat til at planlægge besøg og legeaftaler",
+      "cta": "Log ind og åbn Familier"
+    },
     "noFamilyTitle": "Ingen familie at dele endnu",
     "noFamilyBody": "Næste gang du logger ind, opretter vi automatisk en familie til dig. Du kan også invitere andre fra Profil → Familie.",
     "tabs": {
