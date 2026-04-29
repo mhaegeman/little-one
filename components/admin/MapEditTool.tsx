@@ -2,6 +2,7 @@
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl, { type Map as MapLibreMap, type Marker } from "maplibre-gl";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -41,6 +42,7 @@ const mapStyle = {
 };
 
 export function MapEditTool({ venues, saveEnabled }: MapEditToolProps) {
+  const router = useRouter();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const markersRef = useRef<Map<string, Marker>>(new Map());
@@ -91,6 +93,32 @@ export function MapEditTool({ venues, saveEnabled }: MapEditToolProps) {
     venues.forEach((venue) => map.set(venue.id, venue));
     return map;
   }, [venues]);
+
+  // After a save+refresh, the venues prop carries the new coordinates. Drop
+  // any edit whose lat/lng now matches the venue prop so the pin styling and
+  // localStorage drafts stay in sync. Six decimals matches what we write.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setEdits((prev) => {
+      let changed = false;
+      const next: EditMap = {};
+      for (const [id, edit] of Object.entries(prev)) {
+        const venue = venueById.get(id);
+        if (!venue) {
+          changed = true;
+          continue;
+        }
+        const matches =
+          Math.abs(venue.lat - edit.lat) < 1e-6 && Math.abs(venue.lng - edit.lng) < 1e-6;
+        if (matches) {
+          changed = true;
+          continue;
+        }
+        next[id] = edit;
+      }
+      return changed ? next : prev;
+    });
+  }, [venueById]);
 
   const filteredVenues = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -343,7 +371,11 @@ export function MapEditTool({ venues, saveEnabled }: MapEditToolProps) {
     if (result.ok) {
       setSaveStatus("saved");
       setSaveMessage(`Saved ${result.updated.length} venue(s) to lib/data/venues.ts.`);
-      setEdits({});
+      // Pull fresh server-rendered venues. We deliberately leave `edits` in
+      // place so the pins keep their just-saved positions while the refresh
+      // is in flight; the reconcile effect below drops them once the new
+      // venue props arrive with matching coordinates.
+      router.refresh();
     } else {
       setSaveStatus("error");
       setSaveMessage(result.error);
