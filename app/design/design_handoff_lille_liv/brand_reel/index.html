@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1080, height=1920" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@hyperframes/core/dist/hyperframe.runtime.iife.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@hyperframes/shader-transitions/dist/index.global.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght,SOFT,WONK@9..144,400..700,30..100,0..1&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      /* === Lille Liv — Pastel toy-box === */
+      --bg: #FBF6EE;
+      --surface: #FFFFFF;
+      --sunken: #F4ECDD;
+      --ink: #2A2723;
+      --muted: #6B655C;
+      --subtle: #9A938A;
+      --hairline: #EADFCB;
+      --border: #DCCEB2;
+
+      --peach-50: #FBE7DC;  --peach-100: #F7D2BE; --peach-200: #F2B79A; --peach-300: #E89A75; --peach-ink: #7A3A1E;
+      --mint-50:  #DDEFE3;  --mint-100:  #C2E1CB; --mint-200:  #9DCFAB; --mint-300:  #79B98A; --mint-ink:  #1F4D32;
+      --butter-50:#FBEBC4;  --butter-100:#F7DC9C; --butter-200:#F0C76A; --butter-300:#E5B441; --butter-ink:#6E4F0D;
+      --sky-50:   #DDEAF1;  --sky-100:   #C2D8E5; --sky-200:   #9CC0D5; --sky-300:   #74A4BF; --sky-ink:   #1F4254;
+
+      --primary: #79B98A; --primary-ink: #1F4D32;
+      --accent:  #E89A75; --accent-ink:  #7A3A1E;
+
+      --font-display: "Fraunces", Georgia, serif;
+      --font-body: "DM Sans", system-ui, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); color: var(--ink); font-family: var(--font-body); }
+    button { font-family: inherit; }
+
+    .scene {
+      position: absolute; top: 0; left: 0;
+      width: 1080px; height: 1920px; overflow: hidden;
+      background: var(--bg);
+    }
+    .scene-content {
+      width: 100%; height: 100%;
+      position: relative; z-index: 1;
+    }
+    .clip {}
+
+    /* Soft decorative blobs */
+    .blob {
+      position: absolute; pointer-events: none;
+      border-radius: 62% 38% 51% 49% / 47% 55% 45% 53%;
+      filter: blur(0.5px);
+    }
+
+    /* Type */
+    .display {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-variation-settings: "SOFT" 60, "WONK" 0, "opsz" 144;
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    .body { font-family: var(--font-body); font-weight: 400; line-height: 1.45; }
+    .eyebrow {
+      font-family: var(--font-body); font-size: 22px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.18em; color: var(--subtle);
+    }
+
+    /* Phone bezel — used in EVERY scene to unify the journey */
+    .phone {
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      width: 880px; height: 1760px;
+      background: var(--ink);
+      padding: 22px;
+      border-radius: 120px;
+      box-shadow:
+        0 60px 120px rgba(31,28,22,0.22),
+        0 12px 24px rgba(31,28,22,0.10),
+        inset 0 0 0 2px rgba(255,255,255,0.04);
+    }
+    .phone-screen {
+      width: 100%; height: 100%;
+      border-radius: 100px;
+      overflow: hidden;
+      background: var(--bg);
+      position: relative;
+    }
+    .notch {
+      position: absolute; top: 26px; left: 50%; transform: translateX(-50%);
+      width: 280px; height: 60px; background: var(--ink); border-radius: 999px; z-index: 30;
+    }
+    .statusbar {
+      position: absolute; top: 38px; left: 0; right: 0;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 80px; z-index: 25;
+      font-family: var(--font-body); font-weight: 600; font-size: 28px; color: var(--ink);
+    }
+    .statusbar .ind { display: inline-flex; gap: 8px; align-items: center; }
+    .statusbar .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--ink); }
+
+    .screen {
+      position: absolute; inset: 0;
+      padding: 130px 60px 60px;
+      display: flex; flex-direction: column;
+      gap: 28px;
+    }
+
+    /* Pills */
+    .pill {
+      display: inline-flex; align-items: center; gap: 10px;
+      height: 56px; padding: 0 22px;
+      border-radius: 999px;
+      font-family: var(--font-body); font-weight: 600; font-size: 24px;
+      background: var(--surface); color: var(--ink);
+      box-shadow: inset 0 0 0 1.5px var(--border);
+      white-space: nowrap;
+    }
+    .pill.mint   { background: var(--mint-50);   color: var(--mint-ink);   box-shadow: inset 0 0 0 1.5px var(--mint-100); }
+    .pill.peach  { background: var(--peach-50);  color: var(--peach-ink);  box-shadow: inset 0 0 0 1.5px var(--peach-100); }
+    .pill.butter { background: var(--butter-50); color: var(--butter-ink); box-shadow: inset 0 0 0 1.5px var(--butter-100); }
+    .pill.sky    { background: var(--sky-50);    color: var(--sky-ink);    box-shadow: inset 0 0 0 1.5px var(--sky-100); }
+
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border-radius: 36px;
+      padding: 32px;
+      box-shadow: inset 0 0 0 1.5px var(--hairline);
+    }
+    .card.peach  { background: var(--peach-50);  box-shadow: inset 0 0 0 1.5px var(--peach-100); }
+    .card.mint   { background: var(--mint-50);   box-shadow: inset 0 0 0 1.5px var(--mint-100); }
+    .card.butter { background: var(--butter-50); box-shadow: inset 0 0 0 1.5px var(--butter-100); }
+    .card.sky    { background: var(--sky-50);    box-shadow: inset 0 0 0 1.5px var(--sky-100); }
+
+    /* Avatar dots */
+    .avatar {
+      width: 80px; height: 80px; border-radius: 999px;
+      background: var(--peach-200);
+      display: grid; place-items: center;
+      font-family: var(--font-display); font-weight: 600; font-size: 38px;
+      color: var(--peach-ink);
+    }
+    .avatar.mint   { background: var(--mint-200);   color: var(--mint-ink); }
+    .avatar.butter { background: var(--butter-200); color: var(--butter-ink); }
+    .avatar.sky    { background: var(--sky-200);    color: var(--sky-ink); }
+
+    /* Logo */
+    .logo {
+      display: inline-flex; align-items: center; gap: 16px;
+    }
+    .logo-mark {
+      width: 92px; height: 92px; border-radius: 28px;
+      background: var(--primary); color: var(--primary-ink);
+      display: grid; place-items: center;
+      font-family: var(--font-display); font-weight: 500; font-size: 56px;
+      letter-spacing: -0.04em; line-height: 1;
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,0.06);
+    }
+    .logo-word {
+      font-family: var(--font-display); font-weight: 500; font-size: 56px;
+      color: var(--ink); letter-spacing: -0.02em;
+    }
+
+    /* Big CTA button */
+    .cta {
+      height: 92px; padding: 0 40px;
+      background: var(--primary); color: var(--primary-ink);
+      border-radius: 999px; border: none;
+      font-family: var(--font-body); font-weight: 700; font-size: 28px;
+      box-shadow: 0 2px 0 rgba(0,0,0,0.08), 0 12px 30px rgba(0,0,0,0.10);
+      display: inline-flex; align-items: center; gap: 14px;
+      cursor: pointer;
+    }
+
+    /* Tap ripple */
+    .tap-ripple {
+      position: absolute; width: 200px; height: 200px;
+      border-radius: 999px; border: 4px solid var(--peach-300);
+      pointer-events: none; opacity: 0;
+      transform: translate(-50%, -50%) scale(0.3);
+    }
+
+    /* Stripe placeholder used inside cards */
+    .ph {
+      background: var(--mint-50);
+      border-radius: 24px;
+      box-shadow: inset 0 0 0 1.5px var(--mint-100);
+      position: relative; overflow: hidden;
+    }
+    .ph.peach  { background: var(--peach-50);  box-shadow: inset 0 0 0 1.5px var(--peach-100); }
+    .ph.butter { background: var(--butter-50); box-shadow: inset 0 0 0 1.5px var(--butter-100); }
+    .ph.sky    { background: var(--sky-50);    box-shadow: inset 0 0 0 1.5px var(--sky-100); }
+    .ph::after {
+      content: ""; position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(135deg, currentColor 0 1px, transparent 1px 22px);
+      opacity: 0.10;
+    }
+
+    /* SCENE 1 — opening */
+    #s1 .scene-content {
+      display: grid; place-items: center;
+    }
+    #s1 .greeting {
+      position: absolute; left: 130px; top: 1330px;
+      width: 820px;
+    }
+    #s1 .greeting .eyebrow { font-size: 26px; }
+    #s1 .greeting .display { font-size: 110px; margin-top: 16px; }
+    #s1 .greeting .display .italic { font-style: italic; color: var(--peach-300); }
+
+    /* SCENE 2 — discover feed */
+    #s2 .feed-card {
+      position: absolute; left: 130px; right: 130px;
+    }
+    #s2 .weather {
+      position: absolute; left: 130px; right: 130px; top: 280px;
+      padding: 36px;
+    }
+    #s2 .weather .temp {
+      font-family: var(--font-display); font-weight: 500; font-size: 120px;
+      color: var(--peach-ink); letter-spacing: -0.03em; line-height: 1;
+    }
+    #s2 .weather .desc { font-size: 28px; color: var(--peach-ink); opacity: 0.8; margin-top: 14px; }
+    #s2 .sun {
+      position: absolute; right: 36px; top: 36px;
+      width: 120px; height: 120px; border-radius: 999px;
+      background: var(--butter-200);
+      box-shadow: 0 0 0 18px rgba(240,199,106,0.22);
+    }
+    #s2 .venue {
+      position: absolute; left: 130px; right: 130px;
+      padding: 28px;
+      display: flex; gap: 24px; align-items: center;
+    }
+    #s2 .venue .ph { width: 160px; height: 160px; flex: none; }
+    #s2 .venue .v-title { font-family: var(--font-display); font-weight: 500; font-size: 44px; color: var(--ink); letter-spacing: -0.02em; }
+    #s2 .venue .v-meta { font-size: 24px; color: var(--subtle); margin-top: 8px; }
+    #s2 .venue .v-pills { display: flex; gap: 10px; margin-top: 16px; }
+    #s2 .venue .v-pills .pill { height: 44px; font-size: 20px; padding: 0 16px; }
+    #s2 #s2-v1 { top: 760px; }
+    #s2 #s2-v2 { top: 1020px; }
+    #s2 #s2-v3 { top: 1280px; }
+
+    /* SCENE 3 — venue detail with tap */
+    #s3 .hero-img {
+      position: absolute; left: 130px; right: 130px; top: 270px;
+      height: 540px;
+    }
+    #s3 .hero-img .badge {
+      position: absolute; top: 28px; left: 28px;
+      display: inline-flex; gap: 10px; align-items: center;
+      background: var(--surface); color: var(--ink);
+      padding: 12px 22px; border-radius: 999px;
+      font-family: var(--font-body); font-weight: 600; font-size: 22px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+    }
+    #s3 .v-detail {
+      position: absolute; left: 130px; right: 130px; top: 870px;
+    }
+    #s3 .v-detail h2 {
+      font-family: var(--font-display); font-weight: 500; font-size: 88px;
+      color: var(--ink); letter-spacing: -0.02em; line-height: 1.02;
+    }
+    #s3 .v-detail .meta { font-size: 30px; color: var(--muted); margin-top: 18px; }
+    #s3 .v-detail .pills { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+    #s3 .save-btn {
+      position: absolute; right: 130px; bottom: 200px;
+      height: 96px; padding: 0 40px;
+      background: var(--accent); color: var(--accent-ink);
+      border-radius: 999px;
+      font-family: var(--font-body); font-weight: 700; font-size: 28px;
+      display: inline-flex; align-items: center; gap: 14px;
+      box-shadow: 0 2px 0 rgba(0,0,0,0.08), 0 14px 32px rgba(122,58,30,0.22);
+    }
+
+    /* SCENE 4 — journal capture */
+    #s4 .capture {
+      position: absolute; left: 130px; right: 130px; top: 380px;
+    }
+    #s4 .ph-photo {
+      width: 100%; height: 600px; border-radius: 36px;
+    }
+    #s4 .capture-card {
+      margin-top: -80px; position: relative;
+      padding: 36px;
+    }
+    #s4 .capture-card .eyebrow { font-size: 22px; }
+    #s4 .capture-card .ttl {
+      font-family: var(--font-display); font-weight: 500; font-size: 78px;
+      color: var(--peach-ink); letter-spacing: -0.02em; margin-top: 12px; line-height: 1.05;
+    }
+    #s4 .capture-card .who { font-size: 26px; color: var(--peach-ink); opacity: 0.75; margin-top: 14px; }
+    #s4 .save-pill {
+      position: absolute; left: 50%; bottom: 180px; transform: translateX(-50%);
+      display: inline-flex; align-items: center; gap: 14px;
+      background: var(--mint-50); color: var(--mint-ink);
+      padding: 18px 30px; border-radius: 999px;
+      box-shadow: inset 0 0 0 1.5px var(--mint-100);
+      font-weight: 700; font-size: 26px;
+    }
+    #s4 .check {
+      width: 36px; height: 36px; border-radius: 999px;
+      background: var(--mint-200); color: var(--mint-ink);
+      display: grid; place-items: center; font-size: 22px;
+    }
+
+    /* SCENE 5 — journal timeline */
+    #s5 .head {
+      position: absolute; left: 130px; right: 130px; top: 230px;
+    }
+    #s5 .head .eyebrow { font-size: 26px; }
+    #s5 .head h2 {
+      font-family: var(--font-display); font-weight: 500; font-size: 96px;
+      color: var(--ink); letter-spacing: -0.02em; margin-top: 14px;
+    }
+    #s5 .timeline {
+      position: absolute; left: 200px; top: 540px; bottom: 200px;
+      width: 4px; background: var(--hairline);
+    }
+    #s5 .moment {
+      position: absolute; left: 130px; right: 130px;
+      display: flex; gap: 36px; align-items: flex-start;
+    }
+    #s5 .moment .node {
+      width: 24px; height: 24px; border-radius: 999px;
+      background: var(--surface); box-shadow: 0 0 0 4px var(--mint-200), 0 0 0 8px var(--bg);
+      margin-left: 56px; margin-top: 24px; flex: none;
+    }
+    #s5 .moment .body {
+      flex: 1;
+      background: var(--surface); border-radius: 28px;
+      padding: 24px 28px;
+      box-shadow: inset 0 0 0 1.5px var(--hairline);
+    }
+    #s5 .moment.peach .body { background: var(--peach-50); box-shadow: inset 0 0 0 1.5px var(--peach-100); }
+    #s5 .moment .when { font-size: 22px; font-weight: 700; color: var(--subtle); text-transform: uppercase; letter-spacing: 0.14em; }
+    #s5 .moment .ttl { font-family: var(--font-display); font-weight: 500; font-size: 48px; letter-spacing: -0.02em; margin-top: 10px; line-height: 1.1; }
+    #s5 .moment.peach .ttl { color: var(--peach-ink); }
+    #s5 #s5-m1 { top: 580px; }
+    #s5 #s5-m2 { top: 820px; }
+    #s5 #s5-m3 { top: 1060px; }
+    #s5 #s5-m-new { top: 1320px; }
+    #s5 #s5-m-new .node { box-shadow: 0 0 0 5px var(--peach-300), 0 0 0 9px var(--bg); }
+    #s5 .new-tag {
+      display: inline-block; margin-bottom: 10px;
+      background: var(--peach-300); color: white;
+      padding: 4px 14px; border-radius: 999px;
+      font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em;
+    }
+
+    /* SCENE 6 — grandma reaction */
+    #s6 .notif {
+      position: absolute; left: 80px; right: 80px; top: 220px;
+      background: var(--surface); border-radius: 40px;
+      padding: 32px 36px;
+      box-shadow:
+        0 30px 80px rgba(31,28,22,0.18),
+        inset 0 0 0 1.5px var(--hairline);
+      display: flex; gap: 24px; align-items: center;
+    }
+    #s6 .notif .avatar { width: 96px; height: 96px; font-size: 42px; flex: none; }
+    #s6 .notif .label { font-size: 22px; font-weight: 700; color: var(--subtle); text-transform: uppercase; letter-spacing: 0.14em; }
+    #s6 .notif .msg { font-family: var(--font-display); font-weight: 500; font-size: 40px; color: var(--ink); letter-spacing: -0.02em; margin-top: 6px; line-height: 1.15; }
+    #s6 .echo {
+      position: absolute; left: 130px; right: 130px; top: 720px;
+      background: var(--peach-50); border-radius: 40px;
+      padding: 36px; box-shadow: inset 0 0 0 1.5px var(--peach-100);
+    }
+    #s6 .echo .meta {
+      display: flex; align-items: center; gap: 18px;
+      font-size: 24px; color: var(--peach-ink); font-weight: 600;
+    }
+    #s6 .echo .ttl {
+      font-family: var(--font-display); font-weight: 500; font-size: 60px;
+      color: var(--peach-ink); letter-spacing: -0.02em; margin-top: 18px; line-height: 1.1;
+    }
+    #s6 .echo .reactions {
+      display: flex; gap: 12px; margin-top: 28px;
+    }
+    #s6 .reaction {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: var(--surface); color: var(--peach-ink);
+      padding: 14px 20px; border-radius: 999px;
+      box-shadow: inset 0 0 0 1.5px var(--peach-100);
+      font-weight: 700; font-size: 22px;
+    }
+    #s6 .heart {
+      width: 26px; height: 26px;
+    }
+    #s6 .who {
+      position: absolute; left: 130px; top: 1180px;
+      display: flex; gap: 20px; align-items: center;
+    }
+    #s6 .who .avatar { width: 88px; height: 88px; font-size: 38px; }
+    #s6 .who .name { font-family: var(--font-display); font-weight: 500; font-size: 44px; color: var(--ink); letter-spacing: -0.02em; }
+    #s6 .who .rel { font-size: 24px; color: var(--muted); margin-top: 4px; }
+
+    /* SCENE 7 — CTA */
+    #s7 .scene-content { display: grid; place-items: center; padding: 0; }
+    #s7 .stack {
+      width: 880px; padding: 0 40px;
+      display: flex; flex-direction: column; align-items: center; gap: 36px;
+      text-align: center;
+    }
+    #s7 .logo-mark { width: 160px; height: 160px; border-radius: 48px; font-size: 100px; }
+    #s7 .lockup-word { font-family: var(--font-display); font-weight: 500; font-size: 100px; color: var(--ink); letter-spacing: -0.03em; }
+    #s7 .h {
+      font-family: var(--font-display); font-weight: 500; font-size: 130px;
+      letter-spacing: -0.025em; line-height: 1.0; color: var(--ink); margin-top: 30px;
+    }
+    #s7 .h .italic { font-style: italic; color: var(--peach-300); }
+    #s7 .sub { font-size: 30px; color: var(--muted); margin-top: 18px; max-width: 720px; line-height: 1.45; }
+    #s7 .cta { height: 120px; padding: 0 56px; font-size: 32px; margin-top: 36px; }
+    #s7 .footer {
+      position: absolute; bottom: 100px; left: 0; right: 0;
+      text-align: center;
+      font-family: var(--font-body); font-size: 22px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--subtle); font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div id="main" data-composition-id="main" data-width="1080" data-height="1920" data-start="0" data-duration="16">
+
+    <!-- SCENE 1 — opening: app comes alive -->
+    <div class="scene clip" id="s1" data-start="0" data-duration="2.0" data-track-index="0">
+      <div class="scene-content">
+        <div class="blob" style="width:600px;height:600px;background:var(--peach-100);opacity:0.55;top:-200px;right:-180px;"></div>
+        <div class="blob" style="width:500px;height:500px;background:var(--mint-100);opacity:0.5;bottom:200px;left:-160px;"></div>
+        <div class="blob" style="width:340px;height:340px;background:var(--butter-100);opacity:0.45;top:540px;right:60px;"></div>
+
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="notch"></div>
+            <div class="statusbar">
+              <span>9:24</span>
+              <span class="ind"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>
+            </div>
+            <div class="screen" id="s1-screen">
+              <div id="s1-logo" class="logo" style="margin-top: 480px; align-self: center;">
+                <div class="logo-mark">ll</div>
+                <div class="logo-word">Lille Liv</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="greeting">
+          <div class="eyebrow" id="s1-eyebrow">En lille morgen i København</div>
+          <div class="display" id="s1-greeting">God morgen,<br><span class="italic">Maja</span>.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 2 — discover feed slides up -->
+    <div class="scene clip" id="s2" data-start="2.0" data-duration="2.5" data-track-index="0" style="visibility:hidden;">
+      <div class="scene-content">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="notch"></div>
+            <div class="statusbar">
+              <span>9:24</span>
+              <span class="ind"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>
+            </div>
+            <div class="screen" style="padding-top: 110px;">
+              <div id="s2-eyebrow" style="font-size: 22px; font-weight:700; text-transform:uppercase; letter-spacing:0.18em; color: var(--subtle); padding-left: 70px;">Opdag · Onsdag</div>
+              <div id="s2-title" class="display" style="font-size: 80px; padding-left: 70px; margin-top: 8px;">I dag i byen</div>
+            </div>
+            <div class="card peach weather" id="s2-weather">
+              <div class="sun" id="s2-sun"></div>
+              <div style="font-size:24px; font-weight:700; text-transform:uppercase; letter-spacing:0.14em; color: var(--peach-ink);">Onsdag · 14:00</div>
+              <div class="temp"><span id="s2-temp">14</span>°</div>
+              <div class="desc">Sol &amp; mild vind — perfekt til Fælledparken</div>
+            </div>
+
+            <div class="card venue feed-card" id="s2-v1">
+              <div class="ph mint"></div>
+              <div>
+                <div class="v-title">Plantebørnehaven</div>
+                <div class="v-meta">Indendørs leg · Nørrebro · 0,8 km</div>
+                <div class="v-pills">
+                  <span class="pill mint">0–3 år</span>
+                  <span class="pill sky">Inde</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card venue feed-card" id="s2-v2">
+              <div class="ph butter"></div>
+              <div>
+                <div class="v-title">Kaffe og Køkken</div>
+                <div class="v-meta">Cafe · Vesterbro · 0,4 km</div>
+                <div class="v-pills">
+                  <span class="pill butter">Klapvogn-plads</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card venue feed-card" id="s2-v3">
+              <div class="ph sky"></div>
+              <div>
+                <div class="v-title">Fælledparken</div>
+                <div class="v-meta">Park · Østerbro · 1,2 km</div>
+                <div class="v-pills">
+                  <span class="pill sky">Læ</span>
+                  <span class="pill mint">Legeplads</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="s2-tap" class="tap-ripple" style="left: 540px; top: 1010px;"></div>
+      </div>
+    </div>
+
+    <!-- SCENE 3 — venue detail -->
+    <div class="scene clip" id="s3" data-start="4.5" data-duration="2.5" data-track-index="0" style="visibility:hidden;">
+      <div class="scene-content">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="notch"></div>
+            <div class="statusbar">
+              <span>9:25</span>
+              <span class="ind"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>
+            </div>
+            <div id="s3-hero" class="hero-img ph mint" style="color: var(--mint-ink);">
+              <div class="badge"><span style="display:inline-block;width:14px;height:14px;border-radius:999px;background:var(--mint-300);"></span>Åbent nu</div>
+            </div>
+            <div class="v-detail">
+              <h2 id="s3-title">Plantebørnehaven</h2>
+              <div class="meta" id="s3-meta">Indendørs leg blandt grønne planter · Nørrebro</div>
+              <div class="pills" id="s3-pills">
+                <span class="pill mint">0–3 år</span>
+                <span class="pill sky">Inde</span>
+                <span class="pill butter">Plads til klapvogn</span>
+              </div>
+            </div>
+            <button class="save-btn" id="s3-save">
+              <span style="display:inline-block;width:24px;height:24px;border-radius:8px;background:rgba(255,255,255,0.4);"></span>
+              Gem til i dag
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 4 — journal capture -->
+    <div class="scene clip" id="s4" data-start="7.0" data-duration="2.5" data-track-index="0" style="visibility:hidden;">
+      <div class="scene-content">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="notch"></div>
+            <div class="statusbar">
+              <span>9:48</span>
+              <span class="ind"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>
+            </div>
+            <div class="screen" style="padding-top: 130px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding: 0 10px;">
+                <span class="pill peach">Nyt øjeblik</span>
+                <span style="font-family:var(--font-body);font-weight:700;font-size:22px;color:var(--subtle);text-transform:uppercase;letter-spacing:0.14em;">Privat</span>
+              </div>
+            </div>
+            <div class="capture">
+              <div class="ph-photo ph peach" id="s4-photo" style="color:var(--peach-ink);"></div>
+              <div class="card peach capture-card" id="s4-card">
+                <div class="eyebrow" style="color: var(--peach-ink);">I dag · Plantebørnehaven</div>
+                <div class="ttl" id="s4-ttl">Første smil til en blomst.</div>
+                <div class="who">Asta · 4 mdr.</div>
+              </div>
+            </div>
+            <div class="save-pill" id="s4-saved">
+              <span class="check">✓</span>
+              Gemt til Astas journal
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 5 — journal timeline -->
+    <div class="scene clip" id="s5" data-start="9.5" data-duration="2.0" data-track-index="0" style="visibility:hidden;">
+      <div class="scene-content">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="notch"></div>
+            <div class="statusbar">
+              <span>9:48</span>
+              <span class="ind"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>
+            </div>
+            <div class="head">
+              <div class="eyebrow">Astas journal</div>
+              <h2 id="s5-title">4 måneder, 3 dage</h2>
+            </div>
+            <div class="timeline" id="s5-line"></div>
+
+            <div class="moment" id="s5-m1">
+              <div class="node"></div>
+              <div class="body">
+                <div class="when">Tirsdag · Hjemme</div>
+                <div class="ttl">Første gang griner højt</div>
+              </div>
+            </div>
+            <div class="moment" id="s5-m2">
+              <div class="node"></div>
+              <div class="body">
+                <div class="when">Mandag · Bibliotek</div>
+                <div class="ttl">Højtlæsning på Blågårdsgade</div>
+              </div>
+            </div>
+            <div class="moment" id="s5-m3">
+              <div class="node"></div>
+              <div class="body">
+                <div class="when">Søndag · Fælledparken</div>
+                <div class="ttl">Først tur uden hue</div>
+              </div>
+            </div>
+            <div class="moment peach" id="s5-m-new">
+              <div class="node"></div>
+              <div class="body">
+                <div class="new-tag">Lige tilføjet</div>
+                <div class="when" style="color: var(--peach-ink); opacity: 0.7;">I dag · Plantebørnehaven</div>
+                <div class="ttl">Første smil til en blomst.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 6 — grandma reaction (SHADER ANCHOR) -->
+    <div class="scene clip" id="s6" data-start="11.5" data-duration="2.0" data-track-index="0" style="opacity:0;">
+      <div class="scene-content">
+        <div class="blob" style="width:520px;height:520px;background:var(--peach-100);opacity:0.5;top:-160px;left:-120px;"></div>
+        <div class="blob" style="width:420px;height:420px;background:var(--butter-100);opacity:0.4;bottom:240px;right:-100px;"></div>
+
+        <div class="phone">
+          <div class="phone-screen" style="background: var(--sunken);">
+            <div class="notch"></div>
+            <div class="statusbar">
+              <span>9:51</span>
+              <span class="ind"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>
+            </div>
+
+            <div class="notif" id="s6-notif">
+              <div class="avatar peach" style="background: var(--peach-200); color: var(--peach-ink);">M</div>
+              <div>
+                <div class="label">Lille Liv · nu</div>
+                <div class="msg">Mormor sendte et hjerte til Astas øjeblik 💛</div>
+              </div>
+            </div>
+
+            <div class="echo" id="s6-echo">
+              <div class="meta">
+                <span style="font-size: 22px; font-weight:700; text-transform:uppercase; letter-spacing:0.14em;">I dag · Plantebørnehaven</span>
+              </div>
+              <div class="ttl">Første smil til en blomst.</div>
+              <div class="reactions" id="s6-reactions">
+                <span class="reaction"><svg class="heart" viewBox="0 0 24 24" fill="none"><path d="M12 20s-7-4.5-7-10a4 4 0 017-2.7A4 4 0 0119 10c0 5.5-7 10-7 10z" stroke="currentColor" stroke-width="2" fill="currentColor"/></svg> Mormor</span>
+                <span class="reaction" style="opacity:0.5;">+ Far</span>
+              </div>
+            </div>
+
+            <div class="who" id="s6-who">
+              <div class="avatar" style="background: var(--mint-200); color: var(--mint-ink);">F</div>
+              <div>
+                <div class="name">Familien Lund</div>
+                <div class="rel">Du · Kasper · Mormor · Farfar</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 7 — CTA (SHADER ANCHOR, final) -->
+    <div class="scene clip" id="s7" data-start="13.5" data-duration="2.5" data-track-index="0" style="opacity:0;">
+      <div class="scene-content">
+        <div class="blob" style="width:680px;height:680px;background:var(--peach-100);opacity:0.6;top:-220px;right:-200px;"></div>
+        <div class="blob" style="width:560px;height:560px;background:var(--mint-100);opacity:0.55;bottom:-160px;left:-180px;"></div>
+        <div class="blob" style="width:380px;height:380px;background:var(--butter-100);opacity:0.45;top:50%;left:-120px;"></div>
+
+        <div class="stack">
+          <div class="logo" id="s7-logo">
+            <div class="logo-mark">ll</div>
+            <div class="lockup-word">Lille Liv</div>
+          </div>
+          <div class="h" id="s7-headline">
+            Find steder.<br>
+            <span class="italic">Gem øjeblikkene.</span><br>
+            Sammen.
+          </div>
+          <div class="sub" id="s7-sub">Familieguide for København · 0–6 år. Privat journal pr. barn, delt med dem I vælger.</div>
+          <button class="cta" id="s7-cta">
+            Opret familie — gratis
+            <span style="font-size: 36px;">→</span>
+          </button>
+        </div>
+        <div class="footer" id="s7-footer">lilleliv.dk · København</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.__timelines = window.__timelines || {};
+    var tl = gsap.timeline({ paused: true });
+
+    // ── Visibility toggles ─────────────────────────────────
+    // s1: visible from t=0; hide at end
+    tl.set("#s1", { autoAlpha: 0 }, 2.0);
+    // s2: non-anchor, hard cut from s1
+    tl.set("#s2", { autoAlpha: 1 }, 2.0);
+    tl.set("#s2", { autoAlpha: 0 }, 4.5);
+    // s3: non-anchor
+    tl.set("#s3", { autoAlpha: 1 }, 4.5);
+    tl.set("#s3", { autoAlpha: 0 }, 7.0);
+    // s4: non-anchor
+    tl.set("#s4", { autoAlpha: 1 }, 7.0);
+    tl.set("#s4", { autoAlpha: 0 }, 9.5);
+    // s5: non-anchor
+    tl.set("#s5", { autoAlpha: 1 }, 9.5);
+    tl.set("#s5", { autoAlpha: 0 }, 11.5);
+    // s6 & s7 are shader anchors — HyperShader manages opacity.
+    tl.set("#s6", { opacity: 1 }, 11.5);
+
+    // ── SCENE 1 (0–2.0s) — app opens, greeting ─────────────
+    tl.from("#s1-logo", { y: 60, autoAlpha: 0, duration: 0.8, ease: "power3.out" }, 0.15);
+    tl.to("#s1-logo", { y: -8, duration: 0.9, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0.95);
+    tl.from("#s1-eyebrow", { y: 30, autoAlpha: 0, duration: 0.5, ease: "power2.out" }, 0.55);
+    tl.from("#s1-greeting", { y: 50, autoAlpha: 0, duration: 0.7, ease: "expo.out" }, 0.75);
+    tl.from("#s1-greeting .italic", { autoAlpha: 0, duration: 0.5, ease: "power1.out" }, 1.15);
+
+    // ── SCENE 2 (2.0–4.5s) — feed reveal ───────────────────
+    tl.from("#s2-eyebrow", { y: 20, autoAlpha: 0, duration: 0.5, ease: "power2.out" }, 2.2);
+    tl.from("#s2-title", { y: 40, autoAlpha: 0, duration: 0.6, ease: "power3.out" }, 2.3);
+    tl.from("#s2-weather", { y: 80, autoAlpha: 0, duration: 0.7, ease: "expo.out" }, 2.4);
+    // Sun gentle pulse
+    tl.to("#s2-sun", { scale: 1.08, duration: 1.0, ease: "sine.inOut", yoyo: true, repeat: 1, transformOrigin: "center" }, 2.6);
+    // Counter on temp 0 → 14
+    var s2Temp = { v: 0 };
+    tl.to(s2Temp, {
+      v: 14, duration: 0.8, ease: "power2.out",
+      onUpdate: function () { document.getElementById("s2-temp").textContent = Math.round(s2Temp.v); }
+    }, 2.5);
+
+    // Venue cards stagger
+    tl.from("#s2-v1", { y: 100, autoAlpha: 0, duration: 0.55, ease: "power3.out" }, 2.85);
+    tl.from("#s2-v2", { y: 100, autoAlpha: 0, duration: 0.55, ease: "power3.out" }, 3.0);
+    tl.from("#s2-v3", { y: 100, autoAlpha: 0, duration: 0.55, ease: "power3.out" }, 3.15);
+
+    // Tap ripple on Plantebørnehaven (v1) before shader fires
+    tl.to("#s2-tap", { autoAlpha: 0.9, scale: 1.0, duration: 0.18, ease: "power2.out" }, 4.05);
+    tl.to("#s2-tap", { autoAlpha: 0, scale: 1.6, duration: 0.4, ease: "power2.out" }, 4.18);
+    // Card press feedback
+    tl.to("#s2-v1", { scale: 0.97, duration: 0.15, ease: "power2.out" }, 4.05);
+    tl.to("#s2-v1", { scale: 1.0, duration: 0.2, ease: "power2.out" }, 4.20);
+
+    // ── SCENE 3 (4.5–7.0s) — venue detail (post-shader) ────
+    tl.from("#s3-hero", { scale: 1.05, duration: 1.6, ease: "none" }, 4.7);
+    tl.from("#s3-title", { y: 40, autoAlpha: 0, duration: 0.6, ease: "power3.out" }, 4.95);
+    tl.from("#s3-meta", { y: 24, autoAlpha: 0, duration: 0.5, ease: "power2.out" }, 5.15);
+    tl.from("#s3-pills > *", { y: 20, autoAlpha: 0, duration: 0.45, ease: "back.out(1.6)", stagger: { each: 0.08, from: "start" } }, 5.35);
+    // Save button enters and pulses
+    tl.from("#s3-save", { y: 40, autoAlpha: 0, scale: 0.92, duration: 0.5, ease: "back.out(1.4)" }, 5.85);
+    tl.to("#s3-save", { scale: 1.04, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 1, transformOrigin: "center" }, 6.4);
+
+    // ── SCENE 4 (7.0–9.5s) — journal capture ───────────────
+    tl.from("#s4 .pill.peach", { y: 20, autoAlpha: 0, duration: 0.4, ease: "power2.out" }, 7.15);
+    tl.from("#s4-photo", { y: 60, scale: 0.97, autoAlpha: 0, duration: 0.7, ease: "expo.out" }, 7.2);
+    tl.to("#s4-photo", { scale: 1.03, duration: 2.4, ease: "none", transformOrigin: "center" }, 7.35);
+    tl.from("#s4-card", { y: 80, autoAlpha: 0, duration: 0.6, ease: "power3.out" }, 7.55);
+    tl.from("#s4-ttl", { y: 24, autoAlpha: 0, duration: 0.5, ease: "power2.out" }, 7.85);
+
+    // Saved-toast slides in late
+    tl.from("#s4-saved", { y: 40, autoAlpha: 0, scale: 0.9, duration: 0.5, ease: "back.out(1.6)" }, 8.7);
+    tl.to("#s4-saved", { y: -6, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: 1 }, 9.0);
+
+    // ── SCENE 5 (9.5–11.5s) — journal timeline ─────────────
+    tl.from("#s5-title", { y: 30, autoAlpha: 0, duration: 0.5, ease: "power3.out" }, 9.6);
+    tl.from("#s5-line", { scaleY: 0, transformOrigin: "top", duration: 0.7, ease: "expo.out" }, 9.7);
+    tl.from("#s5-m1", { x: 40, autoAlpha: 0, duration: 0.45, ease: "power3.out" }, 9.9);
+    tl.from("#s5-m2", { x: 40, autoAlpha: 0, duration: 0.45, ease: "power3.out" }, 10.05);
+    tl.from("#s5-m3", { x: 40, autoAlpha: 0, duration: 0.45, ease: "power3.out" }, 10.2);
+    // The new moment slots in with extra emphasis
+    tl.from("#s5-m-new", { y: 30, autoAlpha: 0, scale: 0.96, duration: 0.65, ease: "back.out(1.5)" }, 10.55);
+    tl.to("#s5-m-new .node", { scale: 1.4, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: 1, transformOrigin: "center" }, 10.95);
+
+    // ── SCENE 6 (11.5–13.5s) — grandma reaction ────────────
+    tl.from("#s6-notif", { y: -160, autoAlpha: 0, duration: 0.7, ease: "expo.out" }, 11.65);
+    tl.to("#s6-notif", { y: -6, duration: 0.7, ease: "sine.inOut", yoyo: true, repeat: 1 }, 12.0);
+    tl.from("#s6-echo", { y: 50, autoAlpha: 0, duration: 0.6, ease: "power3.out" }, 12.0);
+    tl.from("#s6-reactions > *", { y: 20, scale: 0.85, autoAlpha: 0, duration: 0.45, ease: "back.out(1.7)", stagger: 0.12 }, 12.5);
+    tl.to("#s6-reactions .reaction:first-child", { scale: 1.1, duration: 0.4, ease: "sine.inOut", yoyo: true, repeat: 1, transformOrigin: "center" }, 12.75);
+    tl.from("#s6-who", { y: 30, autoAlpha: 0, duration: 0.5, ease: "power2.out" }, 12.55);
+
+    // ── SCENE 7 (13.5–16.0s) — CTA, final ──────────────────
+    tl.from("#s7-logo", { y: 30, autoAlpha: 0, duration: 0.55, ease: "power3.out" }, 13.7);
+    tl.from("#s7-headline", { y: 40, autoAlpha: 0, duration: 0.7, ease: "expo.out" }, 13.95);
+    tl.from("#s7-headline .italic", { autoAlpha: 0, duration: 0.55, ease: "power1.out" }, 14.4);
+    tl.from("#s7-sub", { y: 24, autoAlpha: 0, duration: 0.55, ease: "power2.out" }, 14.55);
+    tl.from("#s7-cta", { y: 30, scale: 0.92, autoAlpha: 0, duration: 0.55, ease: "back.out(1.5)" }, 14.85);
+    tl.to("#s7-cta", { scale: 1.04, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 1, transformOrigin: "center" }, 15.25);
+    tl.from("#s7-footer", { autoAlpha: 0, duration: 0.55, ease: "power1.out" }, 15.0);
+
+    // ── Shader transition (1 key moment) ───────────────────
+    // s6 → s7: emotional lift into the CTA (light-leak).
+    // All other cuts are hard cuts — handled by autoAlpha toggles above.
+    window.HyperShader.init({
+      bgColor: getComputedStyle(document.documentElement).getPropertyValue("--bg").trim() || "#FBF6EE",
+      scenes: ["s6", "s7"],
+      timeline: tl,
+      transitions: [
+        { time: 13.25, shader: "light-leak", duration: 0.5 },
+      ],
+    });
+
+    window.__timelines["main"] = tl;
+  </script>
+</body>
+</html>
