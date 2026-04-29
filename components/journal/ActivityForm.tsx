@@ -1,10 +1,11 @@
 "use client";
 
-import { CalendarBlank, ImageSquare, MapPin } from "@phosphor-icons/react/dist/ssr";
+import { CalendarBlank, MapPin } from "@phosphor-icons/react/dist/ssr";
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { PhotoUploader } from "@/components/ui/PhotoUploader";
 import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
 import { useToast } from "@/components/ui/Toaster";
@@ -23,7 +24,7 @@ export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [venueId, setVenueId] = useState("");
   const [notes, setNotes] = useState("");
-  const [photoUrl, setPhotoUrl] = useState("");
+  const [photos, setPhotos] = useState<string[]>([]);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -39,7 +40,7 @@ export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
       title,
       description: selectedVenue ? `${notes} ${notes ? "· " : ""}${selectedVenue.name}` : notes,
       date,
-      photos: photoUrl ? [photoUrl] : undefined
+      photos: photos.length ? photos : undefined
     };
 
     const supabase = createClient();
@@ -55,7 +56,7 @@ export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
         title,
         description: notes || null,
         date,
-        photos: photoUrl ? [photoUrl] : [],
+        photos,
         location_lat: selectedVenue?.lat ?? null,
         location_lng: selectedVenue?.lng ?? null,
         tags: selectedVenue?.tags ?? []
@@ -73,7 +74,7 @@ export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
     setTitle("");
     setVenueId("");
     setNotes("");
-    setPhotoUrl("");
+    setPhotos([]);
     setMessage("");
     toast({ title: "Turen er tilføjet", variant: "success" });
     setSaving(false);
@@ -120,14 +121,15 @@ export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
         />
       </FieldLabel>
 
-      <FieldLabel label="Foto URL">
-        <Input
-          value={photoUrl}
-          onChange={(event) => setPhotoUrl(event.target.value)}
-          placeholder="https://res.cloudinary.com/…"
-          leadingIcon={<ImageSquare size={14} weight="fill" aria-hidden="true" />}
-        />
-      </FieldLabel>
+      <PhotoUploader
+        value={photos}
+        onChange={setPhotos}
+        multiple
+        max={4}
+        label="Fotos"
+        hint="Op til 4 — træk billeder hertil eller indsæt et link."
+      />
+
 
       <Button type="submit" size="lg" className="w-full" disabled={saving}>
         <MapPin size={14} weight="fill" aria-hidden="true" />

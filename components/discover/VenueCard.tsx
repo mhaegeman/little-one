@@ -1,11 +1,65 @@
-import { Baby, MapPin, Star } from "@phosphor-icons/react/dist/ssr";
+"use client";
+
+import { Baby, Heart, MapPin, Star } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
+import type { MouseEvent } from "react";
 import { Badge } from "@/components/ui/Badge";
+import { useToast } from "@/components/ui/Toaster";
+import { useFavorites } from "@/hooks/useFavorites";
 import { categoryBadgeVariant, categoryLabels } from "@/lib/data/taxonomy";
 import type { Venue } from "@/lib/types";
 import { cn, formatDistance, monthRangeLabel } from "@/lib/utils";
 
 type Layout = "row" | "compact" | "tile";
+
+function FavoriteButton({
+  venue,
+  size = "md"
+}: {
+  venue: Venue;
+  size?: "sm" | "md";
+}) {
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const { toast } = useToast();
+  const saved = isFavorite(venue.id);
+
+  function onClick(event: MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+    const next = toggleFavorite(venue.id);
+    toast({
+      title: next ? "Gemt til favoritter" : "Fjernet fra favoritter",
+      description: venue.name,
+      variant: next ? "success" : "info",
+      duration: 2200
+    });
+  }
+
+  const dim = size === "sm" ? "h-7 w-7" : "h-8 w-8";
+  const iconSize = size === "sm" ? 13 : 14;
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={saved ? `Fjern ${venue.name} fra favoritter` : `Gem ${venue.name} til favoritter`}
+      aria-pressed={saved}
+      className={cn(
+        "focus-ring grid place-items-center rounded-full bg-surface/95 shadow-sm ring-1 backdrop-blur transition-colors",
+        dim,
+        saved
+          ? "text-warm-500 ring-warm-200 hover:bg-warm-50"
+          : "text-muted ring-hairline hover:text-warm-500"
+      )}
+    >
+      <Heart
+        size={iconSize}
+        weight={saved ? "fill" : "regular"}
+        aria-hidden="true"
+      />
+    </button>
+  );
+}
 
 export function VenueCard({
   venue,
@@ -26,10 +80,8 @@ export function VenueCard({
         href={`/venues/${venue.id}`}
         onMouseEnter={onHover}
         className={cn(
-          "focus-ring group flex gap-3 rounded-card bg-surface p-2.5 ring-1 transition-colors duration-150 ease-nordic",
-          active
-            ? "ring-sage-400 shadow-soft"
-            : "ring-hairline hover:ring-sage-200"
+          "focus-ring group relative flex gap-3 rounded-card bg-surface p-2.5 ring-1 transition-colors duration-150 ease-nordic",
+          active ? "ring-sage-400 shadow-soft" : "ring-hairline hover:ring-sage-200"
         )}
       >
         <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg">
@@ -40,7 +92,7 @@ export function VenueCard({
             className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
           />
         </div>
-        <div className="min-w-0 flex-1 py-0.5">
+        <div className="min-w-0 flex-1 py-0.5 pr-7">
           <div className="flex items-start justify-between gap-2">
             <h3 className="truncate font-display text-base font-semibold text-ink">
               {venue.name}
@@ -68,6 +120,9 @@ export function VenueCard({
             </Badge>
           </div>
         </div>
+        <span className="absolute right-2 top-2">
+          <FavoriteButton venue={venue} size="sm" />
+        </span>
       </Link>
     );
   }
@@ -89,6 +144,9 @@ export function VenueCard({
             <Badge variant={categoryBadgeVariant[venue.category]}>
               {categoryLabels[venue.category]}
             </Badge>
+          </div>
+          <div className="absolute right-2 top-2">
+            <FavoriteButton venue={venue} />
           </div>
         </div>
         <div className="p-3">
@@ -129,6 +187,9 @@ export function VenueCard({
           <Badge variant={categoryBadgeVariant[venue.category]}>
             {categoryLabels[venue.category]}
           </Badge>
+        </div>
+        <div className="absolute right-2 top-2">
+          <FavoriteButton venue={venue} />
         </div>
       </div>
       <div className="min-w-0 p-3.5">

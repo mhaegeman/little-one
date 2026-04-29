@@ -21,6 +21,7 @@ import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ProfileOverview } from "@/components/profile/ProfileOverview";
 import { ProfilePreferences } from "@/components/profile/ProfilePreferences";
 import { ProfileRecommendations } from "@/components/profile/ProfileRecommendations";
+import { ProfileSaved } from "@/components/profile/ProfileSaved";
 import { Button } from "@/components/ui/Button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -50,7 +51,14 @@ type SessionUser = {
   email: string | null;
 };
 
-type Section = "overview" | "profile" | "family" | "recommendations" | "preferences" | "account";
+type Section =
+  | "overview"
+  | "profile"
+  | "family"
+  | "saved"
+  | "recommendations"
+  | "preferences"
+  | "account";
 
 const SECTIONS: {
   id: Section;
@@ -75,6 +83,12 @@ const SECTIONS: {
     label: "Familie",
     description: "Medlemmer & invitationer",
     icon: Users
+  },
+  {
+    id: "saved",
+    label: "Gemte",
+    description: "Dine favoritsteder",
+    icon: Heart
   },
   {
     id: "recommendations",
@@ -433,11 +447,7 @@ export function ProfilePanel() {
               <ProfileOverview
                 profile={profile}
                 members={allMembers}
-                onJumpTo={(target) => {
-                  if (target === "family" || target === "preferences" || target === "recommendations") {
-                    setSection(target);
-                  }
-                }}
+                onJumpTo={(target) => setSection(target)}
               />
             ) : null}
 
@@ -450,6 +460,8 @@ export function ProfilePanel() {
                 onEdit={() => setSection("preferences")}
               />
             ) : null}
+
+            {section === "saved" ? <ProfileSaved /> : null}
 
             {section === "recommendations" ? (
               <ProfileRecommendations

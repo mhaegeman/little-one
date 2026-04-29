@@ -2,9 +2,14 @@
 
 import {
   Baby,
+  House,
+  MagnifyingGlass,
+  MapPin,
   Plus,
   ShieldCheck,
-  Sparkle
+  Sparkle,
+  UserPlus,
+  X
 } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
@@ -15,12 +20,16 @@ import { MilestoneForm } from "@/components/journal/MilestoneForm";
 import { Timeline } from "@/components/journal/Timeline";
 import { ChildProfileForm } from "@/components/onboarding/ChildProfileForm";
 import { Button } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { Input } from "@/components/ui/Input";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Sheet } from "@/components/ui/Sheet";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { createClient } from "@/lib/supabase/client";
-import type { Child, TimelineItem } from "@/lib/types";
+import type { Child, TimelineItem, TimelineItemType } from "@/lib/types";
 import { cn, formatChildAge } from "@/lib/utils";
+
+type FilterKind = "all" | TimelineItemType;
 
 const demoChild: Child = {
   id: "demo-asta",
@@ -54,7 +63,7 @@ const demoTimeline: TimelineItem[] = [
   }
 ];
 
-type SheetMode = "milestone" | "activity" | null;
+type SheetMode = "milestone" | "activity" | "child" | null;
 
 export function JournalClient() {
   const t = useTranslations("journal");
@@ -66,6 +75,8 @@ export function JournalClient() {
   const [timeline, setTimeline] = useState<TimelineItem[]>(demoTimeline);
   const [sheetMode, setSheetMode] = useState<SheetMode>(null);
   const [usingDemo, setUsingDemo] = useState(false);
+  const [filterKind, setFilterKind] = useState<FilterKind>("all");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const newParam = searchParams.get("new");
@@ -180,6 +191,18 @@ export function JournalClient() {
     [activeChildId, children]
   );
 
+  const filteredTimeline = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return timeline.filter((item) => {
+      if (filterKind !== "all" && item.type !== filterKind) return false;
+      if (!q) return true;
+      const haystack = `${item.title} ${item.description ?? ""} ${item.badge ?? ""}`.toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [timeline, filterKind, search]);
+
+  const filtersActive = filterKind !== "all" || search.length > 0;
+
   if (loading) {
     return (
       <div className="px-4 pt-20 sm:px-6 lg:px-8 lg:pt-6">
@@ -236,7 +259,7 @@ export function JournalClient() {
           title={t("title")}
           description={t("subtitle")}
           action={
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Button onClick={() => setSheetMode("milestone")}>
                 <Plus size={14} weight="bold" aria-hidden="true" />
                 {t("milestone")}
@@ -245,6 +268,16 @@ export function JournalClient() {
                 <Plus size={14} weight="bold" aria-hidden="true" />
                 {t("activity")}
               </Button>
+              {!usingDemo ? (
+                <Button
+                  variant="ghost"
+                  onClick={() => setSheetMode("child")}
+                  aria-label="Tilføj barn"
+                >
+                  <UserPlus size={14} weight="bold" aria-hidden="true" />
+                  Barn
+                </Button>
+              ) : null}
             </div>
           }
         />
@@ -301,9 +334,88 @@ export function JournalClient() {
           ) : null}
         </section>
 
+        {/* Filter bar */}
+        {timeline.length > 0 ? (
+          <section
+            aria-label="Filtrér tidslinjen"
+            className="mt-4 flex flex-wrap items-center gap-2 rounded-card bg-surface p-2 ring-1 ring-hairline"
+          >
+            <div className="flex flex-wrap items-center gap-1">
+              <FilterChip
+                active={filterKind === "all"}
+                onClick={() => setFilterKind("all")}
+                label="Alle"
+                count={timeline.length}
+              />
+              <FilterChip
+                active={filterKind === "milestone"}
+                onClick={() => setFilterKind("milestone")}
+                icon={<Sparkle size={11} weight="fill" aria-hidden="true" />}
+                label="Milepæle"
+                count={timeline.filter((i) => i.type === "milestone").length}
+              />
+              <FilterChip
+                active={filterKind === "activity"}
+                onClick={() => setFilterKind("activity")}
+                icon={<MapPin size={11} weight="fill" aria-hidden="true" />}
+                label="Ture"
+                count={timeline.filter((i) => i.type === "activity").length}
+              />
+              <FilterChip
+                active={filterKind === "aula"}
+                onClick={() => setFilterKind("aula")}
+                icon={<House size={11} weight="fill" aria-hidden="true" />}
+                label="Aula"
+                count={timeline.filter((i) => i.type === "aula").length}
+              />
+            </div>
+            <div className="ml-auto min-w-[160px] flex-1 sm:flex-initial sm:basis-64">
+              <Input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Søg i journalen…"
+                leadingIcon={<MagnifyingGlass size={14} weight="bold" aria-hidden="true" />}
+                trailingIcon={
+                  search ? (
+                    <button
+                      type="button"
+                      onClick={() => setSearch("")}
+                      aria-label="Ryd søgning"
+                      className="focus-ring grid h-5 w-5 place-items-center rounded-md hover:bg-sunken"
+                    >
+                      <X size={11} weight="bold" aria-hidden="true" />
+                    </button>
+                  ) : null
+                }
+              />
+            </div>
+          </section>
+        ) : null}
+
         {/* Timeline */}
-        <section className="mt-5">
-          <Timeline items={timeline} />
+        <section className="mt-4">
+          {filteredTimeline.length === 0 && filtersActive ? (
+            <EmptyState
+              icon={<MagnifyingGlass size={20} weight="bold" aria-hidden="true" />}
+              title="Ingen indslag matcher"
+              description="Prøv at rydde søgningen eller skifte filter."
+              action={
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => {
+                    setFilterKind("all");
+                    setSearch("");
+                  }}
+                >
+                  <X size={12} weight="bold" aria-hidden="true" />
+                  Nulstil
+                </Button>
+              }
+            />
+          ) : (
+            <Timeline items={filteredTimeline} />
+          )}
         </section>
 
         {/* Aula footer */}
@@ -327,8 +439,24 @@ export function JournalClient() {
         onClose={() => setSheetMode(null)}
         side="right"
         size="md"
-        title={sheetMode === "milestone" ? t("addMilestone") : t("addActivity")}
-        description={sheetMode === "milestone" ? "Marker en milepæl for senere." : "Tilføj en lille tur eller hverdagsoplevelse."}
+        title={
+          sheetMode === "milestone"
+            ? t("addMilestone")
+            : sheetMode === "activity"
+              ? t("addActivity")
+              : sheetMode === "child"
+                ? "Tilføj barn"
+                : ""
+        }
+        description={
+          sheetMode === "milestone"
+            ? "Marker en milepæl for senere."
+            : sheetMode === "activity"
+              ? "Tilføj en lille tur eller hverdagsoplevelse."
+              : sheetMode === "child"
+                ? "Opret en profil for endnu et barn."
+                : ""
+        }
       >
         {sheetMode === "milestone" ? (
           <MilestoneForm
@@ -348,7 +476,56 @@ export function JournalClient() {
             }}
           />
         ) : null}
+        {sheetMode === "child" ? (
+          <ChildProfileForm
+            onCreated={(child) => {
+              setChildren((current) => [...current, child]);
+              setActiveChildId(child.id);
+              setTimeline([]);
+              setSheetMode(null);
+            }}
+          />
+        ) : null}
       </Sheet>
     </div>
+  );
+}
+
+function FilterChip({
+  active,
+  onClick,
+  label,
+  icon,
+  count
+}: {
+  active: boolean;
+  onClick: () => void;
+  label: string;
+  icon?: React.ReactNode;
+  count: number;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={cn(
+        "focus-ring inline-flex h-8 items-center gap-1.5 rounded-pill px-2.5 text-xs font-semibold ring-1 transition-colors",
+        active
+          ? "bg-sage-500 text-white ring-sage-500"
+          : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
+      )}
+    >
+      {icon}
+      {label}
+      <span
+        className={cn(
+          "grid h-4 min-w-[1rem] place-items-center rounded-full px-1 text-2xs font-bold",
+          active ? "bg-white/25 text-white" : "bg-sunken text-muted"
+        )}
+      >
+        {count}
+      </span>
+    </button>
   );
 }
