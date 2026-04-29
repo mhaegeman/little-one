@@ -157,7 +157,7 @@ export function JournalCalendar({
               {t("calendarGoToMonth")}
             </button>
           </div>
-          <DayGrid year={expanded.year} month={expanded.month} dayCounts={dayCounts} weekdayLabels={weekdayLabels} />
+          <DayGrid year={expanded.year} month={expanded.month} dayCounts={dayCounts} weekdayLabels={weekdayLabels} locale={locale} t={t} />
         </div>
       ) : null}
     </section>
@@ -168,15 +168,17 @@ function DayGrid({
   year,
   month,
   dayCounts,
-  weekdayLabels
+  weekdayLabels,
+  locale,
+  t
 }: {
   year: number;
   month: number;
   dayCounts: Map<string, number>;
   weekdayLabels: string[];
+  locale: string;
+  t: ReturnType<typeof useTranslations<"journal">>;
 }) {
-  const t = useTranslations("journal");
-  const locale = useLocale();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   // Compute leading blank cells. JS getDay(): Sun=0..Sat=6. Monday-first → shift.
   const firstWeekday = new Date(year, month, 1).getDay();
