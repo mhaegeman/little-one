@@ -22,6 +22,7 @@ import { ProfileOverview } from "@/components/profile/ProfileOverview";
 import { ProfilePreferences } from "@/components/profile/ProfilePreferences";
 import { ProfileRecommendations } from "@/components/profile/ProfileRecommendations";
 import { ProfileSaved } from "@/components/profile/ProfileSaved";
+import { ProfileStats } from "@/components/profile/ProfileStats";
 import { Button } from "@/components/ui/Button";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -123,6 +124,18 @@ export function ProfilePanel() {
   const [section, setSection] = useState<Section>("overview");
 
   useEffect(() => {
+    const sectionParam = searchParams.get("section");
+    if (
+      sectionParam === "overview" ||
+      sectionParam === "profile" ||
+      sectionParam === "family" ||
+      sectionParam === "saved" ||
+      sectionParam === "recommendations" ||
+      sectionParam === "preferences" ||
+      sectionParam === "account"
+    ) {
+      setSection(sectionParam);
+    }
     if (searchParams.get("invite_accepted") === "1") {
       setBanner({ type: "success", text: "Du er nu med i familien." });
       setSection("family");
@@ -444,11 +457,14 @@ export function ProfilePanel() {
           {/* Main content */}
           <div className="min-w-0 space-y-4">
             {section === "overview" ? (
-              <ProfileOverview
-                profile={profile}
-                members={allMembers}
-                onJumpTo={(target) => setSection(target)}
-              />
+              <div className="space-y-4">
+                <ProfileStats />
+                <ProfileOverview
+                  profile={profile}
+                  members={allMembers}
+                  onJumpTo={(target) => setSection(target)}
+                />
+              </div>
             ) : null}
 
             {section === "profile" ? (

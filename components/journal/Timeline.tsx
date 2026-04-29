@@ -111,6 +111,15 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
                             {item.description}
                           </p>
                         ) : null}
+                        {item.tags?.length ? (
+                          <div className="mt-2 flex flex-wrap gap-1">
+                            {item.tags.slice(0, 6).map((tag) => (
+                              <Badge key={tag} variant="neutral">
+                                {tag}
+                              </Badge>
+                            ))}
+                          </div>
+                        ) : null}
                         {item.photos?.length ? (
                           <div className="mt-2.5 flex gap-1.5 overflow-x-auto thin-scroll">
                             {item.photos.map((photo) => (

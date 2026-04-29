@@ -13,6 +13,7 @@ import { useMemo, useState } from "react";
 import { DiscoverMap } from "@/components/discover/DiscoverMap";
 import { EventList } from "@/components/discover/EventList";
 import { LocationControl, type UserLocation } from "@/components/discover/LocationControl";
+import { TodayCard } from "@/components/discover/TodayCard";
 import { VenueCard } from "@/components/discover/VenueCard";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -170,6 +171,10 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
   return (
     <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
       <div className="mx-auto max-w-[1400px]">
+        <TodayCard
+          venues={venues}
+          userLocation={userLocation ? { lat: userLocation.lat, lng: userLocation.lng } : null}
+        />
         <PageHeader
           eyebrow="København"
           title={t("title")}

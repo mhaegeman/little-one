@@ -93,6 +93,7 @@ export type TimelineItem = {
   date: string;
   photos?: string[];
   badge?: string;
+  tags?: string[];
 };
 
 export type MilestoneType =

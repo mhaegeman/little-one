@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { PhotoUploader } from "@/components/ui/PhotoUploader";
 import { Select } from "@/components/ui/Select";
+import { TagInput } from "@/components/ui/TagInput";
 import { Textarea } from "@/components/ui/Textarea";
 import { useToast } from "@/components/ui/Toaster";
 import { venues } from "@/lib/data/venues";
@@ -18,6 +19,17 @@ type ActivityFormProps = {
   onAdd: (item: TimelineItem) => void;
 };
 
+const SUGGESTED_TAGS = [
+  "udendørs",
+  "regnvejr",
+  "venner",
+  "bedsteforældre",
+  "morgen",
+  "frokost",
+  "stille",
+  "energisk"
+];
+
 export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
   const { toast } = useToast();
   const [title, setTitle] = useState("");
@@ -25,6 +37,7 @@ export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
   const [venueId, setVenueId] = useState("");
   const [notes, setNotes] = useState("");
   const [photos, setPhotos] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -34,13 +47,16 @@ export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
     setMessage("");
 
     const selectedVenue = venues.find((venue) => venue.id === venueId);
+    const venueTags = selectedVenue?.tags ?? [];
+    const allTags = Array.from(new Set([...tags, ...venueTags]));
     const optimisticItem: TimelineItem = {
       id: crypto.randomUUID(),
       type: "activity",
       title,
       description: selectedVenue ? `${notes} ${notes ? "· " : ""}${selectedVenue.name}` : notes,
       date,
-      photos: photos.length ? photos : undefined
+      photos: photos.length ? photos : undefined,
+      tags: allTags.length ? allTags : undefined
     };
 
     const supabase = createClient();
@@ -59,7 +75,7 @@ export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
         photos,
         location_lat: selectedVenue?.lat ?? null,
         location_lng: selectedVenue?.lng ?? null,
-        tags: selectedVenue?.tags ?? []
+        tags: allTags
       });
 
       if (error) {
@@ -75,6 +91,7 @@ export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
     setVenueId("");
     setNotes("");
     setPhotos([]);
+    setTags([]);
     setMessage("");
     toast({ title: "Turen er tilføjet", variant: "success" });
     setSaving(false);
@@ -130,6 +147,14 @@ export function ActivityForm({ childId, onAdd }: ActivityFormProps) {
         hint="Op til 4 — træk billeder hertil eller indsæt et link."
       />
 
+      <FieldLabel label="Tags">
+        <TagInput
+          value={tags}
+          onChange={setTags}
+          suggestions={SUGGESTED_TAGS}
+          placeholder="Skriv et ord og tryk enter…"
+        />
+      </FieldLabel>
 
       <Button type="submit" size="lg" className="w-full" disabled={saving}>
         <MapPin size={14} weight="fill" aria-hidden="true" />

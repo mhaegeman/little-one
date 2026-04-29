@@ -78,6 +78,7 @@ export function JournalClient() {
   const [sheetMode, setSheetMode] = useState<SheetMode>(null);
   const [usingDemo, setUsingDemo] = useState(false);
   const [filterKind, setFilterKind] = useState<FilterKind>("all");
+  const [filterTag, setFilterTag] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -140,7 +141,7 @@ export function JournalClient() {
         supabase.from("milestones").select("id,type,date,notes,photo_url").eq("child_id", childId),
         supabase
           .from("activities_log")
-          .select("id,title,description,date,photos")
+          .select("id,title,description,date,photos,tags")
           .eq("child_id", childId),
         supabase
           .from("aula_highlights")
@@ -163,7 +164,8 @@ export function JournalClient() {
           title: item.title,
           description: item.description ?? undefined,
           date: item.date,
-          photos: item.photos ?? undefined
+          photos: item.photos ?? undefined,
+          tags: (item.tags as string[] | null) ?? undefined
         })),
         ...(highlights ?? []).map((item) => ({
           id: item.id,
@@ -193,17 +195,30 @@ export function JournalClient() {
     [activeChildId, children]
   );
 
+  const allTags = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const item of timeline) {
+      for (const tag of item.tags ?? []) {
+        counts.set(tag, (counts.get(tag) ?? 0) + 1);
+      }
+    }
+    return Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10);
+  }, [timeline]);
+
   const filteredTimeline = useMemo(() => {
     const q = search.trim().toLowerCase();
     return timeline.filter((item) => {
       if (filterKind !== "all" && item.type !== filterKind) return false;
+      if (filterTag && !(item.tags ?? []).includes(filterTag)) return false;
       if (!q) return true;
-      const haystack = `${item.title} ${item.description ?? ""} ${item.badge ?? ""}`.toLowerCase();
+      const haystack = `${item.title} ${item.description ?? ""} ${item.badge ?? ""} ${(item.tags ?? []).join(" ")}`.toLowerCase();
       return haystack.includes(q);
     });
-  }, [timeline, filterKind, search]);
+  }, [timeline, filterKind, filterTag, search]);
 
-  const filtersActive = filterKind !== "all" || search.length > 0;
+  const filtersActive = filterKind !== "all" || filterTag !== null || search.length > 0;
 
   if (loading) {
     return (
@@ -397,6 +412,49 @@ export function JournalClient() {
                 }
               />
             </div>
+            {allTags.length > 0 ? (
+              <div className="flex w-full flex-wrap items-center gap-1 border-t border-hairline pt-2">
+                <span className="text-2xs font-bold uppercase tracking-[0.12em] text-subtle">
+                  Tags
+                </span>
+                {allTags.map(([tag, count]) => {
+                  const active = filterTag === tag;
+                  return (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => setFilterTag(active ? null : tag)}
+                      aria-pressed={active}
+                      className={cn(
+                        "focus-ring inline-flex items-center gap-1 rounded-pill px-2 py-0.5 text-2xs font-semibold ring-1 transition-colors",
+                        active
+                          ? "bg-sage-500 text-white ring-sage-500"
+                          : "bg-sunken text-muted ring-hairline hover:text-ink"
+                      )}
+                    >
+                      {tag}
+                      <span
+                        className={cn(
+                          "rounded-full px-1 text-2xs",
+                          active ? "bg-white/25" : "bg-surface text-subtle"
+                        )}
+                      >
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
+                {filterTag ? (
+                  <button
+                    type="button"
+                    onClick={() => setFilterTag(null)}
+                    className="focus-ring text-2xs font-bold uppercase tracking-wide text-warm-600 hover:text-warm-700"
+                  >
+                    Ryd tag
+                  </button>
+                ) : null}
+              </div>
+            ) : null}
           </section>
         ) : null}
 
@@ -416,6 +474,7 @@ export function JournalClient() {
                   size="sm"
                   onClick={() => {
                     setFilterKind("all");
+                    setFilterTag(null);
                     setSearch("");
                   }}
                 >
