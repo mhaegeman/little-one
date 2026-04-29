@@ -46,13 +46,18 @@ export const neighbourhoods: Neighbourhood[] = [
   "Indre By",
   "Amager",
   "Valby",
+  "Sydhavn",
   "Nordvest",
   "Nordhavn",
   "Hellerup",
   "Ishøj",
   "Vanløse",
   "Brønshøj",
-  "Kastrup"
+  "Kastrup",
+  "Klampenborg",
+  "Lyngby",
+  "Humlebæk",
+  "Roskilde"
 ];
 
 export const milestoneLabels: Record<MilestoneType, string> = {

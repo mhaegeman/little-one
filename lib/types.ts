@@ -16,6 +16,7 @@ export type Neighbourhood =
   | "Indre By"
   | "Amager"
   | "Valby"
+  | "Sydhavn"
   | "Nordvest"
   | "Nordhavn"
   | "Hellerup"
