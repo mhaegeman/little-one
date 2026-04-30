@@ -11,7 +11,7 @@ export function LanguagePreferenceCard() {
       <div className="flex items-start gap-3">
         <span
           aria-hidden="true"
-          className="grid h-9 w-9 place-items-center rounded-lg bg-sage-100 text-sage-700"
+          className="grid h-9 w-9 place-items-center rounded-lg bg-mint-50 text-mint-ink"
         >
           <Translate size={18} weight="duotone" />
         </span>

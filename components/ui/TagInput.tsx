@@ -59,19 +59,19 @@ export function TagInput({
     <div className={className}>
       <div
         onClick={() => inputRef.current?.focus()}
-        className="flex flex-wrap items-center gap-1 rounded-lg bg-surface p-1.5 ring-1 ring-border focus-within:ring-2 focus-within:ring-sage-400"
+        className="flex flex-wrap items-center gap-1 rounded-lg bg-surface p-1.5 ring-1 ring-border focus-within:ring-2 focus-within:ring-mint-300"
       >
         {value.map((tag) => (
           <span
             key={tag}
-            className="inline-flex items-center gap-1 rounded-pill bg-sage-100 px-2 py-0.5 text-2xs font-semibold text-sage-700 ring-1 ring-sage-200"
+            className="inline-flex items-center gap-1 rounded-pill bg-mint-50 px-2 py-0.5 text-2xs font-semibold text-mint-ink ring-1 ring-mint-100"
           >
             {tag}
             <button
               type="button"
               onClick={() => remove(tag)}
               aria-label={`Fjern ${tag}`}
-              className="focus-ring grid h-4 w-4 place-items-center rounded-full hover:bg-sage-200"
+              className="focus-ring grid h-4 w-4 place-items-center rounded-full hover:bg-mint-100"
             >
               <X size={9} weight="bold" aria-hidden="true" />
             </button>
@@ -100,7 +100,7 @@ export function TagInput({
               type="button"
               onClick={() => commit(suggestion)}
               className={cn(
-                "focus-ring inline-flex items-center gap-0.5 rounded-pill bg-sunken px-2 py-0.5 text-2xs font-semibold text-muted ring-1 ring-hairline transition-colors hover:bg-sand-100 hover:text-ink",
+                "focus-ring inline-flex items-center gap-0.5 rounded-pill bg-sunken px-2 py-0.5 text-2xs font-semibold text-muted ring-1 ring-hairline transition-colors hover:bg-canvas hover:text-ink",
                 value.length >= max && "cursor-not-allowed opacity-50"
               )}
               disabled={value.length >= max}

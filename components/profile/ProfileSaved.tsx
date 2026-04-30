@@ -43,7 +43,7 @@ export function ProfileSaved() {
     <section className="space-y-3">
       <div className="flex items-end justify-between gap-3">
         <div>
-          <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">
+          <p className="text-2xs font-bold uppercase tracking-[0.16em] text-peach-300">
             Gemte steder
           </p>
           <h2 className="font-display text-xl font-semibold text-ink">
@@ -53,7 +53,7 @@ export function ProfileSaved() {
         <button
           type="button"
           onClick={() => setClearOpen(true)}
-          className="focus-ring text-2xs font-bold uppercase tracking-wide text-warm-600 hover:text-warm-700"
+          className="focus-ring text-2xs font-bold uppercase tracking-wide text-peach-ink hover:text-peach-ink"
         >
           Ryd alle
         </button>

@@ -1,5 +1,6 @@
 import { Heart, MapPin } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { Avatar } from "@/components/ui/Avatar";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 
@@ -53,7 +54,15 @@ export function AppPreview() {
                 />
                 <Eyebrow tone="peach">{t("timelineToday")}</Eyebrow>
                 <div className="mt-2 overflow-hidden rounded-xl ring-1 ring-hairline">
-                  <div className="aspect-[4/3] bg-gradient-to-br from-peach-100 via-butter-100 to-mint-100" />
+                  <div className="relative aspect-[4/3] bg-sunken">
+                    <Image
+                      src="/photography/journal-faelledparken-slide.webp"
+                      alt={t("moment1ImageAlt")}
+                      fill
+                      sizes="(min-width: 1024px) 520px, (min-width: 768px) 60vw, 90vw"
+                      className="object-cover"
+                    />
+                  </div>
                   <div className="bg-surface p-4">
                     <div className="flex items-center gap-1.5 text-xs text-subtle">
                       <MapPin size={12} weight="fill" />

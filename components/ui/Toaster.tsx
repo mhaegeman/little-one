@@ -53,9 +53,9 @@ export function useToast() {
 
 const variantStyles: Record<ToastVariant, string> = {
   info: "bg-surface text-ink ring-hairline",
-  success: "bg-sage-50 text-sage-700 ring-sage-200",
+  success: "bg-mint-50 text-mint-ink ring-mint-100",
   warning: "bg-[#FBF1D9] text-warning ring-[#F0DFB1]",
-  danger: "bg-warm-50 text-danger ring-warm-100"
+  danger: "bg-peach-50 text-danger ring-peach-100"
 };
 
 const variantIcon = {

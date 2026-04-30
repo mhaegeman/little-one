@@ -16,7 +16,7 @@ import {
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ActivityForm } from "@/components/journal/ActivityForm";
 import { JournalCalendar } from "@/components/journal/JournalCalendar";
 import { MilestoneForm } from "@/components/journal/MilestoneForm";
@@ -29,8 +29,20 @@ import { Input } from "@/components/ui/Input";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Sheet } from "@/components/ui/Sheet";
 import { Skeleton } from "@/components/ui/Skeleton";
+import {
+  addReaction,
+  loadReactions,
+  reactionKey,
+  removeReaction
+} from "@/lib/reactions";
 import { createClient } from "@/lib/supabase/client";
-import type { Child, TimelineItem, TimelineItemType } from "@/lib/types";
+import type {
+  Child,
+  Reaction,
+  ReactionKind,
+  TimelineItem,
+  TimelineItemType
+} from "@/lib/types";
 import { cn, formatChildAge } from "@/lib/utils";
 
 type FilterKind = "all" | TimelineItemType;
@@ -64,6 +76,17 @@ export function JournalClient() {
   const [filterKind, setFilterKind] = useState<FilterKind>("all");
   const [filterTag, setFilterTag] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [currentDisplayName, setCurrentDisplayName] = useState<string | null>(
+    null
+  );
+  const [reactionMap, setReactionMap] = useState<Map<string, Reaction[]>>(
+    () => new Map()
+  );
+  // Optimistic reactions whose insert hasn't returned but that the user has
+  // already toggled off. The add path checks this set when the insert
+  // resolves and deletes the just-saved row instead of reflecting it.
+  const pendingDeletionsRef = useRef<Set<string>>(new Set());
 
   const demoTimeline: TimelineItem[] = useMemo(() => [
     {
@@ -89,6 +112,36 @@ export function JournalClient() {
       date: "2026-04-10"
     }
   ], [t]);
+
+  const demoReactionMap = useMemo(() => {
+    const map = new Map<string, Reaction[]>();
+    map.set(reactionKey("activity", "demo-activity-1"), [
+      {
+        id: "demo-reaction-mormor",
+        kind: "heart",
+        userId: "demo-mormor",
+        displayName: "Mormor",
+        createdAt: "2026-04-19T18:12:00Z"
+      },
+      {
+        id: "demo-reaction-morfar",
+        kind: "clap",
+        userId: "demo-morfar",
+        displayName: "Morfar",
+        createdAt: "2026-04-19T18:14:00Z"
+      }
+    ]);
+    map.set(reactionKey("milestone", "demo-milestone-1"), [
+      {
+        id: "demo-reaction-mormor-2",
+        kind: "smile",
+        userId: "demo-mormor",
+        displayName: "Mormor",
+        createdAt: "2026-04-10T20:01:00Z"
+      }
+    ]);
+    return map;
+  }, []);
 
   useEffect(() => {
     const newParam = searchParams.get("new");
@@ -117,6 +170,7 @@ export function JournalClient() {
     if (!client) {
       setChildren([demoChild]);
       setTimeline(demoTimeline);
+      setReactionMap(demoReactionMap);
       setUsingDemo(true);
       setLoading(false);
       return;
@@ -132,11 +186,20 @@ export function JournalClient() {
       setSignedIn(Boolean(session));
 
       if (!session) {
+        setCurrentUserId(null);
+        setCurrentDisplayName(null);
         resetToDemo();
         setLoading(false);
         return;
       }
 
+      setCurrentUserId(session.user.id);
+      const meta = session.user.user_metadata as
+        | { full_name?: string; name?: string; display_name?: string }
+        | undefined;
+      setCurrentDisplayName(
+        meta?.display_name || meta?.full_name || meta?.name || session.user.email || null
+      );
       setUsingDemo(false);
       setSheetMode(null);
 
@@ -149,6 +212,7 @@ export function JournalClient() {
         setChildren([]);
         setActiveChildId("");
         setTimeline([]);
+        setReactionMap(new Map());
         setLoading(false);
         return;
       }
@@ -170,12 +234,13 @@ export function JournalClient() {
       setChildren([demoChild]);
       setActiveChildId(demoChild.id);
       setTimeline(demoTimeline);
+      setReactionMap(demoReactionMap);
       setUsingDemo(true);
       setSheetMode(null);
     }
 
     async function loadTimeline(childId: string) {
-      const [{ data: milestones }, { data: activities }, { data: highlights }] = await Promise.all([
+      const [{ data: milestones }, { data: activities }, { data: highlights }, reactions] = await Promise.all([
         supabase.from("milestones").select("id,type,date,notes,photo_url").eq("child_id", childId),
         supabase
           .from("activities_log")
@@ -184,8 +249,10 @@ export function JournalClient() {
         supabase
           .from("aula_highlights")
           .select("id,title,content,posted_at,photos")
-          .eq("child_id", childId)
+          .eq("child_id", childId),
+        loadReactions(supabase, childId)
       ]);
+      setReactionMap(reactions);
 
       const nextTimeline: TimelineItem[] = [
         ...(milestones ?? []).map((item) => ({
@@ -255,16 +322,136 @@ export function JournalClient() {
 
   const filteredTimeline = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return timeline.filter((item) => {
-      if (filterKind !== "all" && item.type !== filterKind) return false;
-      if (filterTag && !(item.tags ?? []).includes(filterTag)) return false;
-      if (!q) return true;
-      const haystack = `${item.title} ${item.description ?? ""} ${item.badge ?? ""} ${(item.tags ?? []).join(" ")}`.toLowerCase();
-      return haystack.includes(q);
-    });
-  }, [timeline, filterKind, filterTag, search]);
+    return timeline
+      .filter((item) => {
+        if (filterKind !== "all" && item.type !== filterKind) return false;
+        if (filterTag && !(item.tags ?? []).includes(filterTag)) return false;
+        if (!q) return true;
+        const haystack = `${item.title} ${item.description ?? ""} ${item.badge ?? ""} ${(item.tags ?? []).join(" ")}`.toLowerCase();
+        return haystack.includes(q);
+      })
+      .map((item) => ({
+        ...item,
+        reactions: reactionMap.get(reactionKey(item.type, item.id)) ?? []
+      }));
+  }, [timeline, filterKind, filterTag, search, reactionMap]);
 
   const filtersActive = filterKind !== "all" || filterTag !== null || search.length > 0;
+
+  const reactorIdentity = useMemo(() => {
+    if (currentUserId) {
+      return { userId: currentUserId, displayName: currentDisplayName };
+    }
+    if (usingDemo) {
+      return { userId: "demo-self", displayName: t("reactions.demoActor") };
+    }
+    return null;
+  }, [currentUserId, currentDisplayName, usingDemo, t]);
+
+  async function handleToggleReaction(item: TimelineItem, kind: ReactionKind) {
+    if (item.type === "aula") return;
+    if (!reactorIdentity) return;
+    const key = reactionKey(item.type, item.id);
+    const existing = reactionMap.get(key) ?? [];
+    const mine = existing.find(
+      (reaction) =>
+        reaction.kind === kind && reaction.userId === reactorIdentity.userId
+    );
+
+    if (mine) {
+      // Optimistic remove
+      const next = new Map(reactionMap);
+      next.set(
+        key,
+        existing.filter((reaction) => reaction.id !== mine.id)
+      );
+      setReactionMap(next);
+
+      if (currentUserId) {
+        // The reaction's insert may still be in flight — its id is a
+        // `local-*` placeholder and isn't a row on the server yet. Mark it
+        // for deletion in the add path's success handler instead of firing
+        // a no-op DELETE that races the pending INSERT.
+        if (mine.id.startsWith("local-")) {
+          pendingDeletionsRef.current.add(mine.id);
+          return;
+        }
+        const supabase = createClient();
+        if (supabase) {
+          const ok = await removeReaction(supabase, mine.id);
+          if (!ok) {
+            // Revert on failure
+            setReactionMap((current) => {
+              const reverted = new Map(current);
+              reverted.set(key, existing);
+              return reverted;
+            });
+          }
+        }
+      }
+      return;
+    }
+
+    // Optimistic add
+    const optimistic: Reaction = {
+      id: `local-${crypto.randomUUID()}`,
+      kind,
+      userId: reactorIdentity.userId,
+      displayName: reactorIdentity.displayName,
+      createdAt: new Date().toISOString()
+    };
+    const nextList = [...existing, optimistic];
+    const next = new Map(reactionMap);
+    next.set(key, nextList);
+    setReactionMap(next);
+
+    if (currentUserId) {
+      const supabase = createClient();
+      if (!supabase) return;
+      const saved = await addReaction(supabase, {
+        childId: activeChildId,
+        entryType: item.type,
+        entryId: item.id,
+        kind,
+        userId: currentUserId,
+        displayName: reactorIdentity.displayName
+      });
+
+      // The user toggled the reaction back off while the insert was in
+      // flight (handleToggleReaction took the `local-*` branch and
+      // recorded the optimistic id here). Honour that by deleting the
+      // just-saved row and leaving local state alone — it already shows
+      // the reaction as removed.
+      if (pendingDeletionsRef.current.delete(optimistic.id)) {
+        if (saved) {
+          await removeReaction(supabase, saved.id);
+        }
+        return;
+      }
+
+      if (saved) {
+        // Replace optimistic with saved
+        setReactionMap((current) => {
+          const swapped = new Map(current);
+          const list = swapped.get(key) ?? [];
+          swapped.set(
+            key,
+            list.map((reaction) =>
+              reaction.id === optimistic.id ? saved : reaction
+            )
+          );
+          return swapped;
+        });
+      } else {
+        // Revert on failure
+        setReactionMap((current) => {
+          const reverted = new Map(current);
+          reverted.set(key, existing);
+          return reverted;
+        });
+      }
+    }
+  }
 
   if (loading) {
     return (
@@ -329,27 +516,27 @@ export function JournalClient() {
         {welcome ? (
           <section
             role="status"
-            className="mt-4 flex flex-wrap items-start gap-3 rounded-card bg-sage-50 p-4 ring-1 ring-sage-200"
+            className="mt-4 flex flex-wrap items-start gap-3 rounded-card bg-mint-50 p-4 ring-1 ring-mint-100"
           >
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sage-100 text-sage-700">
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-mint-50 text-mint-ink">
               <Confetti size={20} weight="fill" aria-hidden="true" />
             </span>
             <div className="min-w-0 flex-1">
-              <h2 className="font-display text-lg font-semibold text-sage-700">
+              <h2 className="font-display text-lg font-semibold text-mint-ink">
                 {t("welcomeTitle")}
               </h2>
-              <p className="mt-0.5 text-sm leading-6 text-sage-700/85">
+              <p className="mt-0.5 text-sm leading-6 text-mint-ink/85">
                 {t("welcomeBody")}
               </p>
               {welcome.children > 0 || welcome.invites > 0 ? (
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {welcome.children > 0 ? (
-                    <span className="rounded-pill bg-white/70 px-2.5 py-0.5 text-2xs font-semibold text-sage-700">
+                    <span className="rounded-pill bg-white/70 px-2.5 py-0.5 text-2xs font-semibold text-mint-ink">
                       {t("welcomeChildren", { count: welcome.children })}
                     </span>
                   ) : null}
                   {welcome.invites > 0 ? (
-                    <span className="rounded-pill bg-white/70 px-2.5 py-0.5 text-2xs font-semibold text-sage-700">
+                    <span className="rounded-pill bg-white/70 px-2.5 py-0.5 text-2xs font-semibold text-mint-ink">
                       {t("welcomeInvites", { count: welcome.invites })}
                     </span>
                   ) : null}
@@ -360,7 +547,7 @@ export function JournalClient() {
               type="button"
               onClick={() => setWelcome(null)}
               aria-label={t("welcomeDismiss")}
-              className="focus-ring grid h-7 w-7 shrink-0 place-items-center rounded-md text-sage-700/70 hover:bg-white/60 hover:text-sage-700"
+              className="focus-ring grid h-7 w-7 shrink-0 place-items-center rounded-md text-mint-ink/70 hover:bg-white/60 hover:text-mint-ink"
             >
               <X size={13} weight="bold" aria-hidden="true" />
             </button>
@@ -377,7 +564,7 @@ export function JournalClient() {
                 className="h-14 w-14 rounded-2xl object-cover ring-2 ring-canvas"
               />
             ) : (
-              <span className="grid h-14 w-14 place-items-center rounded-2xl bg-sage-100 text-sage-700">
+              <span className="grid h-14 w-14 place-items-center rounded-2xl bg-mint-50 text-mint-ink">
                 <Baby size={26} weight="duotone" aria-hidden="true" />
               </span>
             )}
@@ -561,7 +748,15 @@ export function JournalClient() {
               }
             />
           ) : (
-            <Timeline items={filteredTimeline} />
+            <Timeline
+              items={filteredTimeline}
+              currentUserId={reactorIdentity?.userId ?? null}
+              onToggleReaction={
+                reactorIdentity
+                  ? (item, kind) => handleToggleReaction(item, kind)
+                  : undefined
+              }
+            />
           )}
         </section>
 

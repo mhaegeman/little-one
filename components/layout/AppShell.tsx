@@ -78,7 +78,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <button
           type="button"
           onClick={() => setPaletteOpen(true)}
-          className="focus-ring mt-3 flex h-9 items-center gap-2 rounded-lg bg-sunken px-2.5 text-xs text-muted ring-1 ring-hairline transition-colors hover:bg-sand-100 hover:text-ink"
+          className="focus-ring mt-3 flex h-9 items-center gap-2 rounded-lg bg-sunken px-2.5 text-xs text-muted ring-1 ring-hairline transition-colors hover:bg-canvas hover:text-ink"
           aria-label="Søg (cmd+k)"
         >
           <MagnifyingGlass size={14} weight="bold" aria-hidden="true" />

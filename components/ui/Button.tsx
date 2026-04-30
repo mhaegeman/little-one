@@ -26,8 +26,8 @@ const variants: Record<ButtonVariant, string> = {
     "bg-surface text-ink ring-1 ring-border hover:bg-sunken hover:ring-mint-200",
   ghost: "bg-transparent text-ink hover:bg-sunken",
   soft: "bg-sunken text-ink hover:bg-mint-50",
-  subtle: "bg-sunken text-ink hover:bg-sand-200",
-  danger: "bg-danger text-white hover:bg-warm-600 active:bg-warm-700"
+  subtle: "bg-sunken text-ink hover:bg-hairline",
+  danger: "bg-danger text-white hover:bg-peach-ink active:bg-peach-ink"
 };
 
 const sizes: Record<ButtonSize, string> = {

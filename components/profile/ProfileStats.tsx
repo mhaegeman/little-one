@@ -79,25 +79,25 @@ export function ProfileStats() {
   return (
     <section className="rounded-card bg-surface p-4 ring-1 ring-hairline">
       <div className="mb-2 flex items-center gap-1.5">
-        <TrendUp size={14} weight="bold" className="text-sage-700" aria-hidden="true" />
+        <TrendUp size={14} weight="bold" className="text-mint-ink" aria-hidden="true" />
         <h2 className="font-display text-base font-semibold text-ink">Din uge</h2>
       </div>
       <dl className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         <Stat
-          icon={<Heart size={14} weight="fill" className="text-warm-500" aria-hidden="true" />}
+          icon={<Heart size={14} weight="fill" className="text-peach-300" aria-hidden="true" />}
           label="Gemte"
           value={stats.saved}
         />
         <Stat
           icon={
-            <CalendarDots size={14} weight="fill" className="text-sage-700" aria-hidden="true" />
+            <CalendarDots size={14} weight="fill" className="text-mint-ink" aria-hidden="true" />
           }
           label="Planlagte"
           value={stats.planned}
         />
         <Stat
           icon={
-            <CalendarDots size={14} weight="fill" className="text-warm-600" aria-hidden="true" />
+            <CalendarDots size={14} weight="fill" className="text-peach-ink" aria-hidden="true" />
           }
           label="Denne uge"
           value={stats.upcomingThisWeek}

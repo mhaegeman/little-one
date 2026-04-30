@@ -70,7 +70,7 @@ export function FamilyChildren({ userId, locale }: Props) {
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="flex items-center gap-1.5 font-display text-lg font-semibold text-ink">
-            <Baby size={16} weight="fill" className="text-warm-500" aria-hidden="true" />
+            <Baby size={16} weight="fill" className="text-peach-300" aria-hidden="true" />
             {copy.title}
           </h2>
           <p className="mt-1 text-sm leading-6 text-muted">{copy.subtitle}</p>
@@ -113,7 +113,7 @@ export function FamilyChildren({ userId, locale }: Props) {
                     className="h-10 w-10 rounded-lg object-cover ring-2 ring-surface"
                   />
                 ) : (
-                  <span className="grid h-10 w-10 place-items-center rounded-lg bg-surface font-display text-sm font-semibold text-warm-600 ring-2 ring-surface">
+                  <span className="grid h-10 w-10 place-items-center rounded-lg bg-surface font-display text-sm font-semibold text-peach-ink ring-2 ring-surface">
                     {initials || "?"}
                   </span>
                 )}

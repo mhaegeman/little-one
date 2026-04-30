@@ -166,7 +166,7 @@ export function PhotoUploader({
         <button
           type="button"
           onClick={() => setShowUrl((v) => !v)}
-          className="focus-ring text-2xs font-semibold text-warm-600 hover:text-warm-700"
+          className="focus-ring text-2xs font-semibold text-peach-ink hover:text-peach-ink"
         >
           {showUrl ? t("useUpload") : t("pasteLink")}
         </button>
@@ -205,7 +205,7 @@ export function PhotoUploader({
             type="button"
             onClick={addUrl}
             disabled={!urlValue.trim() || !canAdd}
-            className="focus-ring inline-flex h-10 items-center rounded-lg bg-sage-500 px-3 text-xs font-semibold text-white transition-colors hover:bg-sage-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="focus-ring inline-flex h-10 items-center rounded-lg bg-mint-300 px-3 text-xs font-semibold text-white transition-colors hover:bg-mint-ink disabled:cursor-not-allowed disabled:opacity-50"
           >
             {t("addUrl")}
           </button>
@@ -220,7 +220,7 @@ export function PhotoUploader({
           onDrop={onDrop}
           className={cn(
             "relative flex flex-col items-center justify-center gap-1 rounded-lg border border-dashed bg-sunken/40 px-3 py-5 text-center transition-colors",
-            dragOver ? "border-sage-400 bg-sage-50" : "border-border"
+            dragOver ? "border-mint-300 bg-mint-50" : "border-border"
           )}
         >
           <input
@@ -239,7 +239,7 @@ export function PhotoUploader({
                 size={18}
                 weight="bold"
                 aria-hidden="true"
-                className="animate-spin text-sage-700"
+                className="animate-spin text-mint-ink"
               />
               <span className="text-xs font-semibold text-muted">
                 {t("uploading")} {progress > 0 ? `${progress}%` : ""}
@@ -247,7 +247,7 @@ export function PhotoUploader({
             </>
           ) : (
             <>
-              <span className="grid h-8 w-8 place-items-center rounded-lg bg-surface text-sage-700 ring-1 ring-hairline">
+              <span className="grid h-8 w-8 place-items-center rounded-lg bg-surface text-mint-ink ring-1 ring-hairline">
                 <UploadSimple size={14} weight="bold" aria-hidden="true" />
               </span>
               <span className="text-xs font-semibold text-ink">

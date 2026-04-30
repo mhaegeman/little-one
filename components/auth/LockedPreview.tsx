@@ -26,10 +26,10 @@ export function LockedPreview({
     <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
       <div className="mx-auto max-w-2xl">
         <section className="rounded-card bg-surface p-6 ring-1 ring-hairline">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-sage-50 text-sage-700 ring-1 ring-sage-100">
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-mint-50 text-mint-ink ring-1 ring-mint-50">
             <LockKey size={18} weight="fill" aria-hidden="true" />
           </span>
-          <p className="mt-4 text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">
+          <p className="mt-4 text-2xs font-bold uppercase tracking-[0.16em] text-peach-300">
             {eyebrow}
           </p>
           <h1 className="mt-1 font-display text-3xl font-semibold leading-tight text-ink">
@@ -42,7 +42,7 @@ export function LockedPreview({
                 <Sparkle
                   size={13}
                   weight="fill"
-                  className="mt-1 shrink-0 text-warm-500"
+                  className="mt-1 shrink-0 text-peach-300"
                   aria-hidden="true"
                 />
                 <span>{bullet}</span>
@@ -51,7 +51,7 @@ export function LockedPreview({
           </ul>
           <Link
             href={href}
-            className="focus-ring mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-sage-500 px-4 text-sm font-semibold text-white shadow-sm transition-colors duration-150 ease-nordic hover:bg-sage-600 active:bg-sage-700"
+            className="focus-ring mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-mint-300 px-4 text-sm font-semibold text-white shadow-sm transition-colors duration-150 ease-nordic hover:bg-mint-ink active:bg-mint-ink"
           >
             {cta}
             <ArrowRight size={15} weight="bold" aria-hidden="true" />

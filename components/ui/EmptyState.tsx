@@ -22,7 +22,7 @@ export function EmptyState({
       )}
     >
       {icon ? (
-        <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-sunken text-warm-500">
+        <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-sunken text-peach-300">
           {icon}
         </div>
       ) : null}

@@ -36,7 +36,7 @@ export function ProfileRecommendations({ profile, onTunePreferences }: Props) {
       <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">{t("eyebrow")}</p>
+            <p className="text-2xs font-bold uppercase tracking-[0.16em] text-peach-300">{t("eyebrow")}</p>
             <h2 className="mt-0.5 font-display text-2xl font-semibold text-ink">
               {hasAnyPrefs ? t("tailoredTitle") : t("popularTitle")}
             </h2>
@@ -55,7 +55,7 @@ export function ProfileRecommendations({ profile, onTunePreferences }: Props) {
         {hasAnyPrefs ? (
           <div className="mt-3 flex flex-wrap items-center gap-1">
             {profile?.interests.map((category) => (
-              <Badge key={category} variant="sage">
+              <Badge key={category} variant="mint">
                 {tTaxonomy(category as VenueCategory)}
               </Badge>
             ))}
@@ -79,7 +79,7 @@ export function ProfileRecommendations({ profile, onTunePreferences }: Props) {
 
       <section>
         <div className="mb-2 flex items-center gap-2">
-          <Sparkle size={14} weight="fill" className="text-warm-500" aria-hidden="true" />
+          <Sparkle size={14} weight="fill" className="text-peach-300" aria-hidden="true" />
           <h3 className="font-display text-lg font-semibold text-ink">{t("venuesTitle")}</h3>
         </div>
         <div className="grid gap-3 xl:grid-cols-2">
@@ -91,7 +91,7 @@ export function ProfileRecommendations({ profile, onTunePreferences }: Props) {
 
       <section>
         <div className="mb-2 flex items-center gap-2">
-          <CalendarDots size={14} weight="fill" className="text-warm-500" aria-hidden="true" />
+          <CalendarDots size={14} weight="fill" className="text-peach-300" aria-hidden="true" />
           <h3 className="font-display text-lg font-semibold text-ink">{t("eventsTitle")}</h3>
         </div>
         {eventPicks.length === 0 ? (
@@ -113,7 +113,7 @@ export function ProfileRecommendations({ profile, onTunePreferences }: Props) {
                 </div>
                 <h4 className="font-display text-base font-semibold text-ink">{event.title}</h4>
                 <p className="line-clamp-2 text-sm leading-5 text-muted">{event.description}</p>
-                <p className="text-xs font-semibold text-sage-700">
+                <p className="text-xs font-semibold text-mint-ink">
                   {formatLocalizedDate(event.dateStart, locale, t("eventDatePattern"))}
                 </p>
                 {event.bookingUrl ? (
@@ -121,7 +121,7 @@ export function ProfileRecommendations({ profile, onTunePreferences }: Props) {
                     href={event.bookingUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="focus-ring inline-flex items-center gap-1 text-xs font-semibold text-warm-600 hover:text-warm-700"
+                    className="focus-ring inline-flex items-center gap-1 text-xs font-semibold text-peach-ink hover:text-peach-ink"
                   >
                     {t("readMore")}
                     <ArrowSquareOut size={11} weight="bold" aria-hidden="true" />
