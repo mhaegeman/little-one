@@ -57,13 +57,12 @@ export default async function OnboardingPage({
     redirect(next);
   }
 
-  // Invitees who landed here directly own no family — send them to /profile.
-  // The /auth/callback path also marks their onboarding complete, but if they
-  // somehow reach this page, fall through gracefully.
+  // The wizard is owner-only: it edits the family and creates invites, both
+  // gated by RLS to the owner. Non-owners (invitees who somehow landed here
+  // directly) get redirected — /auth/callback already marks their onboarding
+  // complete on invite acceptance.
   const ownedFamily =
-    memberships.find((entry) => entry.role === "owner")?.family ??
-    memberships[0]?.family ??
-    null;
+    memberships.find((entry) => entry.role === "owner")?.family ?? null;
 
   if (!ownedFamily) {
     redirect(next);

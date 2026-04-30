@@ -42,10 +42,12 @@ export function FamilyChildren({ userId, locale }: Props) {
       setLoading(false);
       return;
     }
+    // No user_id filter: RLS already scopes this to children the current user
+    // can see (their own + co-members of the same family), so an invitee gets
+    // the shared family roster, not just children they personally created.
     const { data } = await supabase
       .from("children")
       .select("id,name,date_of_birth,photo_url")
-      .eq("user_id", userId)
       .order("date_of_birth", { ascending: true });
     setChildren(
       (data ?? []).map((row) => ({
