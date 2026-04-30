@@ -455,25 +455,25 @@ function pinSvg(category: VenueCategory, selected: boolean) {
 }
 
 function categoryHex(category: VenueCategory) {
-  // Aligned with the new sage/warm palette
+  // Pastel Toy-Box palette — distinct hue per category for map markers.
   switch (category) {
     case "cafe":
-      return "#C46A40"; // warm
+      return "#E89A75"; // peach-300
     case "playground":
-      return "#5B8377"; // sage
+      return "#79B98A"; // mint-300
     case "indoor_play":
-      return "#B47A1F"; // warning
+      return "#6E4F0D"; // butter-ink
     case "cinema":
-      return "#3F6F84"; // info
+      return "#1F4254"; // sky-ink
     case "library":
-      return "#8C6B40"; // sand-700
+      return "#E5B441"; // butter-300
     case "swimming":
-      return "#2D6670"; // teal-info
+      return "#74A4BF"; // sky-300
     case "theatre":
-      return "#A55432"; // warm-600
+      return "#7A3A1E"; // peach-ink
     case "event":
-      return "#C46A40"; // warm
+      return "#1F4D32"; // mint-ink
     default:
-      return "#33554C"; // sage-700
+      return "#2A2723"; // ink
   }
 }

@@ -76,7 +76,7 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
               <button
                 type="button"
                 onClick={() => onJumpTo("preferences")}
-                className="focus-ring mt-1.5 inline-flex items-center gap-1 rounded-pill bg-sunken px-2.5 py-1 text-xs font-semibold text-muted ring-1 ring-hairline hover:bg-sand-100"
+                className="focus-ring mt-1.5 inline-flex items-center gap-1 rounded-pill bg-sunken px-2.5 py-1 text-xs font-semibold text-muted ring-1 ring-hairline hover:bg-canvas"
               >
                 <Heart size={12} weight="fill" aria-hidden="true" />
                 {t("chooseCategories")}
@@ -84,7 +84,7 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
             ) : (
               <div className="mt-1.5 flex flex-wrap gap-1">
                 {interests.map((category) => (
-                  <Badge key={category} variant="sage">
+                  <Badge key={category} variant="mint">
                     {tTaxonomy(category as VenueCategory)}
                   </Badge>
                 ))}
@@ -100,7 +100,7 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
               <button
                 type="button"
                 onClick={() => onJumpTo("preferences")}
-                className="focus-ring mt-1.5 inline-flex items-center gap-1 rounded-pill bg-sunken px-2.5 py-1 text-xs font-semibold text-muted ring-1 ring-hairline hover:bg-sand-100"
+                className="focus-ring mt-1.5 inline-flex items-center gap-1 rounded-pill bg-sunken px-2.5 py-1 text-xs font-semibold text-muted ring-1 ring-hairline hover:bg-canvas"
               >
                 <MapPinArea size={12} weight="fill" aria-hidden="true" />
                 {t("addNeighbourhoods")}

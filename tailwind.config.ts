@@ -70,17 +70,6 @@ const config: Config = {
         primary: { DEFAULT: "#79B98A", ink: "#1F4D32" },
         accent: { DEFAULT: "#E89A75", ink: "#7A3A1E" },
 
-        // ─────────────────────────────────────────────────────────────
-        // Legacy `sand` scale — kept until remaining ui/* callsites
-        // migrate to canvas/sunken/border. Sage and warm have been
-        // retired; do not reintroduce them.
-        sand: {
-          50: "#FBF7EF",
-          100: "#F4EFE2",
-          200: "#E8DDC2",
-          300: "#D8C8A0"
-        },
-
         // Status (kept; could be re-keyed to Pastel inks later)
         success: "#1F4D32",
         warning: "#6E4F0D",

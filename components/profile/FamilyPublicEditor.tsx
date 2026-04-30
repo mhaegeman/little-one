@@ -398,7 +398,7 @@ function VisibilityCard({
         "focus-ring rounded-lg p-3 text-left ring-1 transition-colors",
         active
           ? "bg-mint-50 text-mint-ink ring-mint-200"
-          : "bg-sunken text-ink ring-hairline hover:bg-sand-100"
+          : "bg-sunken text-ink ring-hairline hover:bg-canvas"
       )}
     >
       <p className="text-2xs font-bold uppercase tracking-[0.12em] text-muted">

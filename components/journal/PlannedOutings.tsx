@@ -186,7 +186,7 @@ export function PlannedOutings({ childId, onAdd }: Props) {
                   });
                 }}
                 aria-label={t("removePlan", { name: venue.name })}
-                className="focus-ring grid h-8 w-8 place-items-center rounded-md text-muted hover:bg-sand-100 hover:text-peach-ink"
+                className="focus-ring grid h-8 w-8 place-items-center rounded-md text-muted hover:bg-canvas hover:text-peach-ink"
               >
                 <X size={12} weight="bold" aria-hidden="true" />
               </button>

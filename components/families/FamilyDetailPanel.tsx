@@ -305,7 +305,7 @@ export function FamilyDetailPanel({ familyId }: Props) {
               <img src={profile.coverUrl ?? ""} alt="" className="h-full w-full object-cover" />
             </div>
           ) : (
-            <div className="h-20 bg-gradient-to-br from-mint-50 via-canvas to-sand-100" />
+            <div className="h-20 bg-gradient-to-br from-mint-50 via-canvas to-sunken" />
           )}
 
           <div className="p-5 sm:p-6">

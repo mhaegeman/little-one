@@ -55,7 +55,7 @@ export function ProfileRecommendations({ profile, onTunePreferences }: Props) {
         {hasAnyPrefs ? (
           <div className="mt-3 flex flex-wrap items-center gap-1">
             {profile?.interests.map((category) => (
-              <Badge key={category} variant="sage">
+              <Badge key={category} variant="mint">
                 {tTaxonomy(category as VenueCategory)}
               </Badge>
             ))}

@@ -371,7 +371,7 @@ export function CommandPalette({
                         isActive
                           ? "bg-mint-50 text-mint-ink"
                           : isRecent
-                            ? "bg-sand-100 text-muted"
+                            ? "bg-sunken text-muted"
                             : item.kind === "action"
                               ? "bg-peach-50 text-peach-ink"
                               : "bg-sunken text-muted"

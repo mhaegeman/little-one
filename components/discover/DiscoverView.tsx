@@ -185,7 +185,7 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
           description={t("subtitle")}
           action={
             <div className="flex items-center gap-2">
-              <Badge variant="sage">{t("results", { count: filteredVenues.length })}</Badge>
+              <Badge variant="mint">{t("results", { count: filteredVenues.length })}</Badge>
               {process.env.NODE_ENV !== "production" ? (
                 <Link
                   href="/admin/map-tool"
@@ -258,7 +258,7 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
           <button
             type="button"
             onClick={() => setFiltersOpen(true)}
-            className="focus-ring inline-flex h-10 items-center gap-2 rounded-lg bg-sunken px-3 text-sm font-semibold text-ink ring-1 ring-hairline transition-colors hover:bg-sand-100"
+            className="focus-ring inline-flex h-10 items-center gap-2 rounded-lg bg-sunken px-3 text-sm font-semibold text-ink ring-1 ring-hairline transition-colors hover:bg-canvas"
           >
             <Faders size={15} weight="bold" aria-hidden="true" />
             {t("filters")}

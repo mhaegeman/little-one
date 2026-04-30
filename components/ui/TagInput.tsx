@@ -100,7 +100,7 @@ export function TagInput({
               type="button"
               onClick={() => commit(suggestion)}
               className={cn(
-                "focus-ring inline-flex items-center gap-0.5 rounded-pill bg-sunken px-2 py-0.5 text-2xs font-semibold text-muted ring-1 ring-hairline transition-colors hover:bg-sand-100 hover:text-ink",
+                "focus-ring inline-flex items-center gap-0.5 rounded-pill bg-sunken px-2 py-0.5 text-2xs font-semibold text-muted ring-1 ring-hairline transition-colors hover:bg-canvas hover:text-ink",
                 value.length >= max && "cursor-not-allowed opacity-50"
               )}
               disabled={value.length >= max}

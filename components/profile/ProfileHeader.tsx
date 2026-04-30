@@ -51,7 +51,7 @@ export function ProfileHeader({ email, profile, familyCount, ownerCount, onEdit 
                 className="h-20 w-20 rounded-2xl object-cover ring-4 ring-surface sm:h-24 sm:w-24"
               />
             ) : (
-              <span className="grid h-20 w-20 place-items-center rounded-2xl bg-sand-100 font-display text-2xl font-semibold text-mint-ink ring-4 ring-surface sm:h-24 sm:w-24">
+              <span className="grid h-20 w-20 place-items-center rounded-2xl bg-sunken font-display text-2xl font-semibold text-mint-ink ring-4 ring-surface sm:h-24 sm:w-24">
                 {initials || <UserCircle size={28} weight="duotone" aria-hidden="true" />}
               </span>
             )}

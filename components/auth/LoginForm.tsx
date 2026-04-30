@@ -227,7 +227,7 @@ export function LoginForm({
     >
       {invite ? (
         <div className="mb-4 rounded-card bg-mint-ink p-4 text-white">
-          <div className="flex items-center gap-2 text-sand-100">
+          <div className="flex items-center gap-2 text-canvas">
             <HandHeart size={16} weight="fill" aria-hidden="true" />
             <p className="text-2xs font-bold uppercase tracking-[0.16em]">
               {locale === "da" ? "Familie-invitation" : "Family invite"}
