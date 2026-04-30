@@ -342,7 +342,7 @@ const baseVenues: Venue[] = [
     description:
       "Farverigt byrum på Nørrebro med gynger, bevægelse, plads til løbecykler og masser at kigge på.",
     category: "playground",
-    address: "Nørrebrogade / Heimdalsgade, 2200 København N",
+    address: "Mimersgade 19, 2200 København N",
     lat: 55.6997,
     lng: 12.5429,
     ageMinMonths: 12,
@@ -392,7 +392,7 @@ const baseVenues: Venue[] = [
     description:
       "Cykeltema i Fælledparken med små veje, skilte og gratis lånecykler til børn, der øver trafik og balance.",
     category: "playground",
-    address: "Fælledparken, Gunnar Nu Hansens Plads, 2100 København Ø",
+    address: "Gunnar Nu Hansens Plads 1, 2100 København Ø",
     lat: 55.7072,
     lng: 12.5686,
     ageMinMonths: 24,
@@ -974,7 +974,7 @@ const baseVenues: Venue[] = [
     description:
       "Københavnsk børneteater for de mindste med forestillinger ofte anbefalet fra 2 år.",
     category: "theatre",
-    address: "Lavendelstræde 5-7, 1462 København K",
+    address: "Lavendelstræde 5, 1462 København K",
     lat: 55.6774,
     lng: 12.5742,
     ageMinMonths: 24,
@@ -1221,7 +1221,7 @@ const baseVenues: Venue[] = [
     description:
       "Little House i Sydhavn med café, legeborg og babyvenlige aktiviteter under ét tag, ideelt til barselsmøder og tumlingeleg.",
     category: "cafe",
-    address: "Pladehals Allé 28 st., 2450 København SV",
+    address: "Pladehals Allé 28, 2450 København SV",
     lat: 55.6487,
     lng: 12.5376,
     ageMinMonths: 0,
