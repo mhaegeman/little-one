@@ -6,6 +6,8 @@ import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { Logo } from "@/app/(marketing)/_components/Logo";
+import { Avatar, AvatarStack } from "@/components/ui/Avatar";
+import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import { createClient } from "@/lib/supabase/server";
 
 type SearchParams = Record<string, string | string[] | undefined>;
@@ -52,22 +54,26 @@ export default async function AuthPage({
   const effectiveLocale: "da" | "en" = locale === "en" ? "en" : "da";
   const t = await getTranslations("auth");
   const tProfile = await getTranslations("profilePage");
+  const tHero = await getTranslations("marketing.hero");
   const backLabel = effectiveLocale === "da" ? "Tilbage" : "Back";
 
   return (
     <div className="min-h-dvh bg-canvas text-ink">
       <header className="sticky top-0 z-30 border-b border-hairline/70 bg-canvas/85 backdrop-blur-md supports-[backdrop-filter]:bg-canvas/70">
-        <div className="mx-auto flex h-16 max-w-[1240px] items-center justify-between px-5 md:px-10">
+        <div className="mx-auto flex h-16 max-w-[1240px] items-center justify-between gap-3 px-5 md:px-10">
           <Link href="/" aria-label="Lille Liv" className="focus-ring rounded-md">
             <Logo />
           </Link>
-          <Link
-            href="/"
-            className="focus-ring inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium text-muted transition-colors hover:text-ink"
-          >
-            <ArrowLeft size={14} weight="bold" aria-hidden="true" />
-            <span>{backLabel}</span>
-          </Link>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <LanguageSwitcher />
+            <Link
+              href="/"
+              className="focus-ring inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium text-muted transition-colors hover:text-ink"
+            >
+              <ArrowLeft size={14} weight="bold" aria-hidden="true" />
+              <span>{backLabel}</span>
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -116,6 +122,24 @@ export default async function AuthPage({
                 body={tProfile("magicLinkBody")}
               />
             </ul>
+
+            <div className="mt-7 flex items-center gap-3 text-sm text-subtle">
+              <AvatarStack>
+                <Avatar tone="peach" size="sm" ring>
+                  MK
+                </Avatar>
+                <Avatar tone="butter" size="sm" ring>
+                  SO
+                </Avatar>
+                <Avatar tone="mint" size="sm" ring>
+                  AN
+                </Avatar>
+                <Avatar tone="sky" size="sm" ring>
+                  BI
+                </Avatar>
+              </AvatarStack>
+              <span>{tHero("socialProof")}</span>
+            </div>
           </section>
 
           <div>

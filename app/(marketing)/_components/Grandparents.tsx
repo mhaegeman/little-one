@@ -56,7 +56,7 @@ export function Grandparents() {
           </ul>
           <div className="mt-8">
             <Link
-              href="/profile?next=/families"
+              href="/auth?mode=signup&next=/families"
               className={buttonClass({ variant: "accent", size: "lg" })}
             >
               <span>{t("cta")}</span>

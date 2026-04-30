@@ -58,13 +58,13 @@ export function MarketingNav() {
 
         <div className="hidden items-center gap-2 md:flex">
           <Link
-            href="/profile"
+            href="/auth"
             className={buttonClass({ variant: "ghost", size: "sm" })}
           >
             {t("login")}
           </Link>
           <Link
-            href="/profile?next=/journal"
+            href="/auth?mode=signup&next=/journal"
             className={buttonClass({ variant: "primary", size: "sm" })}
           >
             {t("createFamily")}
@@ -111,7 +111,7 @@ export function MarketingNav() {
             )}
             <div className="mt-2 flex items-center gap-2">
               <Link
-                href="/profile"
+                href="/auth"
                 onClick={() => setOpen(false)}
                 className={buttonClass({
                   variant: "ghost",
@@ -122,7 +122,7 @@ export function MarketingNav() {
                 {t("login")}
               </Link>
               <Link
-                href="/profile?next=/journal"
+                href="/auth?mode=signup&next=/journal"
                 onClick={() => setOpen(false)}
                 className={buttonClass({
                   variant: "primary",

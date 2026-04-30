@@ -44,7 +44,7 @@ export function Hero() {
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
-              href="/profile?next=/journal"
+              href="/auth?mode=signup&next=/journal"
               className={buttonClass({ variant: "primary", size: "xl" })}
             >
               <span>{t("ctaPrimary")}</span>
