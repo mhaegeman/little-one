@@ -23,8 +23,13 @@ const SCENE_COUNT = SCENE_DURATIONS.length;
 
 function subscribeReducedMotion(callback: () => void) {
   const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
-  mql.addEventListener("change", callback);
-  return () => mql.removeEventListener("change", callback);
+  // Safari < 14 / older iOS Safari only ship the deprecated addListener API.
+  if (typeof mql.addEventListener === "function") {
+    mql.addEventListener("change", callback);
+    return () => mql.removeEventListener("change", callback);
+  }
+  mql.addListener(callback);
+  return () => mql.removeListener(callback);
 }
 function getReducedMotionSnapshot() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
