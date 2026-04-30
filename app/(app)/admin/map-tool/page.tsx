@@ -1,13 +1,18 @@
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { notFound, redirect } from "next/navigation";
 import { MapEditTool } from "@/components/admin/MapEditTool";
 import { isAdminUser } from "@/lib/auth/admin";
 import { venues } from "@/lib/data/venues";
 import { createClient } from "@/lib/db/supabase/server";
 
-export const metadata = {
-  title: "Map editor · Lille Liv",
-  robots: { index: false, follow: false }
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("adminMapTool");
+  return {
+    title: `${t("metaTitle")} · Lille Liv`,
+    robots: { index: false, follow: false }
+  };
+}
 
 export default async function MapToolPage() {
   const supabase = await createClient();

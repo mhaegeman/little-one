@@ -1,7 +1,8 @@
 {
   "app": {
     "name": "Lille Liv",
-    "tagline": "Copenhagen family life, gently organized."
+    "tagline": "Copenhagen family life, gently organized.",
+    "languageSwitcherLabel": "Language"
   },
   "nav": {
     "discover": "Discover",
@@ -290,6 +291,7 @@
   },
   "families": {
     "eyebrow": "Families",
+    "metaTitle": "Families",
     "title": "Families in your neighbourhood",
     "description": "Connect with other families and plan outings together in your part of town.",
     "loginRequiredTitle": "Login required",
@@ -559,6 +561,7 @@
     "signedOut": "You are signed out."
   },
   "profilePage": {
+    "metaTitle": "Profile",
     "loggedOutEyebrow": "Profile",
     "loggedOutTitle": "A personal space for the family",
     "loggedOutBody": "Sign in with a magic link and open a private hub: profile, preferences, recommendations and a shared family space.",
@@ -680,6 +683,27 @@
     "readMore": "Read more",
     "eventDatePattern": "EEEE d MMM yyyy 'at' HH:mm"
   },
+  "onboarding": {
+    "metaTitle": "Create your family"
+  },
+  "adminMapTool": {
+    "metaTitle": "Map editor"
+  },
+  "invite": {
+    "notFoundTitle": "Invitation not found",
+    "notFoundBody": "The link is expired or invalid. Ask the sender to issue a new one.",
+    "expiredTitle": "This invitation is no longer active",
+    "expiredBodyAccepted": "It has already been used.",
+    "expiredBodyOther": "It has expired or been withdrawn. Ask the family for a new invitation.",
+    "eyebrow": "You're invited",
+    "headline": "{inviter} invited you to {family}",
+    "welcomeFamily": "Welcome to {family}",
+    "welcomeFallback": "Welcome to the family",
+    "body": "Lille Liv is a private space for everyday family life — milestones, little moments, photos and outings, gathered for you.",
+    "messageFromInviter": "A note from {inviter}",
+    "messageFromFamily": "A note from the family",
+    "privacy": "We store your data in EU regions with strict access rules. You can leave the family at any time."
+  },
   "venuePage": {
     "backLabel": "Discover",
     "ageLabel": "Age",
@@ -688,7 +712,9 @@
     "addressLabel": "Address",
     "photoCreditsLabel": "Photo credits",
     "photoCreditBy": "by {author}",
-    "photoCreditVia": "via {source}"
+    "photoCreditVia": "via {source}",
+    "googleMapsLabel": "Google Maps",
+    "websiteLabel": "Website"
   },
   "planVisit": {
     "buttonLabel": "Plan a visit",

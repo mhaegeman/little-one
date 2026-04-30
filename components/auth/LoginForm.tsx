@@ -61,6 +61,7 @@ const COPY = {
     notConfigured: "Supabase mangler miljøvariabler.",
     error: "Det gik ikke. Prøv igen om lidt.",
     privacy: "EU-hosted Supabase · Vi gemmer ingen Aula-adgangskoder.",
+    inviteEyebrow: "Familie-invitation",
     inviteHeadline: "{inviter} har inviteret dig til {family}",
     inviteFallback: "Du er inviteret til en familie",
     inviteIntro: "Bekræft din e-mail med et loginlink, så åbner vi familiens delte rum.",
@@ -97,6 +98,7 @@ const COPY = {
     notConfigured: "Supabase environment variables are missing.",
     error: "Something went wrong. Please try again.",
     privacy: "EU-hosted Supabase · We never store Aula passwords.",
+    inviteEyebrow: "Family invite",
     inviteHeadline: "{inviter} invited you to {family}",
     inviteFallback: "You're invited to a family",
     inviteIntro: "Confirm your email with a sign-in link and we'll open the shared family space.",
@@ -278,7 +280,7 @@ export function LoginForm({
           <div className="flex items-center gap-2 text-canvas">
             <HandHeart size={16} weight="fill" aria-hidden="true" />
             <p className="text-2xs font-bold uppercase tracking-[0.16em]">
-              {locale === "da" ? "Familie-invitation" : "Family invite"}
+              {copy.inviteEyebrow}
             </p>
           </div>
           <h2 className="mt-1.5 font-display text-xl font-semibold leading-tight">

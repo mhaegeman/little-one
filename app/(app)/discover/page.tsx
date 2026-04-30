@@ -1,7 +1,17 @@
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { DiscoverView } from "@/components/discover/DiscoverView";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { events, venues } from "@/lib/data/venues";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("discover");
+  return {
+    title: `${t("title")} · Lille Liv`,
+    description: t("subtitle")
+  };
+}
 
 export default function DiscoverPage() {
   return (

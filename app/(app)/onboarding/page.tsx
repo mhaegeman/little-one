@@ -1,8 +1,16 @@
-import { getLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { getLocale, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { FamilyOnboardingWizard } from "@/components/onboarding/FamilyOnboardingWizard";
 import { loadFamiliesForUser, loadOwnProfile } from "@/lib/services/family";
 import { createClient } from "@/lib/db/supabase/server";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("onboarding");
+  return {
+    title: `${t("metaTitle")} · Lille Liv`
+  };
+}
 
 type SearchParams = Record<string, string | string[] | undefined>;
 

@@ -159,13 +159,13 @@ export default async function VenuePage({ params }: VenuePageProps) {
                   >
                     <Button variant="secondary" className="w-full">
                       <NavigationArrow size={14} weight="fill" aria-hidden="true" />
-                      Google Maps
+                      {t("googleMapsLabel")}
                     </Button>
                   </Link>
                   <Link href={venue.website ?? "#"} target="_blank" className="sm:flex-1">
                     <Button variant="ghost" className="w-full">
                       <ArrowSquareOut size={14} weight="bold" aria-hidden="true" />
-                      Website
+                      {t("websiteLabel")}
                     </Button>
                   </Link>
                 </div>
