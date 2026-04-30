@@ -55,13 +55,15 @@ If the user has a working DB, do **not** re-seed unless they ask — `npm run db
 
 Use whichever interactive driver is available, **in this order of preference**:
 
-1. **Playwright MCP** (`mcp__playwright__*`) — full click/scroll/screenshot. Best.
+1. **Playwright MCP** (`mcp__playwright__*`) — full click/scroll/screenshot. Best. **This repo ships a `.mcp.json` at the root that configures `@playwright/mcp` in headless mode.** On first session use, the user must approve the MCP server (one prompt). The first run also downloads Chromium (~150MB); if `npx` can't reach the registry, run `npx playwright install chromium` manually once.
 2. **Chrome DevTools MCP / browser-use MCP** — same idea, different vendor.
 3. **`WebFetch`** against `$BASE_URL/...` (the URL captured in step 2) — read-only HTML/text. Cannot click; use to verify routes render, redirects work, status codes, meta tags, server-rendered copy, missing-translation strings.
 4. **`curl`** via Bash — for status codes, headers, JSON API responses, redirects.
 5. **Code-only fallback** — read the page/component source, the matching service in `lib/services/`, and the i18n keys in `messages/`. Prefix issues with `[Static analysis]` and lower confidence accordingly.
 
 If only #3–#5 are available, **tell the user up front** that you can't perform real clicks/scrolls and ask whether to proceed in static-analysis mode or wait for a browser tool.
+
+When Playwright MCP is available, prefer it for: filling and submitting the magic-link form, clicking marker clusters / cluster-zoom edge cases on `/discover`, exercising photo upload paths on `/journal` and `/profile`, dialog focus-trap and `Esc`-to-close checks, mobile viewport via `mcp__playwright__resize`, and capturing console errors / network 4xx-5xx for evidence in issue bodies.
 
 ### 4. Walk the routes
 
