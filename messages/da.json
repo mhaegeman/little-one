@@ -118,6 +118,18 @@
       "clearSearch": "Ryd søgning",
       "clearTag": "Ryd tag"
     },
+    "reactions": {
+      "add": "Reager",
+      "pickerLabel": "Vælg en reaktion",
+      "demoActor": "Dig",
+      "kind": {
+        "heart": "Hjerte",
+        "clap": "Klap",
+        "smile": "Smil",
+        "star": "Stjerne"
+      },
+      "kindCount": "{kind} · {count, plural, one {# reaktion} other {# reaktioner}}"
+    },
     "form": {
       "fieldTitle": "Titel",
       "fieldDate": "Dato",

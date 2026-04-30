@@ -109,6 +109,18 @@
     "filterLabel": "Filter timeline",
     "visitedPrefix": "Visited {name}",
     "entryCount": "{count, plural, one {# entry} other {# entries}}",
+    "reactions": {
+      "add": "React",
+      "pickerLabel": "Pick a reaction",
+      "demoActor": "You",
+      "kind": {
+        "heart": "Heart",
+        "clap": "Clap",
+        "smile": "Smile",
+        "star": "Star"
+      },
+      "kindCount": "{kind} · {count, plural, one {# reaction} other {# reactions}}"
+    },
     "filter": {
       "all": "All",
       "milestones": "Milestones",

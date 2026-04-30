@@ -28,8 +28,20 @@ import { Input } from "@/components/ui/Input";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Sheet } from "@/components/ui/Sheet";
 import { Skeleton } from "@/components/ui/Skeleton";
+import {
+  addReaction,
+  loadReactions,
+  reactionKey,
+  removeReaction
+} from "@/lib/reactions";
 import { createClient } from "@/lib/supabase/client";
-import type { Child, TimelineItem, TimelineItemType } from "@/lib/types";
+import type {
+  Child,
+  Reaction,
+  ReactionKind,
+  TimelineItem,
+  TimelineItemType
+} from "@/lib/types";
 import { cn, formatChildAge } from "@/lib/utils";
 
 type FilterKind = "all" | TimelineItemType;
@@ -57,6 +69,13 @@ export function JournalClient() {
   const [filterKind, setFilterKind] = useState<FilterKind>("all");
   const [filterTag, setFilterTag] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [currentDisplayName, setCurrentDisplayName] = useState<string | null>(
+    null
+  );
+  const [reactionMap, setReactionMap] = useState<Map<string, Reaction[]>>(
+    () => new Map()
+  );
 
   const demoTimeline: TimelineItem[] = useMemo(() => [
     {
@@ -83,6 +102,36 @@ export function JournalClient() {
     }
   ], [t]);
 
+  const demoReactionMap = useMemo(() => {
+    const map = new Map<string, Reaction[]>();
+    map.set(reactionKey("activity", "demo-activity-1"), [
+      {
+        id: "demo-reaction-mormor",
+        kind: "heart",
+        userId: "demo-mormor",
+        displayName: "Mormor",
+        createdAt: "2026-04-19T18:12:00Z"
+      },
+      {
+        id: "demo-reaction-morfar",
+        kind: "clap",
+        userId: "demo-morfar",
+        displayName: "Morfar",
+        createdAt: "2026-04-19T18:14:00Z"
+      }
+    ]);
+    map.set(reactionKey("milestone", "demo-milestone-1"), [
+      {
+        id: "demo-reaction-mormor-2",
+        kind: "smile",
+        userId: "demo-mormor",
+        displayName: "Mormor",
+        createdAt: "2026-04-10T20:01:00Z"
+      }
+    ]);
+    return map;
+  }, []);
+
   useEffect(() => {
     const newParam = searchParams.get("new");
     if (newParam === "milestone" || newParam === "activity") {
@@ -96,6 +145,7 @@ export function JournalClient() {
     if (!client) {
       setChildren([demoChild]);
       setTimeline(demoTimeline);
+      setReactionMap(demoReactionMap);
       setUsingDemo(true);
       setLoading(false);
       return;
@@ -111,11 +161,20 @@ export function JournalClient() {
       setSignedIn(Boolean(session));
 
       if (!session) {
+        setCurrentUserId(null);
+        setCurrentDisplayName(null);
         resetToDemo();
         setLoading(false);
         return;
       }
 
+      setCurrentUserId(session.user.id);
+      const meta = session.user.user_metadata as
+        | { full_name?: string; name?: string; display_name?: string }
+        | undefined;
+      setCurrentDisplayName(
+        meta?.display_name || meta?.full_name || meta?.name || session.user.email || null
+      );
       setUsingDemo(false);
       setSheetMode(null);
 
@@ -128,6 +187,7 @@ export function JournalClient() {
         setChildren([]);
         setActiveChildId("");
         setTimeline([]);
+        setReactionMap(new Map());
         setLoading(false);
         return;
       }
@@ -149,12 +209,13 @@ export function JournalClient() {
       setChildren([demoChild]);
       setActiveChildId(demoChild.id);
       setTimeline(demoTimeline);
+      setReactionMap(demoReactionMap);
       setUsingDemo(true);
       setSheetMode(null);
     }
 
     async function loadTimeline(childId: string) {
-      const [{ data: milestones }, { data: activities }, { data: highlights }] = await Promise.all([
+      const [{ data: milestones }, { data: activities }, { data: highlights }, reactions] = await Promise.all([
         supabase.from("milestones").select("id,type,date,notes,photo_url").eq("child_id", childId),
         supabase
           .from("activities_log")
@@ -163,8 +224,10 @@ export function JournalClient() {
         supabase
           .from("aula_highlights")
           .select("id,title,content,posted_at,photos")
-          .eq("child_id", childId)
+          .eq("child_id", childId),
+        loadReactions(supabase, childId)
       ]);
+      setReactionMap(reactions);
 
       const nextTimeline: TimelineItem[] = [
         ...(milestones ?? []).map((item) => ({
@@ -234,16 +297,115 @@ export function JournalClient() {
 
   const filteredTimeline = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return timeline.filter((item) => {
-      if (filterKind !== "all" && item.type !== filterKind) return false;
-      if (filterTag && !(item.tags ?? []).includes(filterTag)) return false;
-      if (!q) return true;
-      const haystack = `${item.title} ${item.description ?? ""} ${item.badge ?? ""} ${(item.tags ?? []).join(" ")}`.toLowerCase();
-      return haystack.includes(q);
-    });
-  }, [timeline, filterKind, filterTag, search]);
+    return timeline
+      .filter((item) => {
+        if (filterKind !== "all" && item.type !== filterKind) return false;
+        if (filterTag && !(item.tags ?? []).includes(filterTag)) return false;
+        if (!q) return true;
+        const haystack = `${item.title} ${item.description ?? ""} ${item.badge ?? ""} ${(item.tags ?? []).join(" ")}`.toLowerCase();
+        return haystack.includes(q);
+      })
+      .map((item) => ({
+        ...item,
+        reactions: reactionMap.get(reactionKey(item.type, item.id)) ?? []
+      }));
+  }, [timeline, filterKind, filterTag, search, reactionMap]);
 
   const filtersActive = filterKind !== "all" || filterTag !== null || search.length > 0;
+
+  const reactorIdentity = useMemo(() => {
+    if (currentUserId) {
+      return { userId: currentUserId, displayName: currentDisplayName };
+    }
+    if (usingDemo) {
+      return { userId: "demo-self", displayName: t("reactions.demoActor") };
+    }
+    return null;
+  }, [currentUserId, currentDisplayName, usingDemo, t]);
+
+  async function handleToggleReaction(item: TimelineItem, kind: ReactionKind) {
+    if (item.type === "aula") return;
+    if (!reactorIdentity) return;
+    const key = reactionKey(item.type, item.id);
+    const existing = reactionMap.get(key) ?? [];
+    const mine = existing.find(
+      (reaction) =>
+        reaction.kind === kind && reaction.userId === reactorIdentity.userId
+    );
+
+    if (mine) {
+      // Optimistic remove
+      const next = new Map(reactionMap);
+      next.set(
+        key,
+        existing.filter((reaction) => reaction.id !== mine.id)
+      );
+      setReactionMap(next);
+
+      if (currentUserId) {
+        const supabase = createClient();
+        if (supabase) {
+          const ok = await removeReaction(supabase, mine.id);
+          if (!ok) {
+            // Revert on failure
+            setReactionMap((current) => {
+              const reverted = new Map(current);
+              reverted.set(key, existing);
+              return reverted;
+            });
+          }
+        }
+      }
+      return;
+    }
+
+    // Optimistic add
+    const optimistic: Reaction = {
+      id: `local-${crypto.randomUUID()}`,
+      kind,
+      userId: reactorIdentity.userId,
+      displayName: reactorIdentity.displayName,
+      createdAt: new Date().toISOString()
+    };
+    const nextList = [...existing, optimistic];
+    const next = new Map(reactionMap);
+    next.set(key, nextList);
+    setReactionMap(next);
+
+    if (currentUserId) {
+      const supabase = createClient();
+      if (!supabase) return;
+      const saved = await addReaction(supabase, {
+        childId: activeChildId,
+        entryType: item.type,
+        entryId: item.id,
+        kind,
+        userId: currentUserId,
+        displayName: reactorIdentity.displayName
+      });
+      if (saved) {
+        // Replace optimistic with saved
+        setReactionMap((current) => {
+          const swapped = new Map(current);
+          const list = swapped.get(key) ?? [];
+          swapped.set(
+            key,
+            list.map((reaction) =>
+              reaction.id === optimistic.id ? saved : reaction
+            )
+          );
+          return swapped;
+        });
+      } else {
+        // Revert on failure
+        setReactionMap((current) => {
+          const reverted = new Map(current);
+          reverted.set(key, existing);
+          return reverted;
+        });
+      }
+    }
+  }
 
   if (loading) {
     return (
@@ -315,7 +477,7 @@ export function JournalClient() {
                 className="h-14 w-14 rounded-2xl object-cover ring-2 ring-canvas"
               />
             ) : (
-              <span className="grid h-14 w-14 place-items-center rounded-2xl bg-sage-100 text-sage-700">
+              <span className="grid h-14 w-14 place-items-center rounded-2xl bg-mint-50 text-mint-ink">
                 <Baby size={26} weight="duotone" aria-hidden="true" />
               </span>
             )}
@@ -499,7 +661,15 @@ export function JournalClient() {
               }
             />
           ) : (
-            <Timeline items={filteredTimeline} />
+            <Timeline
+              items={filteredTimeline}
+              currentUserId={reactorIdentity?.userId ?? null}
+              onToggleReaction={
+                reactorIdentity
+                  ? (item, kind) => handleToggleReaction(item, kind)
+                  : undefined
+              }
+            />
           )}
         </section>
 

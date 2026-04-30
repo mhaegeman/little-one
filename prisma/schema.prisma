@@ -80,6 +80,22 @@ enum FamilyInviteStatus {
   @@map("family_invite_status")
 }
 
+enum ReactionEntryType {
+  milestone
+  activity
+
+  @@map("reaction_entry_type")
+}
+
+enum ReactionKind {
+  heart
+  clap
+  smile
+  star
+
+  @@map("reaction_kind")
+}
+
 model FamilyProfile {
   userId             String     @id @map("user_id") @db.Uuid
   displayName        String?    @map("display_name")
@@ -296,4 +312,20 @@ model AulaHighlight {
   @@index([childId, postedAt])
   @@unique([childId, aulaPostId])
   @@map("aula_highlights")
+}
+
+model JournalReaction {
+  id          String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  childId     String            @map("child_id") @db.Uuid
+  entryType   ReactionEntryType @map("entry_type")
+  entryId     String            @map("entry_id") @db.Uuid
+  userId      String            @map("user_id") @db.Uuid
+  kind        ReactionKind
+  displayName String?           @map("display_name")
+  createdAt   DateTime          @default(now()) @map("created_at")
+
+  @@unique([entryType, entryId, userId, kind])
+  @@index([childId, createdAt])
+  @@index([entryType, entryId])
+  @@map("journal_reactions")
 }
