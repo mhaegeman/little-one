@@ -3,13 +3,13 @@
 > tsx scripts/geocode-venues.ts
 
 Geocoding 62 venue(s) against Nominatim
-Mode: dry-run | threshold: 250 m
+Mode: dry-run | threshold: 10000 m
 
 [ 1/62] → the-living-room              Δ 217m  [place/house]  The Living Room
 [ 2/62] → granola                      Δ  10m  [place/house]  Granola
-[ 3/62] ! absalon                      Δ 557m  [place/house]  Absalon
+[ 3/62] → absalon                      Δ 557m  [place/house]  Absalon
 [ 4/62] → bar50-danhostel              Δ 179m  [place/house]  BAR50 Child-friendly Cafe
-[ 5/62] ! mad-og-kaffe-vesterbro       Δ 394m  [place/house]  Mad & Kaffe Vesterbro
+[ 5/62] → mad-og-kaffe-vesterbro       Δ 394m  [place/house]  Mad & Kaffe Vesterbro
 [ 6/62] ✗ superkilen — no Nominatim match for "Nørrebrogade / Heimdalsgade, 2200 København N"
 [ 7/62] ✗ taarnlegepladsen — no Nominatim match for "Fælledparken, 2100 København Ø"
 [ 8/62] ✗ trafiklegepladsen — no Nominatim match for "Fælledparken, Gunnar Nu Hansens Plads, 2100 København Ø"
@@ -17,25 +17,25 @@ Mode: dry-run | threshold: 250 m
 [10/62] → valbyparken-naturlegeplads   Δ 225m  [place/house]  Naturlegepladsen i Valbyparken
 [11/62] ! konditaget-luders            Δ 312m  [highway/residential]  Konditaget Lüders
 [12/62] ✗ havnegade-trampoliner — no Nominatim match for "Havnegade, 1058 København K"
-[13/62] ! skydebanehaven               Δ 273m  [place/house]  Skydebanehaven
+[13/62] → skydebanehaven               Δ 273m  [place/house]  Skydebanehaven
 [14/62] ✗ amager-strandpark — no Nominatim match for "Amager Strand Promenaden, 2300 København S"
 [15/62] → experimentarium              Δ 227m  [place/house]  Experimentarium
-[16/62] ! dinos-legeland               Δ1.37km  [place/house]  Dinos Legeland
-[17/62] ! remisen                      Δ 890m  [place/house]  Remisen
-[18/62] ! ku-be                        Δ1.10km  [place/house]  KU.BE
+[16/62] → dinos-legeland               Δ1.37km  [place/house]  Dinos Legeland
+[17/62] → remisen                      Δ 890m  [place/house]  Remisen
+[18/62] → ku-be                        Δ1.10km  [place/house]  KU.BE
 [19/62] → den-blaa-planet              Δ 139m  [place/house]  Den Blå Planet
 [20/62] → boernenes-museum             Δ  38m  [place/house]  Børnenes Museum
-[21/62] ! cinemateket                  Δ 251m  [place/house]  Cinemateket
+[21/62] → cinemateket                  Δ 251m  [place/house]  Cinemateket
 [22/62] → hovedbiblioteket-laes        Δ  54m  [place/house]  Hovedbiblioteket LÆS
-[23/62] ! biblioteket-rentemestervej   Δ 763m  [place/house]  BIBLIOTEKET Rentemestervej
-[24/62] ! oesterbro-bibliotek          Δ1.28km  [place/house]  Østerbro Bibliotek
+[23/62] → biblioteket-rentemestervej   Δ 763m  [place/house]  BIBLIOTEKET Rentemestervej
+[24/62] → oesterbro-bibliotek          Δ1.28km  [place/house]  Østerbro Bibliotek
 [25/62] → frederiksberg-hovedbibliotek Δ  84m  [place/house]  Frederiksberg Hovedbibliotek
-[26/62] ! valby-bibliotek              Δ 524m  [place/house]  Valby Bibliotek
-[27/62] ! bibliotekshuset              Δ1.14km  [place/house]  Bibliotekshuset
-[28/62] ! dgi-byen-svoemning           Δ 316m  [place/house]  DGI Byen Svømmehal
-[29/62] ! valby-vandkulturhus          Δ1.54km  [place/house]  Valby Vandkulturhus
-[30/62] ! oebro-hallen                 Δ 420m  [place/house]  Øbro-Hallen
-[31/62] ! bellahoej-svoemmestadion     Δ 944m  [place/house]  Bellahøj Svømmestadion
+[26/62] → valby-bibliotek              Δ 524m  [place/house]  Valby Bibliotek
+[27/62] → bibliotekshuset              Δ1.14km  [place/house]  Bibliotekshuset
+[28/62] → dgi-byen-svoemning           Δ 316m  [place/house]  DGI Byen Svømmehal
+[29/62] → valby-vandkulturhus          Δ1.54km  [place/house]  Valby Vandkulturhus
+[30/62] → oebro-hallen                 Δ 420m  [place/house]  Øbro-Hallen
+[31/62] → bellahoej-svoemmestadion     Δ 944m  [place/house]  Bellahøj Svømmestadion
 [32/62] ✗ det-lille-teater — no Nominatim match for "Lavendelstræde 5-7, 1462 København K"
 [33/62] ✗ marionet-teatret — no Nominatim match for "Kongens Have, 1350 København K"
 [34/62] → eventyrteatret-tivoli        Δ 175m  [place/house]  Eventyrteatret i Tivoli
@@ -43,214 +43,64 @@ Mode: dry-run | threshold: 250 m
 [36/62] → copenhagen-zoo               Δ 147m  [place/house]  København Zoo
 [37/62] → tivoli-gardens               Δ 193m  [place/house]  Tivoli
 [38/62] → little-house-oesterbro       Δ  90m  [place/house]  Little House Østerbro
-[39/62] ! little-house-noerrebro       Δ 833m  [place/house]  Little House Nørrebro
-[40/62] ! little-house-amager          Δ2.58km  [place/house]  Little House Amager
-[41/62] ! little-house-valby           Δ 305m  [place/house]  Little House Valby
+[39/62] → little-house-noerrebro       Δ 833m  [place/house]  Little House Nørrebro
+[40/62] → little-house-amager          Δ2.58km  [place/house]  Little House Amager
+[41/62] → little-house-valby           Δ 305m  [place/house]  Little House Valby
 [42/62] ✗ little-house-sydhavn — no Nominatim match for "Pladehals Allé 28 st., 2450 København SV"
 [43/62] → paludan-bogcafe              Δ 153m  [place/house]  Paludan Bogcafé
-[44/62] ! frederiksberg-have           Δ 340m  [place/house]  Frederiksberg Have
+[44/62] → frederiksberg-have           Δ 340m  [place/house]  Frederiksberg Have
 [45/62] ! soendermarken                Δ 995m  [highway/residential]  Søndermarken
-[46/62] ! karens-minde-kulturhus       Δ 593m  [place/house]  Karens Minde Kulturhus
-[47/62] ! bavnehoej-friluftsbad        Δ 462m  [place/house]  Bavnehøj Friluftsbad
-[48/62] ! sydhavnstippen               Δ 597m  [place/house]  Sydhavnstippen
+[46/62] → karens-minde-kulturhus       Δ 593m  [place/house]  Karens Minde Kulturhus
+[47/62] → bavnehoej-friluftsbad        Δ 462m  [place/house]  Bavnehøj Friluftsbad
+[48/62] → sydhavnstippen               Δ 597m  [place/house]  Sydhavnstippen
 [49/62] ! utterslev-mose               Δ1.61km  [information/board]  Utterslev Mose
 [50/62] → botanisk-have                Δ  69m  [place/house]  Botanisk Have
-[51/62] ! assistens-kirkegaard         Δ 676m  [place/house]  Assistens Kirkegård
-[52/62] ! oerstedsparken               Δ 438m  [place/house]  Ørstedsparken
-[53/62] ! ishoj-strandpark             Δ3.33km  [highway/secondary]  Ishøj Strandpark
-[54/62] ! havnebadet-islands-brygge    Δ 355m  [place/house]  Havnebadet Islands Brygge
-[55/62] ! dyrehaven                    Δ2.00km  [highway/bus_stop]  Dyrehaven
-[56/62] ! bellevue-strand              Δ1.26km  [place/house]  Bellevue Strand
+[51/62] → assistens-kirkegaard         Δ 676m  [place/house]  Assistens Kirkegård
+[52/62] → oerstedsparken               Δ 438m  [place/house]  Ørstedsparken
+[53/62] ! ishoj-strandpark             Δ4.03km  [highway/secondary]  Ishøj Strandpark
+[54/62] → havnebadet-islands-brygge    Δ1.12km  [place/house]  Havnebadet Islands Brygge
+[55/62] ! dyrehaven                    Δ2.04km  [highway/bus_stop]  Dyrehaven
+[56/62] → bellevue-strand              Δ1.26km  [place/house]  Bellevue Strand
 [57/62] → bakken                       Δ 164m  [place/house]  Bakken (Dyrehavsbakken)
 [58/62] → louisiana-museum             Δ 215m  [place/house]  Louisiana Museum of Modern Art
-[59/62] ! vikingeskibsmuseet           Δ 309m  [place/house]  Vikingeskibsmuseet
-[60/62] ! frilandsmuseet               Δ2.25km  [place/house]  Frilandsmuseet
-[61/62] ! arken-museum                 Δ6.36km  [place/house]  ARKEN Museum for Moderne Kunst
-[62/62] ! copenhagen-contemporary      Δ 344m  [place/house]  Copenhagen Contemporary
+[59/62] → vikingeskibsmuseet           Δ 309m  [place/house]  Vikingeskibsmuseet
+[60/62] → frilandsmuseet               Δ2.25km  [place/house]  Frilandsmuseet
+[61/62] → arken-museum                 Δ6.36km  [place/house]  ARKEN Museum for Moderne Kunst
+[62/62] → copenhagen-contemporary      Δ 344m  [place/house]  Copenhagen Contemporary
 
 === Summary ===
-Already aligned (Δ < 1m):   0
-Within threshold (eligible): 18
-Flagged (Δ > 250m):       35
+Already aligned (Δ < 1m):    0
+Eligible to apply:           48
+Flagged (coarse / over cap): 5
 No Nominatim match:          9
 Errors:                      0
 
 Flagged venues — review manually in /admin/map-tool:
-  • absalon  Δ 557m  Absalon
-      addr:      Sønder Boulevard 73, 1720 København V
-      current:   55.6688, 12.5438
-      nominatim: 55.66539, 12.550313  [place/house]
-      OSM says:  73, Sønder Boulevard, Den Gule By, Vesterbro, København, Københavns Kommune, Region Hovedstaden, 1720, Danmark
-  • mad-og-kaffe-vesterbro  Δ 394m  Mad & Kaffe Vesterbro
-      addr:      Sønder Boulevard 68, 1720 København V
-      current:   55.6686, 12.5463
-      nominatim: 55.665935, 12.550444  [place/house]
-      OSM says:  68, Sønder Boulevard, Den Gule By, Vesterbro, København, Københavns Kommune, Region Hovedstaden, 1720, Danmark
-  • konditaget-luders  Δ 312m  Konditaget Lüders
+  • konditaget-luders  Δ 312m  Konditaget Lüders  — coarse match (highway/residential)
       addr:      Helsinkigade 30, 2150 Nordhavn
       current:   55.711, 12.5968
       nominatim: 55.7081991, 12.5964155  [highway/residential]
       OSM says:  Helsinkigade, Sundmolen, Nordhavn, København, Københavns Kommune, Region Hovedstaden, 2150, Danmark
-  • skydebanehaven  Δ 273m  Skydebanehaven
-      addr:      Absalonsgade 12, 1658 København V
-      current:   55.6709, 12.5498
-      nominatim: 55.671411, 12.554066  [place/house]
-      OSM says:  12, Absalonsgade, Vestervold, Vesterbro, København, Københavns Kommune, Region Hovedstaden, 1658, Danmark
-  • dinos-legeland  Δ1.37km  Dinos Legeland
-      addr:      Industribuen 7C, 2635 Ishøj
-      current:   55.6157, 12.3567
-      nominatim: 55.617989, 12.335259  [place/house]
-      OSM says:  7C, Industribuen, Smågårde, Ishøj Landsby, Ishøj Kommune, Region Hovedstaden, 2635, Danmark
-  • remisen  Δ 890m  Remisen
-      addr:      Blegdamsvej 132A, 2100 København Ø
-      current:   55.7053, 12.5684
-      nominatim: 55.698757, 12.576581  [place/house]
-      OSM says:  132A, Blegdamsvej, Indre Østerbro, Østerbro, København, Københavns Kommune, Region Hovedstaden, 2100, Danmark
-  • ku-be  Δ1.10km  KU.BE
-      addr:      Dirch Passers Allé 4, 2000 Frederiksberg
-      current:   55.6826, 12.5233
-      nominatim: 55.682778, 12.505715  [place/house]
-      OSM says:  4, Dirch Passers Allé, Frederiksberg, Frederiksberg Kommune, Region Hovedstaden, 2000, Danmark
-  • cinemateket  Δ 251m  Cinemateket
-      addr:      Gothersgade 55, 1123 København K
-      current:   55.6836, 12.5825
-      nominatim: 55.683126, 12.578591  [place/house]
-      OSM says:  55, Gothersgade, Nørrevold, Indre By, København, Københavns Kommune, Region Hovedstaden, 1123, Danmark
-  • biblioteket-rentemestervej  Δ 763m  BIBLIOTEKET Rentemestervej
-      addr:      Rentemestervej 76, 2400 København NV
-      current:   55.7118, 12.5335
-      nominatim: 55.708412, 12.522916  [place/house]
-      OSM says:  76, Rentemestervej, Utterslev, Bispebjerg, København, Københavns Kommune, Region Hovedstaden, 2400, Danmark
-  • oesterbro-bibliotek  Δ1.28km  Østerbro Bibliotek
-      addr:      Dag Hammarskjölds Allé 19, 2100 København Ø
-      current:   55.7058, 12.577
-      nominatim: 55.694573, 12.581745  [place/house]
-      OSM says:  19, Dag Hammarskjölds Allé, Østervold, Østerbro, København, Københavns Kommune, Region Hovedstaden, 2100, Danmark
-  • valby-bibliotek  Δ 524m  Valby Bibliotek
-      addr:      Annexstræde 2, 2500 Valby
-      current:   55.6612, 12.5171
-      nominatim: 55.665343, 12.513107  [place/house]
-      OSM says:  2, Annexstræde, Valby, København, Københavns Kommune, Region Hovedstaden, 2500, Danmark
-  • bibliotekshuset  Δ1.14km  Bibliotekshuset
-      addr:      Rodosvej 4, 2300 København S
-      current:   55.6604, 12.6095
-      nominatim: 55.650349, 12.613151  [place/house]
-      OSM says:  4, Rodosvej, Sundbyerne, København, Københavns Kommune, Region Hovedstaden, 2300, Danmark
-  • dgi-byen-svoemning  Δ 316m  DGI Byen Svømmehal
-      addr:      Tietgensgade 65, 1704 København V
-      current:   55.6677, 12.5622
-      nominatim: 55.670058, 12.565019  [place/house]
-      OSM says:  65, Tietgensgade, Postbyen, Vestervold, Kødbyen, København, Københavns Kommune, Region Hovedstaden, 1704, Danmark
-  • valby-vandkulturhus  Δ1.54km  Valby Vandkulturhus
-      addr:      Julius Andersens Vej 1A, 2450 København SV
-      current:   55.6608, 12.5025
-      nominatim: 55.648978, 12.515276  [place/house]
-      OSM says:  1A, Julius Andersens Vej, Valby, København, Københavns Kommune, Region Hovedstaden, 2450, Danmark
-  • oebro-hallen  Δ 420m  Øbro-Hallen
-      addr:      Gunnar Nu Hansens Plads 3, 2100 København Ø
-      current:   55.7077, 12.5721
-      nominatim: 55.704756, 12.576293  [place/house]
-      OSM says:  3, Gunnar Nu Hansens Plads, Indre Østerbro, Østerbro, København, Københavns Kommune, Region Hovedstaden, 2100, Danmark
-  • bellahoej-svoemmestadion  Δ 944m  Bellahøj Svømmestadion
-      addr:      Bellahøjvej 1, 2700 Brønshøj
-      current:   55.7087, 12.5
-      nominatim: 55.706041, 12.514315  [place/house]
-      OSM says:  1, Bellahøjvej, Bellahøj, Brønshøj, København, Københavns Kommune, Region Hovedstaden, 2700, Danmark
-  • little-house-noerrebro  Δ 833m  Little House Nørrebro
-      addr:      Jægersborggade 41, 2200 København N
-      current:   55.6998, 12.5488
-      nominatim: 55.692998, 12.543219  [place/house]
-      OSM says:  41, Jægersborggade, De Gamles By, Nørrebro, København, Københavns Kommune, Region Hovedstaden, 2200, Danmark
-  • little-house-amager  Δ2.58km  Little House Amager
-      addr:      Lindgreens Allé 1, 2300 København S
-      current:   55.6443, 12.6134
-      nominatim: 55.66714, 12.620441  [place/house]
-      OSM says:  1, Lindgreens Allé, Sundbyøster, København, Københavns Kommune, Region Hovedstaden, 2300, Danmark
-  • little-house-valby  Δ 305m  Little House Valby
-      addr:      Pakkerivej 1, 2500 Valby
-      current:   55.6629, 12.5162
-      nominatim: 55.660894, 12.512874  [place/house]
-      OSM says:  1, Pakkerivej, Valby Maskinfabrik, Valby, København, Københavns Kommune, Region Hovedstaden, 2500, Danmark
-  • frederiksberg-have  Δ 340m  Frederiksberg Have
-      addr:      Frederiksberg Runddel 1, 2000 Frederiksberg
-      current:   55.6761, 12.5265
-      nominatim: 55.674661, 12.53128  [place/house]
-      OSM says:  1, Frederiksberg Runddel, Frederiksberg, Frederiksberg Kommune, Region Hovedstaden, 2000, Danmark
-  • soendermarken  Δ 995m  Søndermarken
+  • soendermarken  Δ 995m  Søndermarken  — coarse match (highway/residential)
       addr:      Søndermarken, 2000 Frederiksberg
       current:   55.6764, 12.5128
       nominatim: 55.6682503, 12.5193711  [highway/residential]
       OSM says:  Bag Søndermarken, Frederiksberg, Frederiksberg Kommune, Region Hovedstaden, 1805, Danmark
-  • karens-minde-kulturhus  Δ 593m  Karens Minde Kulturhus
-      addr:      Wagnersvej 19, 2450 København SV
-      current:   55.6506, 12.5362
-      nominatim: 55.646783, 12.529608  [place/house]
-      OSM says:  19, Wagnersvej, Kongens Enghave, København, Københavns Kommune, Region Hovedstaden, 2450, Danmark
-  • bavnehoej-friluftsbad  Δ 462m  Bavnehøj Friluftsbad
-      addr:      Enghavevej 90, 2450 København SV
-      current:   55.6572, 12.5327
-      nominatim: 55.659686, 12.538606  [place/house]
-      OSM says:  90, Enghavevej, Den Gule By, Carlsberg Byen, København, Københavns Kommune, Region Hovedstaden, 2450, Danmark
-  • sydhavnstippen  Δ 597m  Sydhavnstippen
-      addr:      Bådehavnsgade 44, 2450 København SV
-      current:   55.6385, 12.5304
-      nominatim: 55.639751, 12.539643  [place/house]
-      OSM says:  44, Bådehavnsgade, Kongens Enghave, København, Københavns Kommune, Region Hovedstaden, 2450, Danmark
-  • utterslev-mose  Δ1.61km  Utterslev Mose
+  • utterslev-mose  Δ1.61km  Utterslev Mose  — coarse match (information/board)
       addr:      Utterslev Mose, 2700 Brønshøj
       current:   55.7145, 12.5105
       nominatim: 55.7089155, 12.4867894  [information/board]
       OSM says:  Utterslev Mose, Pilesvinget, Brønshøj, København, Københavns Kommune, Region Hovedstaden, 2700, Danmark
-  • assistens-kirkegaard  Δ 676m  Assistens Kirkegård
-      addr:      Kapelvej 4, 2200 København N
-      current:   55.6951, 12.5476
-      nominatim: 55.689628, 12.55231  [place/house]
-      OSM says:  4, Kapelvej, De Gamles By, Nørrebro, København, Københavns Kommune, Region Hovedstaden, 2200, Danmark
-  • oerstedsparken  Δ 438m  Ørstedsparken
-      addr:      Nørre Voldgade 34, 1358 København K
-      current:   55.6841, 12.5651
-      nominatim: 55.680769, 12.568836  [place/house]
-      OSM says:  34, Nørre Voldgade, Nørrevold, Indre By, København, Københavns Kommune, Region Hovedstaden, 1358, Danmark
-  • ishoj-strandpark  Δ3.33km  Ishøj Strandpark
+  • ishoj-strandpark  Δ4.03km  Ishøj Strandpark  — coarse match (highway/secondary)
       addr:      Ishøj Strandvej, 2635 Ishøj
       current:   55.6044, 12.2993
-      nominatim: 55.603032, 12.3522747  [highway/secondary]
+      nominatim: 55.6108946, 12.3623491  [highway/secondary]
       OSM says:  Ishøj Strandvej, Ishøj, Ishøj Kommune, Region Hovedstaden, 2635, Danmark
-  • havnebadet-islands-brygge  Δ 355m  Havnebadet Islands Brygge
-      addr:      Islands Brygge 14, 2300 København S
-      current:   55.6659, 12.5754
-      nominatim: 55.662718, 12.575835  [place/house]
-      OSM says:  14, Sturlasgade, Islands Brygge, Ballonparken, København, Københavns Kommune, Region Hovedstaden, 2300, Danmark
-  • dyrehaven  Δ2.00km  Dyrehaven
+  • dyrehaven  Δ2.04km  Dyrehaven  — coarse match (highway/bus_stop)
       addr:      Dyrehaven, 2930 Klampenborg
       current:   55.7734, 12.5521
-      nominatim: 55.7745164, 12.5840692  [highway/bus_stop]
-      OSM says:  Dyrehaven, Christiansholmsvej, Ordrup, Klampenborg, Gentofte Kommune, Region Hovedstaden, 2930, Danmark
-  • bellevue-strand  Δ1.26km  Bellevue Strand
-      addr:      Strandvejen 340, 2930 Klampenborg
-      current:   55.7672, 12.5947
-      nominatim: 55.778361, 12.591325  [place/house]
-      OSM says:  340, Strandvejen, Klampenborg, Gentofte Kommune, Region Hovedstaden, 2930, Danmark
-  • vikingeskibsmuseet  Δ 309m  Vikingeskibsmuseet
-      addr:      Vindeboder 12, 4000 Roskilde
-      current:   55.6521, 12.0804
-      nominatim: 55.649643, 12.078091  [place/house]
-      OSM says:  12, Vindeboder, Sankt Jørgensbjerg, Sankt Agnes Huse, Roskilde, Roskilde Kommune, Region Sjælland, 4000, Danmark
-  • frilandsmuseet  Δ2.25km  Frilandsmuseet
-      addr:      Kongevejen 100, 2800 Kongens Lyngby
-      current:   55.7994, 12.5167
-      nominatim: 55.785699, 12.490175  [place/house]
-      OSM says:  100, Kongevejen, Fuglevad, Sorgenfri, Kongens Lyngby, Lyngby-Taarbæk Kommune, Region Hovedstaden, 2800, Danmark
-  • arken-museum  Δ6.36km  ARKEN Museum for Moderne Kunst
-      addr:      Skovvej 100, 2635 Ishøj
-      current:   55.6003, 12.2856
-      nominatim: 55.606148, 12.386328  [place/house]
-      OSM says:  100, Skovvej, Ishøj, Ishøj Kommune, Region Hovedstaden, 2635, Danmark
-  • copenhagen-contemporary  Δ 344m  Copenhagen Contemporary
-      addr:      Refshalevej 173A, 1432 København K
-      current:   55.6936, 12.6082
-      nominatim: 55.693492, 12.61368  [place/house]
-      OSM says:  173A, Refshalevej, Refshaleøen, Indre By, København, Københavns Kommune, Region Hovedstaden, 1432, Danmark
+      nominatim: 55.7750786, 12.5845234  [highway/bus_stop]
+      OSM says:  Dyrehaven, Dyrehavevej, Ordrup, Klampenborg, Gentofte Kommune, Region Hovedstaden, 2930, Danmark
 
 No Nominatim match — review manually:
   • superkilen  Nørrebrogade / Heimdalsgade, 2200 København N
@@ -263,4 +113,4 @@ No Nominatim match — review manually:
   • marionet-teatret  Kongens Have, 1350 København K
   • little-house-sydhavn  Pladehals Allé 28 st., 2450 København SV
 
-(Dry-run) Re-run with --apply to write 18 update(s) to lib/data/venues.ts.
+(Dry-run) Re-run with --apply to write 48 update(s) to lib/data/venues.ts.
