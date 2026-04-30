@@ -4,7 +4,7 @@ import { List, X } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useState } from "react";
-import { Button } from "@/components/ui/Button";
+import { buttonClass } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { Logo } from "./Logo";
 
@@ -47,15 +47,17 @@ export function MarketingNav() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          <Link href="/auth">
-            <Button variant="ghost" size="sm">
-              {t("login")}
-            </Button>
+          <Link
+            href="/auth"
+            className={buttonClass({ variant: "ghost", size: "sm" })}
+          >
+            {t("login")}
           </Link>
-          <Link href="/auth">
-            <Button variant="primary" size="sm">
-              {t("createFamily")}
-            </Button>
+          <Link
+            href="/auth"
+            className={buttonClass({ variant: "primary", size: "sm" })}
+          >
+            {t("createFamily")}
           </Link>
         </div>
 
@@ -87,15 +89,25 @@ export function MarketingNav() {
               </a>
             ))}
             <div className="mt-2 flex items-center gap-2">
-              <Link href="/auth" className="flex-1">
-                <Button variant="ghost" size="md" className="w-full">
-                  {t("login")}
-                </Button>
+              <Link
+                href="/auth"
+                className={buttonClass({
+                  variant: "ghost",
+                  size: "md",
+                  className: "flex-1"
+                })}
+              >
+                {t("login")}
               </Link>
-              <Link href="/auth" className="flex-1">
-                <Button variant="primary" size="md" className="w-full">
-                  {t("createFamily")}
-                </Button>
+              <Link
+                href="/auth"
+                className={buttonClass({
+                  variant: "primary",
+                  size: "md",
+                  className: "flex-1"
+                })}
+              >
+                {t("createFamily")}
               </Link>
             </div>
           </nav>

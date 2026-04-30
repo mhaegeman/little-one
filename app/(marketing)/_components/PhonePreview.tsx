@@ -30,13 +30,13 @@ export function PhonePreview() {
 
           <div className="flex gap-1.5 overflow-hidden">
             <Pill tone="mint" size="sm" selected>
-              Legeplads
+              {t("phoneChipPlayground")}
             </Pill>
             <Pill tone="sunken" size="sm">
-              Cafe
+              {t("phoneChipCafe")}
             </Pill>
             <Pill tone="sunken" size="sm">
-              Bibliotek
+              {t("phoneChipLibrary")}
             </Pill>
           </div>
 
@@ -45,7 +45,7 @@ export function PhonePreview() {
               <div>
                 <Eyebrow tone="peach">{t("phoneToday")}</Eyebrow>
                 <div className="mt-1 font-display text-lg leading-tight text-peach-ink">
-                  Sol &amp; vind
+                  {t("phoneTodayWeather")}
                 </div>
               </div>
               <Sun size={28} weight="fill" className="text-peach-300" />
@@ -66,10 +66,10 @@ export function PhonePreview() {
               </div>
               <div className="mt-2 flex gap-1">
                 <Pill tone="sunken" size="sm">
-                  0–3 år
+                  {t("phoneVenue1Age")}
                 </Pill>
                 <Pill tone="sky" size="sm">
-                  Inde
+                  {t("phoneVenue1Indoor")}
                 </Pill>
               </div>
             </div>

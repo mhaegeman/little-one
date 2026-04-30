@@ -2,7 +2,7 @@ import { ArrowRight, Heart, Play } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Avatar, AvatarStack } from "@/components/ui/Avatar";
-import { Button } from "@/components/ui/Button";
+import { Button, buttonClass } from "@/components/ui/Button";
 import { EyebrowBadge } from "@/components/ui/Eyebrow";
 import { PhonePreview } from "./PhonePreview";
 
@@ -43,11 +43,12 @@ export function Hero() {
             {t("lede")}
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link href="/auth">
-              <Button variant="primary" size="xl">
-                <span>{t("ctaPrimary")}</span>
-                <ArrowRight size={18} weight="bold" />
-              </Button>
+            <Link
+              href="/auth"
+              className={buttonClass({ variant: "primary", size: "xl" })}
+            >
+              <span>{t("ctaPrimary")}</span>
+              <ArrowRight size={18} weight="bold" />
             </Link>
             <Button variant="ghost" size="xl">
               <Play size={14} weight="fill" />
