@@ -286,8 +286,17 @@ const NEIGHBOURHOOD_GROUPS: Array<{
   }
 ];
 
+// Format the user's local "today" as YYYY-MM-DD. Using toISOString() here
+// would return the UTC date, which drifts by a day for users in non-UTC
+// timezones (e.g. allows tomorrow in PT evenings, blocks today in JST
+// pre-dawn). The <input type="date"> max attribute expects local-calendar
+// semantics.
 function todayIso() {
-  return new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 type OnboardingDraft = {
@@ -354,12 +363,19 @@ function formatPartialSavedHint(
 
 function ageInYears(dateOfBirth: string): number | null {
   if (!dateOfBirth) return null;
-  const dob = new Date(dateOfBirth);
-  if (Number.isNaN(dob.getTime())) return null;
+  // Parse YYYY-MM-DD as a local-calendar date. `new Date("2025-01-01")` is
+  // parsed as UTC midnight, and reading .getMonth()/.getDate() in non-UTC
+  // timezones would shift the day (and across year boundaries, the year).
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(dateOfBirth);
+  if (!match) return null;
+  const dobYear = Number(match[1]);
+  const dobMonth = Number(match[2]);
+  const dobDay = Number(match[3]);
+  if (!dobYear || !dobMonth || !dobDay) return null;
   const now = new Date();
-  let years = now.getFullYear() - dob.getFullYear();
-  const monthDiff = now.getMonth() - dob.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < dob.getDate())) years -= 1;
+  let years = now.getFullYear() - dobYear;
+  const monthDiff = now.getMonth() + 1 - dobMonth;
+  if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < dobDay)) years -= 1;
   return years;
 }
 
