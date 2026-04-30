@@ -37,6 +37,21 @@ const sizes: Record<ButtonSize, string> = {
   xl: "h-16 px-7 text-base gap-3 rounded-pill"
 };
 
+const baseButtonClass =
+  "focus-ring inline-flex items-center justify-center font-semibold tracking-[-0.005em] transition-all duration-150 ease-nordic disabled:cursor-not-allowed disabled:opacity-50";
+
+export function buttonClass({
+  variant = "primary",
+  size = "md",
+  className
+}: {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  className?: string;
+} = {}) {
+  return cn(baseButtonClass, variants[variant], sizes[size], className);
+}
+
 export function Button({
   className,
   variant = "primary",
@@ -47,13 +62,9 @@ export function Button({
   return (
     <button
       type={type}
-      className={cn(
-        "focus-ring inline-flex items-center justify-center font-semibold tracking-[-0.005em] transition-all duration-150 ease-nordic disabled:cursor-not-allowed disabled:opacity-50",
-        variants[variant],
-        sizes[size],
-        className
-      )}
+      className={buttonClass({ variant, size, className })}
       {...props}
     />
   );
 }
+

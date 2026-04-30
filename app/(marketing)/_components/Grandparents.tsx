@@ -1,7 +1,7 @@
 import { ArrowRight, Check } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+import { buttonClass } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 
 export function Grandparents() {
@@ -55,11 +55,12 @@ export function Grandparents() {
             ))}
           </ul>
           <div className="mt-8">
-            <Link href="/auth">
-              <Button variant="accent" size="lg">
-                <span>{t("cta")}</span>
-                <ArrowRight size={16} weight="bold" />
-              </Button>
+            <Link
+              href="/auth"
+              className={buttonClass({ variant: "accent", size: "lg" })}
+            >
+              <span>{t("cta")}</span>
+              <ArrowRight size={16} weight="bold" />
             </Link>
           </div>
         </div>

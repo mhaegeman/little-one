@@ -1,7 +1,7 @@
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+import { buttonClass } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 
 export function FooterCta() {
@@ -26,16 +26,18 @@ export function FooterCta() {
             {t("body")}
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link href="/auth">
-              <Button variant="primary" size="xl">
-                <span>{t("ctaPrimary")}</span>
-                <ArrowRight size={18} weight="bold" />
-              </Button>
+            <Link
+              href="/auth"
+              className={buttonClass({ variant: "primary", size: "xl" })}
+            >
+              <span>{t("ctaPrimary")}</span>
+              <ArrowRight size={18} weight="bold" />
             </Link>
-            <Link href="/auth">
-              <Button variant="ghost" size="xl">
-                {t("ctaSecondary")}
-              </Button>
+            <Link
+              href="/auth"
+              className={buttonClass({ variant: "ghost", size: "xl" })}
+            >
+              {t("ctaSecondary")}
             </Link>
           </div>
         </div>
