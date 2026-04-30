@@ -355,7 +355,7 @@ export function JournalClient() {
               <span className="flex-1">{t("demoBanner")}</span>
               {!signedIn ? (
                 <Link
-                  href="/profile?next=/journal"
+                  href="/auth?next=/journal"
                   className="focus-ring inline-flex items-center gap-1 rounded-pill bg-mint-300 px-2.5 py-1 text-2xs font-bold uppercase tracking-[0.08em] text-mint-ink hover:bg-mint-200"
                 >
                   {t("demoBannerCta")}

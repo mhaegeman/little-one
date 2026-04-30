@@ -1,10 +1,12 @@
 "use client";
 
 import {
+  ArrowSquareOut,
   CheckCircle,
   CircleNotch,
   EnvelopeSimple,
   HandHeart,
+  PencilSimple,
   UserCircle
 } from "@phosphor-icons/react/dist/ssr";
 import { useLocale } from "next-intl";
@@ -46,23 +48,27 @@ const COPY = {
     roleLabel: "Hvem er du?",
     emailLabel: "E-mail",
     emailPlaceholder: "navn@example.dk",
-    submit: "Send magisk link",
+    submit: "Send loginlink",
     submitInvite: "Tilslut familien",
     sending: "Sender...",
     sentTitle: "Tjek din indbakke",
-    sentBody: "Vi har sendt et magisk link til {email}. Linket virker i 60 minutter.",
+    sentBody: "Vi har sendt et loginlink til {email}. Linket virker i 60 minutter.",
     sentHintInvite: "Klikker du på linket fra denne enhed, åbner familien sig med det samme.",
+    sentSpamHint: "Kan du ikke finde det? Tjek dit spam- eller reklamefilter.",
+    sentEditEmail: "Brug en anden e-mail",
+    sentOpenMail: "Åbn {provider}",
+    sentResend: "Send igen",
     notConfigured: "Supabase mangler miljøvariabler.",
     error: "Det gik ikke. Prøv igen om lidt.",
     privacy: "EU-hosted Supabase · Vi gemmer ingen Aula-adgangskoder.",
     inviteHeadline: "{inviter} har inviteret dig til {family}",
     inviteFallback: "Du er inviteret til en familie",
-    inviteIntro: "Bekræft din e-mail med et magisk link, så åbner vi familiens delte rum.",
+    inviteIntro: "Bekræft din e-mail med et loginlink, så åbner vi familiens delte rum.",
     locale: "Sprog",
     signinTitle: "Log ind",
-    signinSubtitle: "Indtast din e-mail, så sender vi et magisk loginlink.",
+    signinSubtitle: "Indtast din e-mail, så sender vi et loginlink.",
     signupTitle: "Opret jeres familie",
-    signupSubtitle: "Få adgang ved at oprette en familie og få et magisk link.",
+    signupSubtitle: "Det tager ca. 2 minutter: opret en familie nu, så sender vi et loginlink til din indbakke.",
     toSignup: "Første gang? Opret jeres familie",
     toSignin: "Har I allerede en familie? Log ind",
     roles: {
@@ -78,23 +84,27 @@ const COPY = {
     roleLabel: "Who are you?",
     emailLabel: "Email",
     emailPlaceholder: "name@example.com",
-    submit: "Send magic link",
+    submit: "Email me a sign-in link",
     submitInvite: "Join the family",
     sending: "Sending...",
     sentTitle: "Check your inbox",
-    sentBody: "We sent a magic link to {email}. It is valid for 60 minutes.",
+    sentBody: "We sent a sign-in link to {email}. It's valid for 60 minutes.",
     sentHintInvite: "Open the link on this device and the family opens right away.",
+    sentSpamHint: "Can't find it? Check your spam or promotions folder.",
+    sentEditEmail: "Use a different email",
+    sentOpenMail: "Open {provider}",
+    sentResend: "Resend",
     notConfigured: "Supabase environment variables are missing.",
     error: "Something went wrong. Please try again.",
     privacy: "EU-hosted Supabase · We never store Aula passwords.",
     inviteHeadline: "{inviter} invited you to {family}",
     inviteFallback: "You're invited to a family",
-    inviteIntro: "Confirm your email with a magic link and we'll open the shared family space.",
+    inviteIntro: "Confirm your email with a sign-in link and we'll open the shared family space.",
     locale: "Language",
     signinTitle: "Sign in",
-    signinSubtitle: "Enter your email and we'll send a magic sign-in link.",
+    signinSubtitle: "Enter your email and we'll send a one-time sign-in link.",
     signupTitle: "Create your family",
-    signupSubtitle: "Get started by creating a family and receiving a magic link.",
+    signupSubtitle: "Takes about 2 minutes: create a family now and we'll email a sign-in link.",
     toSignup: "First time? Create your family",
     toSignin: "Already have a family? Sign in",
     roles: {
@@ -126,7 +136,9 @@ export function LoginForm({
   const isSignup = mode === "signup" || Boolean(invite);
   const [email, setEmail] = useState(invite?.suggestedEmail ?? "");
   const [displayName, setDisplayName] = useState(invite ? invite.invitedByName ?? "" : "");
-  const [role, setRole] = useState<FamilyRole>(invite ? "family" : "parent");
+  // Owners default to "parent"; invitees default to "family". The role can be
+  // refined during onboarding (for owners) or in profile settings.
+  const role: FamilyRole = invite ? "family" : "parent";
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -136,14 +148,13 @@ export function LoginForm({
 
   const supabaseAvailable = useMemo(() => Boolean(createClient()), []);
 
-  async function submitMagicLink(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function sendMagicLink(): Promise<boolean> {
     const supabase = createClient();
 
     if (!supabase) {
       setStatus("error");
       setErrorMessage(copy.notConfigured);
-      return;
+      return false;
     }
 
     setStatus("loading");
@@ -190,13 +201,24 @@ export function LoginForm({
     if (error) {
       setStatus("error");
       setErrorMessage(error.message || copy.error);
-      return;
+      return false;
     }
 
     setStatus("sent");
+    return true;
+  }
+
+  async function submitMagicLink(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    await sendMagicLink();
+  }
+
+  async function resendMagicLink() {
+    await sendMagicLink();
   }
 
   if (status === "sent") {
+    const provider = mailProviderForEmail(email);
     return (
       <div className="rounded-card bg-surface p-5 ring-1 ring-hairline">
         <div className="flex items-center gap-2 text-sage-700">
@@ -209,13 +231,39 @@ export function LoginForm({
         {invite ? (
           <p className="mt-1 text-sm leading-6 text-subtle">{copy.sentHintInvite}</p>
         ) : null}
-        <button
-          type="button"
-          onClick={() => setStatus("idle")}
-          className="focus-ring mt-4 text-sm font-semibold text-warm-600 underline-offset-4 hover:underline"
-        >
-          {locale === "da" ? "Send igen" : "Resend"}
-        </button>
+        <p className="mt-2 text-xs leading-5 text-subtle">{copy.sentSpamHint}</p>
+
+        {provider ? (
+          <a
+            href={provider.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="focus-ring mt-4 inline-flex items-center gap-1.5 rounded-pill bg-sage-500 px-4 py-2 text-sm font-semibold text-white hover:bg-sage-700"
+          >
+            <ArrowSquareOut size={14} weight="bold" aria-hidden="true" />
+            {copy.sentOpenMail.replace("{provider}", provider.label)}
+          </a>
+        ) : null}
+
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5">
+          <button
+            type="button"
+            onClick={() => setStatus("idle")}
+            className="focus-ring inline-flex items-center gap-1 text-sm font-semibold text-warm-600 underline-offset-4 hover:underline"
+          >
+            <PencilSimple size={13} weight="bold" aria-hidden="true" />
+            {copy.sentEditEmail}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              void resendMagicLink();
+            }}
+            className="focus-ring text-sm font-semibold text-muted underline-offset-4 hover:text-ink hover:underline"
+          >
+            {copy.sentResend}
+          </button>
+        </div>
       </div>
     );
   }
@@ -276,31 +324,6 @@ export function LoginForm({
               />
               <span className="mt-1 block text-xs text-subtle">{copy.nameHelp}</span>
             </label>
-
-            <fieldset>
-              <legend className="mb-1 block text-2xs font-bold uppercase tracking-[0.12em] text-muted">
-                {copy.roleLabel}
-              </legend>
-              <div className="grid grid-cols-3 gap-1.5">
-                {(Object.keys(copy.roles) as FamilyRole[]).map((roleKey) => {
-                  const active = role === roleKey;
-                  return (
-                    <button
-                      key={roleKey}
-                      type="button"
-                      onClick={() => setRole(roleKey)}
-                      className={`focus-ring rounded-lg px-2 py-2 text-xs font-semibold ring-1 transition-colors ${
-                        active
-                          ? "bg-sage-500 text-white ring-sage-500"
-                          : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
-                      }`}
-                    >
-                      {copy.roles[roleKey]}
-                    </button>
-                  );
-                })}
-              </div>
-            </fieldset>
           </>
         ) : null}
 
@@ -356,7 +379,39 @@ export function LoginForm({
         </p>
       ) : null}
 
-      <p className="mt-3 text-2xs leading-5 text-subtle">{copy.privacy}</p>
+      <p className="mt-3 rounded-md bg-sage-100/70 px-2 py-1.5 text-xs leading-5 font-medium text-sage-700">
+        {copy.privacy}
+      </p>
     </form>
   );
+}
+
+type MailProvider = { label: string; url: string };
+
+function mailProviderForEmail(email: string): MailProvider | null {
+  const at = email.lastIndexOf("@");
+  if (at < 0) return null;
+  const domain = email.slice(at + 1).toLowerCase().trim();
+  if (!domain) return null;
+  if (domain === "gmail.com" || domain === "googlemail.com") {
+    return { label: "Gmail", url: "https://mail.google.com/" };
+  }
+  if (
+    domain === "outlook.com" ||
+    domain === "hotmail.com" ||
+    domain === "live.com" ||
+    domain === "msn.com"
+  ) {
+    return { label: "Outlook", url: "https://outlook.live.com/mail/" };
+  }
+  if (domain === "yahoo.com" || domain === "yahoo.co.uk" || domain === "ymail.com") {
+    return { label: "Yahoo Mail", url: "https://mail.yahoo.com/" };
+  }
+  if (domain === "icloud.com" || domain === "me.com" || domain === "mac.com") {
+    return { label: "iCloud Mail", url: "https://www.icloud.com/mail" };
+  }
+  if (domain === "proton.me" || domain === "protonmail.com") {
+    return { label: "Proton Mail", url: "https://mail.proton.me/" };
+  }
+  return null;
 }
