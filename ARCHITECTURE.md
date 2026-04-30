@@ -9,8 +9,8 @@
 ├─────────────────────────────────────────────────────────┤
 │  lib/services/   Domain logic (DB queries + mutations)  │
 ├─────────────────────────────────────────────────────────┤
-│  lib/db/         DB clients (Supabase, Prisma)          │
-│  lib/integrations/  External SDKs (Cloudinary, Stripe)  │
+│  lib/db/         Supabase clients (browser + server)    │
+│  lib/integrations/  External SDKs (Aula, Cloudinary)    │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -44,7 +44,6 @@ components/
 
 lib/
   db/
-    prisma.ts
     supabase/
       client.ts         browser (RLS-scoped)
       server.ts         RSC + route handlers (cookie-bound)
@@ -55,12 +54,12 @@ lib/
     connections.ts      requests, blocks, reports, rate limits
     messaging.ts        threads + direct messages
   integrations/
-    aula.ts  cloudinary.ts  stripe.ts
+    aula.ts  cloudinary.ts
   data/
     venues.ts           seed venue data (Copenhagen)
     taxonomy.ts         categories, neighbourhoods
     venuePhotos.generated.json
-  env.ts  i18n.ts  types.ts  utils.ts  focus.ts
+  env.ts  types.ts  utils.ts  focus.ts
 
 hooks/                  client-side hooks (useDiscoverParams, useFavorites, …)
 i18n/request.ts         next-intl config

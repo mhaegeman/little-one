@@ -1,15 +1,10 @@
 import { clsx, type ClassValue } from "clsx";
-import { differenceInMonths, format, intervalToDuration, parseISO } from "date-fns";
+import { format, intervalToDuration, parseISO } from "date-fns";
 import { da, enGB } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
-}
-
-export function formatDanishDate(date: string | Date, pattern = "d. MMMM yyyy") {
-  const value = typeof date === "string" ? parseISO(date) : date;
-  return format(value, pattern, { locale: da });
 }
 
 // Locale-aware variant. Used by surfaces that need to match the user's
@@ -25,10 +20,6 @@ export function formatLocalizedDate(
   const effective =
     locale === "en" && pattern === "d. MMMM yyyy" ? "d MMM yyyy" : pattern;
   return format(value, effective, { locale: dateFnsLocale });
-}
-
-export function ageInMonths(dateOfBirth: string) {
-  return Math.max(0, differenceInMonths(new Date(), parseISO(dateOfBirth)));
 }
 
 export function formatChildAge(dateOfBirth: string, locale = "da") {
