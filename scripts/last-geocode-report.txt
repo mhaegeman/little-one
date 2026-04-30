@@ -1,9 +1,9 @@
 
 > lille-liv@0.1.0 geocode:venues
-> tsx scripts/geocode-venues.ts
+> tsx scripts/geocode-venues.ts --apply
 
 Geocoding 62 venue(s) against Nominatim
-Mode: dry-run | threshold: 10000 m
+Mode: APPLY | threshold: 10000 m
 
 [ 1/62] = the-living-room              Δ  <1m  [place/house]  The Living Room
 [ 2/62] = granola                      Δ  <1m  [place/house]  Granola
@@ -109,4 +109,4 @@ No Nominatim match — review manually:
   • amager-strandpark  Amager Strand Promenaden, 2300 København S
   • marionet-teatret  Kongens Have, 1350 København K
 
-(Dry-run) Re-run with --apply to write 5 update(s) to lib/data/venues.ts.
+✓ Wrote 5 update(s) to lib/data/venues.ts.
