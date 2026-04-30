@@ -1,10 +1,10 @@
-import { ArrowRight, Heart, Play } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRight, Play } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Avatar, AvatarStack } from "@/components/ui/Avatar";
 import { Button, buttonClass } from "@/components/ui/Button";
 import { EyebrowBadge } from "@/components/ui/Eyebrow";
-import { PhonePreview } from "./PhonePreview";
+import { BrandReel } from "./BrandReel";
 
 export function Hero() {
   const t = useTranslations("marketing.hero");
@@ -74,25 +74,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="relative mx-auto w-full max-w-[420px]">
-          <PhonePreview />
-          <div
-            aria-hidden="true"
-            className="absolute -left-6 top-12 hidden w-[220px] items-center gap-3 rounded-card bg-surface p-3 shadow-lift ring-1 ring-hairline sm:flex"
-          >
-            <span className="grid h-11 w-11 place-items-center rounded-md bg-peach-100 text-peach-ink">
-              <Heart size={20} weight="fill" />
-            </span>
-            <div>
-              <div className="text-xs font-semibold text-ink">
-                {t("savedTitle")}
-              </div>
-              <div className="mt-0.5 text-[11px] leading-snug text-muted">
-                {t("savedBody")}
-              </div>
-            </div>
-          </div>
-        </div>
+        <BrandReel />
       </div>
     </section>
   );
