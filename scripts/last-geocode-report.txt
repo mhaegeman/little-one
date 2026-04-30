@@ -1,9 +1,9 @@
 
 > lille-liv@0.1.0 geocode:venues
-> tsx scripts/geocode-venues.ts
+> tsx scripts/geocode-venues.ts --apply
 
 Geocoding 62 venue(s) against Nominatim
-Mode: dry-run | threshold: 10000 m
+Mode: APPLY | threshold: 10000 m
 
 [ 1/62] → the-living-room              Δ 217m  [place/house]  The Living Room
 [ 2/62] → granola                      Δ  10m  [place/house]  Granola
@@ -57,9 +57,9 @@ Mode: dry-run | threshold: 10000 m
 [50/62] → botanisk-have                Δ  69m  [place/house]  Botanisk Have
 [51/62] → assistens-kirkegaard         Δ 676m  [place/house]  Assistens Kirkegård
 [52/62] → oerstedsparken               Δ 438m  [place/house]  Ørstedsparken
-[53/62] ! ishoj-strandpark             Δ4.03km  [highway/secondary]  Ishøj Strandpark
-[54/62] → havnebadet-islands-brygge    Δ1.12km  [place/house]  Havnebadet Islands Brygge
-[55/62] ! dyrehaven                    Δ2.04km  [highway/bus_stop]  Dyrehaven
+[53/62] ! ishoj-strandpark             Δ3.33km  [highway/secondary]  Ishøj Strandpark
+[54/62] → havnebadet-islands-brygge    Δ 355m  [place/house]  Havnebadet Islands Brygge
+[55/62] ! dyrehaven                    Δ2.00km  [highway/bus_stop]  Dyrehaven
 [56/62] → bellevue-strand              Δ1.26km  [place/house]  Bellevue Strand
 [57/62] → bakken                       Δ 164m  [place/house]  Bakken (Dyrehavsbakken)
 [58/62] → louisiana-museum             Δ 215m  [place/house]  Louisiana Museum of Modern Art
@@ -91,16 +91,16 @@ Flagged venues — review manually in /admin/map-tool:
       current:   55.7145, 12.5105
       nominatim: 55.7089155, 12.4867894  [information/board]
       OSM says:  Utterslev Mose, Pilesvinget, Brønshøj, København, Københavns Kommune, Region Hovedstaden, 2700, Danmark
-  • ishoj-strandpark  Δ4.03km  Ishøj Strandpark  — coarse match (highway/secondary)
+  • ishoj-strandpark  Δ3.33km  Ishøj Strandpark  — coarse match (highway/secondary)
       addr:      Ishøj Strandvej, 2635 Ishøj
       current:   55.6044, 12.2993
-      nominatim: 55.6108946, 12.3623491  [highway/secondary]
+      nominatim: 55.603032, 12.3522747  [highway/secondary]
       OSM says:  Ishøj Strandvej, Ishøj, Ishøj Kommune, Region Hovedstaden, 2635, Danmark
-  • dyrehaven  Δ2.04km  Dyrehaven  — coarse match (highway/bus_stop)
+  • dyrehaven  Δ2.00km  Dyrehaven  — coarse match (highway/bus_stop)
       addr:      Dyrehaven, 2930 Klampenborg
       current:   55.7734, 12.5521
-      nominatim: 55.7750786, 12.5845234  [highway/bus_stop]
-      OSM says:  Dyrehaven, Dyrehavevej, Ordrup, Klampenborg, Gentofte Kommune, Region Hovedstaden, 2930, Danmark
+      nominatim: 55.7745164, 12.5840692  [highway/bus_stop]
+      OSM says:  Dyrehaven, Christiansholmsvej, Ordrup, Klampenborg, Gentofte Kommune, Region Hovedstaden, 2930, Danmark
 
 No Nominatim match — review manually:
   • superkilen  Nørrebrogade / Heimdalsgade, 2200 København N
@@ -113,4 +113,4 @@ No Nominatim match — review manually:
   • marionet-teatret  Kongens Have, 1350 København K
   • little-house-sydhavn  Pladehals Allé 28 st., 2450 København SV
 
-(Dry-run) Re-run with --apply to write 48 update(s) to lib/data/venues.ts.
+✓ Wrote 48 update(s) to lib/data/venues.ts.
