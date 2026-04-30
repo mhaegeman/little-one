@@ -3,6 +3,7 @@
 import {
   ArrowRight,
   Baby,
+  Confetti,
   House,
   MagnifyingGlass,
   MapPin,
@@ -14,7 +15,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { ActivityForm } from "@/components/journal/ActivityForm";
 import { JournalCalendar } from "@/components/journal/JournalCalendar";
@@ -47,6 +48,12 @@ export function JournalClient() {
   const t = useTranslations("journal");
   const locale = useLocale();
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const [welcome, setWelcome] = useState<{
+    children: number;
+    invites: number;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const [signedIn, setSignedIn] = useState(false);
   const [children, setChildren] = useState<Child[]>([]);
@@ -88,7 +95,21 @@ export function JournalClient() {
     if (newParam === "milestone" || newParam === "activity") {
       setSheetMode(newParam);
     }
-  }, [searchParams]);
+
+    if (searchParams.get("welcome") === "1") {
+      const childrenCount = Number(searchParams.get("children") ?? "0") || 0;
+      const invitesCount = Number(searchParams.get("invites") ?? "0") || 0;
+      setWelcome({ children: childrenCount, invites: invitesCount });
+
+      // Strip the query params so a refresh doesn't show the banner again.
+      const next = new URLSearchParams(searchParams.toString());
+      next.delete("welcome");
+      next.delete("children");
+      next.delete("invites");
+      const queryString = next.toString();
+      router.replace(queryString ? `${pathname}?${queryString}` : pathname);
+    }
+  }, [searchParams, router, pathname]);
 
   useEffect(() => {
     const client = createClient();
@@ -304,6 +325,47 @@ export function JournalClient() {
             ) : null
           }
         />
+
+        {welcome ? (
+          <section
+            role="status"
+            className="mt-4 flex flex-wrap items-start gap-3 rounded-card bg-sage-50 p-4 ring-1 ring-sage-200"
+          >
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sage-100 text-sage-700">
+              <Confetti size={20} weight="fill" aria-hidden="true" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <h2 className="font-display text-lg font-semibold text-sage-700">
+                {t("welcomeTitle")}
+              </h2>
+              <p className="mt-0.5 text-sm leading-6 text-sage-700/85">
+                {t("welcomeBody")}
+              </p>
+              {welcome.children > 0 || welcome.invites > 0 ? (
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {welcome.children > 0 ? (
+                    <span className="rounded-pill bg-white/70 px-2.5 py-0.5 text-2xs font-semibold text-sage-700">
+                      {t("welcomeChildren", { count: welcome.children })}
+                    </span>
+                  ) : null}
+                  {welcome.invites > 0 ? (
+                    <span className="rounded-pill bg-white/70 px-2.5 py-0.5 text-2xs font-semibold text-sage-700">
+                      {t("welcomeInvites", { count: welcome.invites })}
+                    </span>
+                  ) : null}
+                </div>
+              ) : null}
+            </div>
+            <button
+              type="button"
+              onClick={() => setWelcome(null)}
+              aria-label={t("welcomeDismiss")}
+              className="focus-ring grid h-7 w-7 shrink-0 place-items-center rounded-md text-sage-700/70 hover:bg-white/60 hover:text-sage-700"
+            >
+              <X size={13} weight="bold" aria-hidden="true" />
+            </button>
+          </section>
+        ) : null}
 
         {/* Child header card */}
         <section className="mt-4 rounded-card bg-surface p-3.5 ring-1 ring-hairline">

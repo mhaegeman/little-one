@@ -4,26 +4,34 @@ import {
   ArrowLeft,
   ArrowRight,
   Baby,
+  Books,
+  Buildings,
   CheckCircle,
   CircleNotch,
+  Coffee,
+  Confetti,
+  Drop,
   EnvelopeSimple,
+  FilmReel,
   HandHeart,
   Heart,
   HouseLine,
   ListChecks,
   MapPinArea,
+  MaskHappy,
   PencilSimple,
   Plus,
   Trash,
+  Tree,
   Users
 } from "@phosphor-icons/react/dist/ssr";
 import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
-import { categories, neighbourhoods } from "@/lib/data/taxonomy";
+import { categories } from "@/lib/data/taxonomy";
 import {
   createFamilyInvite,
   markOnboardingComplete,
@@ -77,6 +85,12 @@ const COPY = {
     submitting: "Gemmer…",
     skip: "Spring trinnet over",
     saveError: "Noget gik galt. Prøv igen.",
+    partialSavedPrefix: "Allerede gemt:",
+    partialSavedFamily: "familie",
+    partialSavedProfile: "indstillinger",
+    partialSavedChildren: "{n} børn",
+    partialSavedInvites: "{n} invitationer",
+    partialRetryHint: "Klik færdig igen — vi springer det allerede gemte over.",
     family: {
       title: "Bekræft jeres familienavn",
       subtitle: "Vi har lavet en familie til dig. Tilpas navnet og tilføj evt. en kort beskrivelse.",
@@ -114,7 +128,10 @@ const COPY = {
     location: {
       title: "Hvor leger I helst?",
       subtitle: "Vælg de bydele og områder I færdes mest i.",
-      none: "Ingen valgt endnu — det er også ok."
+      none: "Ingen valgt endnu — det er også ok.",
+      groupInner: "København (Indre)",
+      groupOuter: "København (Ydre)",
+      groupSurrounds: "Omegn"
     },
     interests: {
       title: "Hvad er I til?",
@@ -154,6 +171,12 @@ const COPY = {
     submitting: "Saving…",
     skip: "Skip this step",
     saveError: "Something went wrong. Please try again.",
+    partialSavedPrefix: "Already saved:",
+    partialSavedFamily: "family",
+    partialSavedProfile: "preferences",
+    partialSavedChildren: "{n} child(ren)",
+    partialSavedInvites: "{n} invitation(s)",
+    partialRetryHint: "Click finish again — we'll skip what's already saved.",
     family: {
       title: "Confirm your family's name",
       subtitle:
@@ -192,7 +215,10 @@ const COPY = {
     location: {
       title: "Where do you spend time?",
       subtitle: "Pick the neighbourhoods you visit most.",
-      none: "Nothing picked yet — that's fine too."
+      none: "Nothing picked yet — that's fine too.",
+      groupInner: "Inner Copenhagen",
+      groupOuter: "Outer Copenhagen",
+      groupSurrounds: "Surrounds"
     },
     interests: {
       title: "What do you love?",
@@ -231,8 +257,99 @@ const TOTAL_STEPS = 5;
 const REVIEW_STEP = 5;
 const ADULT_ROLES: FamilyRole[] = ["parent", "family", "caregiver"];
 
+// Grouping that makes a flat 19-item chip cloud scannable for parents who
+// don't necessarily know every neighbourhood by name.
+const NEIGHBOURHOOD_GROUPS: Array<{
+  key: "inner" | "outer" | "surrounds";
+  hoods: Neighbourhood[];
+}> = [
+  {
+    key: "inner",
+    hoods: ["Indre By", "Nørrebro", "Østerbro", "Vesterbro", "Frederiksberg"]
+  },
+  {
+    key: "outer",
+    hoods: [
+      "Amager",
+      "Valby",
+      "Sydhavn",
+      "Nordvest",
+      "Nordhavn",
+      "Vanløse",
+      "Brønshøj",
+      "Kastrup"
+    ]
+  },
+  {
+    key: "surrounds",
+    hoods: ["Hellerup", "Klampenborg", "Lyngby", "Ishøj", "Humlebæk", "Roskilde"]
+  }
+];
+
 function todayIso() {
   return new Date().toISOString().slice(0, 10);
+}
+
+type OnboardingDraft = {
+  step: number;
+  familyName: string;
+  familyDescription: string;
+  children: ChildDraft[];
+  invites: InviteDraft[];
+  neighbourhoodPicks: Neighbourhood[];
+  interests: VenueCategory[];
+};
+
+function loadDraft(key: string): OnboardingDraft | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<OnboardingDraft>;
+    if (typeof parsed !== "object" || parsed === null) return null;
+    // Defensive: validate shape so a corrupted draft doesn't crash the wizard.
+    if (typeof parsed.step !== "number") return null;
+    if (typeof parsed.familyName !== "string") return null;
+    if (typeof parsed.familyDescription !== "string") return null;
+    if (!Array.isArray(parsed.children)) return null;
+    if (!Array.isArray(parsed.invites)) return null;
+    if (!Array.isArray(parsed.neighbourhoodPicks)) return null;
+    if (!Array.isArray(parsed.interests)) return null;
+    return parsed as OnboardingDraft;
+  } catch {
+    return null;
+  }
+}
+
+function clearDraft(key: string) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem(key);
+  } catch {
+    // best-effort
+  }
+}
+
+type CopyDictionary = (typeof COPY)[keyof typeof COPY];
+
+function formatPartialSavedHint(
+  copy: CopyDictionary,
+  childCount: number,
+  inviteCount: number,
+  familySaved: boolean,
+  profileSaved: boolean
+): string {
+  const parts: string[] = [];
+  if (familySaved) parts.push(copy.partialSavedFamily);
+  if (profileSaved) parts.push(copy.partialSavedProfile);
+  if (childCount > 0) {
+    parts.push(copy.partialSavedChildren.replace("{n}", String(childCount)));
+  }
+  if (inviteCount > 0) {
+    parts.push(copy.partialSavedInvites.replace("{n}", String(inviteCount)));
+  }
+  if (parts.length === 0) return "";
+  return `${copy.partialSavedPrefix} ${parts.join(", ")}. ${copy.partialRetryHint}`;
 }
 
 function ageInYears(dateOfBirth: string): number | null {
@@ -261,21 +378,69 @@ export function FamilyOnboardingWizard({
   const router = useRouter();
   const copy = COPY[locale];
 
-  const [step, setStep] = useState(1);
-  const [familyName, setFamilyName] = useState(family.name);
-  const [familyDescription, setFamilyDescription] = useState(family.description ?? "");
+  // Per-user localStorage key so different sessions on a shared device don't
+  // collide. The draft is cleared on successful submit.
+  const draftStorageKey = `lille-liv-onboarding-draft:${userId}`;
+  const initialDraft = useMemo(
+    () => loadDraft(draftStorageKey),
+    [draftStorageKey]
+  );
+
+  const [step, setStep] = useState(initialDraft?.step ?? 1);
+  const [familyName, setFamilyName] = useState(initialDraft?.familyName ?? family.name);
+  const [familyDescription, setFamilyDescription] = useState(
+    initialDraft?.familyDescription ?? family.description ?? ""
+  );
   // Start with an empty list — auto-inserting a blank row felt like a forced ask.
   // The empty state offers an "Add your first child" CTA instead.
-  const [children, setChildren] = useState<ChildDraft[]>([]);
-  const [invites, setInvites] = useState<InviteDraft[]>([]);
+  const [children, setChildren] = useState<ChildDraft[]>(initialDraft?.children ?? []);
+  const [invites, setInvites] = useState<InviteDraft[]>(initialDraft?.invites ?? []);
   const todayBound = useMemo(() => todayIso(), []);
   const [neighbourhoodPicks, setNeighbourhoodPicks] = useState<Neighbourhood[]>(
-    profile?.neighbourhoods ?? []
+    initialDraft?.neighbourhoodPicks ?? profile?.neighbourhoods ?? []
   );
-  const [interests, setInterests] = useState<VenueCategory[]>(profile?.interests ?? []);
+  const [interests, setInterests] = useState<VenueCategory[]>(
+    initialDraft?.interests ?? profile?.interests ?? []
+  );
+
+  // Persist draft on every change so a refresh / browser close / accidental
+  // tab loss doesn't wipe progress mid-onboarding.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const draft: OnboardingDraft = {
+        step,
+        familyName,
+        familyDescription,
+        children,
+        invites,
+        neighbourhoodPicks,
+        interests
+      };
+      window.localStorage.setItem(draftStorageKey, JSON.stringify(draft));
+    } catch {
+      // localStorage may be unavailable (private mode, quota exceeded). Drafts
+      // are best-effort — we don't surface this to the user.
+    }
+  }, [
+    draftStorageKey,
+    step,
+    familyName,
+    familyDescription,
+    children,
+    invites,
+    neighbourhoodPicks,
+    interests
+  ]);
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  // Track which side-effects already succeeded so a retry after a partial
+  // failure doesn't double-insert children or re-send invites.
+  const savedChildKeysRef = useRef<Set<string>>(new Set());
+  const sentInviteKeysRef = useRef<Set<string>>(new Set());
+  const familySavedRef = useRef(false);
+  const profileSavedRef = useRef(false);
 
   const inviterName = useMemo(
     () => profile?.displayName?.trim() || userEmail || "A family member",
@@ -339,54 +504,66 @@ export function FamilyOnboardingWizard({
       return;
     }
 
+    // Snapshot what's about to be saved so we can build a partial-success
+    // message if a later step fails after some have already succeeded.
+    const validChildren = children.filter(
+      (c) => c.name.trim() && c.dateOfBirth.trim()
+    );
+    const validInvites = invites.filter((i) => i.email.trim());
+
     try {
-      // 1. Family details
-      if (
-        familyName.trim() !== family.name ||
-        (familyDescription.trim() || null) !== (family.description ?? null)
-      ) {
-        await updateFamily(supabase, family.id, {
-          name: familyName.trim() || family.name,
-          description: familyDescription.trim() || null
+      // 1. Family details — only the first time, and only if changed.
+      if (!familySavedRef.current) {
+        if (
+          familyName.trim() !== family.name ||
+          (familyDescription.trim() || null) !== (family.description ?? null)
+        ) {
+          await updateFamily(supabase, family.id, {
+            name: familyName.trim() || family.name,
+            description: familyDescription.trim() || null
+          });
+        }
+        familySavedRef.current = true;
+      }
+
+      // 2. Profile preferences — also only on the first successful pass.
+      if (!profileSavedRef.current) {
+        await upsertOwnProfile(supabase, userId, {
+          displayName: profile?.displayName ?? null,
+          pronouns: profile?.pronouns ?? null,
+          bio: profile?.bio ?? null,
+          avatarUrl: profile?.avatarUrl ?? null,
+          preferredRole: profile?.preferredRole ?? "parent",
+          preferredLocale: profile?.preferredLocale ?? locale,
+          interests,
+          neighbourhoods: neighbourhoodPicks,
+          indoorPreference: profile?.indoorPreference ?? "any",
+          childAgeMinMonths: profile?.childAgeMinMonths ?? null,
+          childAgeMaxMonths: profile?.childAgeMaxMonths ?? null,
+          notifyEmail: profile?.notifyEmail ?? true,
+          onboardingCompletedAt: profile?.onboardingCompletedAt ?? null
         });
+        profileSavedRef.current = true;
       }
 
-      // 2. Profile preferences (interests + neighbourhoods)
-      await upsertOwnProfile(supabase, userId, {
-        displayName: profile?.displayName ?? null,
-        pronouns: profile?.pronouns ?? null,
-        bio: profile?.bio ?? null,
-        avatarUrl: profile?.avatarUrl ?? null,
-        preferredRole: profile?.preferredRole ?? "parent",
-        preferredLocale: profile?.preferredLocale ?? locale,
-        interests,
-        neighbourhoods: neighbourhoodPicks,
-        indoorPreference: profile?.indoorPreference ?? "any",
-        childAgeMinMonths: profile?.childAgeMinMonths ?? null,
-        childAgeMaxMonths: profile?.childAgeMaxMonths ?? null,
-        notifyEmail: profile?.notifyEmail ?? true,
-        onboardingCompletedAt: profile?.onboardingCompletedAt ?? null
-      });
-
-      // 3. Children rows
-      const validChildren = children.filter(
-        (c) => c.name.trim() && c.dateOfBirth.trim()
-      );
-      if (validChildren.length > 0) {
-        const { error: childError } = await supabase.from("children").insert(
-          validChildren.map((child) => ({
-            user_id: userId,
-            name: child.name.trim(),
-            date_of_birth: child.dateOfBirth
-          }))
-        );
+      // 3. Children — insert one at a time so a mid-list failure preserves
+      // earlier successes (the previous bulk insert would re-insert all of
+      // them on retry, creating duplicates).
+      for (const child of validChildren) {
+        if (savedChildKeysRef.current.has(child.key)) continue;
+        const { error: childError } = await supabase.from("children").insert({
+          user_id: userId,
+          name: child.name.trim(),
+          date_of_birth: child.dateOfBirth
+        });
         if (childError) throw childError;
+        savedChildKeysRef.current.add(child.key);
       }
 
-      // 4. Adult invites — create row + send magic link (matches ProfilePanel pattern).
-      const validInvites = invites.filter((i) => i.email.trim());
+      // 4. Adult invites — create row + send magic link.
       const origin = typeof window === "undefined" ? "" : window.location.origin;
       for (const invite of validInvites) {
+        if (sentInviteKeysRef.current.has(invite.key)) continue;
         const trimmedMessage = invite.message.trim() || undefined;
         const created = await createFamilyInvite(supabase, userId, {
           familyId: family.id,
@@ -412,15 +589,39 @@ export function FamilyOnboardingWizard({
             }
           }
         });
+        sentInviteKeysRef.current.add(invite.key);
       }
 
       // 5. Mark complete.
       await markOnboardingComplete(supabase, userId);
 
-      router.replace(next);
+      // The wizard is done — drop the draft so a fresh visit doesn't replay
+      // stale data (and so localStorage stays tidy on shared devices).
+      clearDraft(draftStorageKey);
+
+      // Pass simple counts to /journal so it can show a celebratory welcome banner.
+      const params = new URLSearchParams();
+      params.set("welcome", "1");
+      if (savedChildKeysRef.current.size > 0) {
+        params.set("children", String(savedChildKeysRef.current.size));
+      }
+      if (sentInviteKeysRef.current.size > 0) {
+        params.set("invites", String(sentInviteKeysRef.current.size));
+      }
+      const separator = next.includes("?") ? "&" : "?";
+      router.replace(`${next}${separator}${params.toString()}`);
     } catch (caught) {
-      const message = caught instanceof Error ? caught.message : copy.saveError;
-      setError(message);
+      const baseMessage = caught instanceof Error ? caught.message : copy.saveError;
+      const savedChildCount = savedChildKeysRef.current.size;
+      const sentInviteCount = sentInviteKeysRef.current.size;
+      const partial = formatPartialSavedHint(
+        copy,
+        savedChildCount,
+        sentInviteCount,
+        familySavedRef.current,
+        profileSavedRef.current
+      );
+      setError(partial ? `${baseMessage} ${partial}` : baseMessage);
       setSubmitting(false);
     }
   }
@@ -675,22 +876,39 @@ export function FamilyOnboardingWizard({
             title={copy.location.title}
             subtitle={copy.location.subtitle}
           >
-            <div className="flex flex-wrap gap-1.5">
-              {neighbourhoods.map((hood) => {
-                const active = neighbourhoodPicks.includes(hood);
+            <div className="space-y-3.5">
+              {NEIGHBOURHOOD_GROUPS.map((group) => {
+                const heading =
+                  group.key === "inner"
+                    ? copy.location.groupInner
+                    : group.key === "outer"
+                    ? copy.location.groupOuter
+                    : copy.location.groupSurrounds;
                 return (
-                  <button
-                    key={hood}
-                    type="button"
-                    onClick={() => toggleNeighbourhood(hood)}
-                    className={`focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors ${
-                      active
-                        ? "bg-sage-700 text-white ring-sage-700"
-                        : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
-                    }`}
-                  >
-                    {hood}
-                  </button>
+                  <div key={group.key}>
+                    <h3 className="mb-1.5 text-2xs font-bold uppercase tracking-[0.12em] text-subtle">
+                      {heading}
+                    </h3>
+                    <div className="flex flex-wrap gap-1.5">
+                      {group.hoods.map((hood) => {
+                        const active = neighbourhoodPicks.includes(hood);
+                        return (
+                          <button
+                            key={hood}
+                            type="button"
+                            onClick={() => toggleNeighbourhood(hood)}
+                            className={`focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors ${
+                              active
+                                ? "bg-sage-700 text-white ring-sage-700"
+                                : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
+                            }`}
+                          >
+                            {hood}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
                 );
               })}
             </div>
@@ -709,17 +927,23 @@ export function FamilyOnboardingWizard({
             <div className="flex flex-wrap gap-1.5">
               {categories.map((category) => {
                 const active = interests.includes(category);
+                const CategoryIcon = CATEGORY_ICONS[category];
                 return (
                   <button
                     key={category}
                     type="button"
                     onClick={() => toggleCategory(category)}
-                    className={`focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors ${
+                    className={`focus-ring inline-flex items-center gap-1.5 rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors ${
                       active
                         ? "bg-sage-500 text-white ring-sage-500"
                         : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                     }`}
                   >
+                    <CategoryIcon
+                      size={13}
+                      weight={active ? "fill" : "regular"}
+                      aria-hidden="true"
+                    />
                     {CATEGORY_LABELS[locale][category]}
                   </button>
                 );
@@ -842,14 +1066,18 @@ export function FamilyOnboardingWizard({
                 <p className="text-sm text-subtle">{copy.review.noInterests}</p>
               ) : (
                 <div className="flex flex-wrap gap-1.5">
-                  {interests.map((category) => (
-                    <span
-                      key={category}
-                      className="rounded-pill bg-warm-50 px-2.5 py-1 text-2xs font-semibold text-warm-600"
-                    >
-                      {CATEGORY_LABELS[locale][category]}
-                    </span>
-                  ))}
+                  {interests.map((category) => {
+                    const CategoryIcon = CATEGORY_ICONS[category];
+                    return (
+                      <span
+                        key={category}
+                        className="inline-flex items-center gap-1 rounded-pill bg-warm-50 px-2.5 py-1 text-2xs font-semibold text-warm-600"
+                      >
+                        <CategoryIcon size={11} weight="fill" aria-hidden="true" />
+                        {CATEGORY_LABELS[locale][category]}
+                      </span>
+                    );
+                  })}
                 </div>
               )}
             </ReviewSection>
@@ -915,6 +1143,17 @@ export function FamilyOnboardingWizard({
     </section>
   );
 }
+
+const CATEGORY_ICONS: Record<VenueCategory, typeof Coffee> = {
+  cafe: Coffee,
+  playground: Tree,
+  indoor_play: Buildings,
+  cinema: FilmReel,
+  library: Books,
+  swimming: Drop,
+  theatre: MaskHappy,
+  event: Confetti
+};
 
 const CATEGORY_LABELS: Record<"da" | "en", Record<VenueCategory, string>> = {
   da: {
