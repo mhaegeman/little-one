@@ -815,6 +815,7 @@
       "timelineYesterday": "I går · Fælledparken",
       "moment1Title": "Første gang på rutsjebanen",
       "moment1Caption": "Asta turde selv. Vi klappede begge to.",
+      "moment1ImageAlt": "Børn leger ved den grønne rutsjebane i Fælledparken",
       "moment2Title": "Boller på Nørrebro",
       "moment2Caption": "Hjem til middagsluren med fyldt mave.",
       "reactionTitle": "Mormor",
@@ -829,7 +830,8 @@
       "bullet2": "Reagér med hjerte, klap eller smil — ingen kommentarspor",
       "bullet3": "Virker på telefon, tablet og computer",
       "cta": "Inviter mormor",
-      "portraitCaption": "Mormor Birgit · Aarhus"
+      "portraitCaption": "Mormor Birgit · Aarhus",
+      "portraitImageAlt": "Lille barn smiler i parken — et øjeblik delt med bedsteforældrene"
     },
     "faq": {
       "eyebrow": "Spørgsmål & svar",

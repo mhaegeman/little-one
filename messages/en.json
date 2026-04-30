@@ -815,6 +815,7 @@
       "timelineYesterday": "Yesterday · Fælledparken",
       "moment1Title": "First time on the slide",
       "moment1Caption": "Asta dared on her own. We both clapped.",
+      "moment1ImageAlt": "Children playing by the green slide at Fælledparken",
       "moment2Title": "Buns in Nørrebro",
       "moment2Caption": "Home for nap with a full belly.",
       "reactionTitle": "Mormor",
@@ -829,7 +830,8 @@
       "bullet2": "React with heart, clap or smile — no comment threads",
       "bullet3": "Works on phone, tablet and laptop",
       "cta": "Invite Mormor",
-      "portraitCaption": "Mormor Birgit · Aarhus"
+      "portraitCaption": "Mormor Birgit · Aarhus",
+      "portraitImageAlt": "Little one smiling in the park — a moment shared with grandparents"
     },
     "faq": {
       "eyebrow": "Questions & answers",
