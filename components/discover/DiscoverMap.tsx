@@ -8,6 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/Badge";
 import { categoryBadgeVariant } from "@/lib/data/taxonomy";
+import { mapStyle } from "@/lib/map/style";
 import type { Venue, VenueCategory } from "@/lib/types";
 import { cn, formatDistance, haversineKm } from "@/lib/utils";
 
@@ -29,30 +30,6 @@ type HoverState = {
 };
 
 const COPENHAGEN: [number, number] = [12.5683, 55.6761];
-
-const mapStyle = {
-  version: 8 as const,
-  sources: {
-    osm: {
-      type: "raster" as const,
-      tiles: [
-        "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      ],
-      tileSize: 256,
-      attribution: "© OpenStreetMap contributors",
-      maxzoom: 19
-    }
-  },
-  layers: [
-    {
-      id: "osm",
-      type: "raster" as const,
-      source: "osm"
-    }
-  ]
-};
 
 export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }: DiscoverMapProps) {
   const t = useTranslations("discover");
