@@ -20,7 +20,7 @@ export function LockedPreview({
   cta,
   redirectTo
 }: LockedPreviewProps) {
-  const href = `/profile?next=${encodeURIComponent(redirectTo)}`;
+  const href = `/auth?next=${encodeURIComponent(redirectTo)}`;
 
   return (
     <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
