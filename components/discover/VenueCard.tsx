@@ -50,8 +50,8 @@ function FavoriteButton({
         "focus-ring grid place-items-center rounded-full bg-surface/95 shadow-sm ring-1 backdrop-blur transition-colors",
         dim,
         saved
-          ? "text-warm-500 ring-warm-200 hover:bg-warm-50"
-          : "text-muted ring-hairline hover:text-warm-500"
+          ? "text-peach-ink ring-peach-200 hover:bg-peach-50"
+          : "text-muted ring-hairline hover:text-peach-ink"
       )}
     >
       <Heart
@@ -77,6 +77,7 @@ export function VenueCard({
   onHover?: () => void;
 }) {
   const tTaxonomy = useTranslations("taxonomy");
+  const tDiscover = useTranslations("discover");
   const locale = useLocale();
 
   if (layout === "compact") {
@@ -85,11 +86,13 @@ export function VenueCard({
         href={`/venues/${venue.id}`}
         onMouseEnter={onHover}
         className={cn(
-          "focus-ring group relative flex gap-3 rounded-card bg-surface p-2.5 ring-1 transition-colors duration-150 ease-nordic",
-          active ? "ring-sage-400 shadow-soft" : "ring-hairline hover:ring-sage-200"
+          "focus-ring group relative flex items-center gap-3.5 rounded-card bg-surface p-3 ring-1 transition-colors duration-150 ease-nordic",
+          active
+            ? "ring-mint-300 shadow-soft"
+            : "ring-hairline hover:ring-mint-100"
         )}
       >
-        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg">
+        <div className="relative h-[76px] w-[76px] shrink-0 overflow-hidden rounded-lg">
           <img
             src={venue.photos[0]}
             alt=""
@@ -97,36 +100,36 @@ export function VenueCard({
             className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
           />
         </div>
-        <div className="min-w-0 flex-1 py-0.5 pr-7">
+        <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="truncate font-display text-base font-semibold text-ink">
+            <h3 className="truncate font-display text-lg font-semibold leading-snug text-ink">
               {venue.name}
             </h3>
             <span className="shrink-0 inline-flex items-center gap-0.5 text-xs font-semibold text-muted">
-              <Star size={12} weight="fill" className="text-warm-500" aria-hidden="true" />
+              <Star size={12} weight="fill" className="text-peach-300" aria-hidden="true" />
               {venue.rating.toFixed(1)}
             </span>
           </div>
-          <p className="mt-0.5 truncate text-xs text-muted">
-            <span className="inline-flex items-center gap-0.5">
-              <MapPin size={11} weight="fill" aria-hidden="true" />
-              {venue.neighbourhood}
-              {typeof distanceKm === "number" ? (
-                <span className="text-subtle"> · {formatDistance(distanceKm)}</span>
-              ) : null}
-            </span>
+          <p className="mt-0.5 flex items-center gap-1 truncate text-xs text-subtle">
+            <MapPin size={11} weight="fill" aria-hidden="true" />
+            {tTaxonomy(venue.category as VenueCategory)} · {venue.neighbourhood}
+            {typeof distanceKm === "number" ? (
+              <span> · {formatDistance(distanceKm)}</span>
+            ) : null}
           </p>
-          <div className="mt-1.5 flex flex-wrap items-center gap-1">
-            <Badge variant={categoryBadgeVariant[venue.category]}>
-              {tTaxonomy(venue.category as VenueCategory)}
-            </Badge>
+          <div className="mt-2 flex flex-wrap items-center gap-1">
             <Badge variant="neutral">
               {monthRangeLabel(venue.ageMinMonths, venue.ageMaxMonths, locale)}
             </Badge>
+            {venue.indoorOutdoor === "indoor" ? (
+              <Badge variant="sky">{tDiscover("indoor")}</Badge>
+            ) : venue.indoorOutdoor === "outdoor" ? (
+              <Badge variant="mint">{tDiscover("outdoor")}</Badge>
+            ) : null}
           </div>
         </div>
-        <span className="absolute right-2 top-2">
-          <FavoriteButton venue={venue} size="sm" />
+        <span className="self-center pl-1">
+          <FavoriteButton venue={venue} size="md" />
         </span>
       </Link>
     );
@@ -160,7 +163,7 @@ export function VenueCard({
               {venue.name}
             </h3>
             <span className="shrink-0 inline-flex items-center gap-0.5 text-xs font-semibold text-muted">
-              <Star size={12} weight="fill" className="text-warm-500" aria-hidden="true" />
+              <Star size={12} weight="fill" className="text-peach-300" aria-hidden="true" />
               {venue.rating.toFixed(1)}
             </span>
           </div>
@@ -201,7 +204,7 @@ export function VenueCard({
         <div className="flex items-start justify-between gap-2">
           <h3 className="font-display text-lg font-semibold text-ink">{venue.name}</h3>
           <span className="shrink-0 inline-flex items-center gap-0.5 text-xs font-semibold text-muted">
-            <Star size={12} weight="fill" className="text-warm-500" aria-hidden="true" />
+            <Star size={12} weight="fill" className="text-peach-300" aria-hidden="true" />
             {venue.rating.toFixed(1)}
           </span>
         </div>

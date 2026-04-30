@@ -91,7 +91,7 @@ export function FamiliesPanel() {
     return (
       <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
         <div className="mx-auto max-w-3xl rounded-card bg-surface p-5 ring-1 ring-hairline">
-          <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">{t("eyebrow")}</p>
+          <p className="text-2xs font-bold uppercase tracking-[0.18em] text-peach-ink">{t("eyebrow")}</p>
           <h1 className="mt-1 font-display text-2xl font-semibold text-ink">{t("loginRequiredTitle")}</h1>
           <p className="mt-2 text-sm leading-6 text-muted">{t("loginRequiredBody")}</p>
         </div>
@@ -116,7 +116,7 @@ export function FamiliesPanel() {
     return (
       <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
         <div className="mx-auto max-w-3xl rounded-card bg-surface p-5 ring-1 ring-hairline">
-          <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">{t("eyebrow")}</p>
+          <p className="text-2xs font-bold uppercase tracking-[0.18em] text-peach-ink">{t("eyebrow")}</p>
           <h1 className="mt-1 font-display text-2xl font-semibold text-ink">{t("noFamilyTitle")}</h1>
           <p className="mt-2 text-sm leading-6 text-muted">{t("noFamilyBody")}</p>
         </div>

@@ -192,7 +192,7 @@ export function ConnectionsInbox({ me, primaryFamily }: Props) {
               <span className="inline-flex items-center gap-1">
                 {t("incomingTab")}
                 {incoming.length > 0 ? (
-                  <span className="rounded-full bg-warm-500 px-1.5 text-2xs font-bold text-white">
+                  <span className="rounded-full bg-peach-300 px-1.5 text-2xs font-bold text-peach-ink">
                     {incoming.length}
                   </span>
                 ) : null}

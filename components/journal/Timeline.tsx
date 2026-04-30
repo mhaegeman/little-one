@@ -8,8 +8,8 @@ import {
   Sparkle
 } from "@phosphor-icons/react/dist/ssr";
 import { useLocale, useTranslations } from "next-intl";
-import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { Pill } from "@/components/ui/Pill";
 import type { TimelineItem, TimelineItemType } from "@/lib/types";
 import { formatLocalizedDate } from "@/lib/utils";
 
@@ -19,10 +19,22 @@ const icons: Record<TimelineItemType, typeof Baby> = {
   aula: House
 };
 
-const dotStyle: Record<TimelineItemType, string> = {
-  milestone: "bg-warm-100 text-warm-600",
-  activity: "bg-sage-100 text-sage-700",
-  aula: "bg-sky-100 text-info"
+const nodeStyle: Record<TimelineItemType, string> = {
+  milestone: "bg-peach-100 text-peach-ink",
+  activity: "bg-mint-100 text-mint-ink",
+  aula: "bg-sky-100 text-sky-ink"
+};
+
+const pillTone: Record<TimelineItemType, "peach" | "mint" | "sky"> = {
+  milestone: "peach",
+  activity: "mint",
+  aula: "sky"
+};
+
+const tagTone: Record<TimelineItemType, "peach" | "mint" | "sky" | "butter"> = {
+  milestone: "peach",
+  activity: "mint",
+  aula: "sky"
 };
 
 function monthKey(iso: string) {
@@ -64,11 +76,17 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
     }
   }
 
+  function kindLabel(item: TimelineItem) {
+    if (item.type === "milestone") return t("milestone");
+    if (item.type === "activity") return t("activity");
+    return item.badge ?? t("aulaBadgeNursery");
+  }
+
   return (
     <div className="space-y-6">
       {groups.map((group) => (
         <section key={group.key} id={`month-${group.key}`} className="scroll-mt-20">
-          <div className="sticky top-14 z-[1] -mx-4 mb-2 flex items-center gap-2 bg-canvas/95 px-4 py-1.5 backdrop-blur lg:top-0 lg:mx-0 lg:px-0">
+          <div className="sticky top-14 z-[1] -mx-4 mb-3 flex items-center gap-2 bg-canvas/95 px-4 py-1.5 backdrop-blur lg:top-0 lg:mx-0 lg:px-0">
             <h3 className="font-display text-sm font-semibold uppercase tracking-[0.12em] text-muted">
               {group.label}
             </h3>
@@ -78,74 +96,74 @@ export function Timeline({ items }: { items: TimelineItem[] }) {
             </span>
           </div>
 
-          <ol className="relative space-y-2 pl-4">
+          <ol className="relative space-y-3 pl-0">
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute bottom-2 left-[7px] top-2 w-px bg-hairline"
+              className="pointer-events-none absolute bottom-3 left-[23px] top-3 w-[2px] rounded-full bg-hairline"
             />
             {group.items.map((item) => {
               const Icon = icons[item.type];
               return (
-                <li key={item.id} className="relative">
+                <li key={item.id} className="relative flex items-start gap-4">
                   <span
                     aria-hidden="true"
-                    className={`absolute -left-[3px] top-3 grid h-3.5 w-3.5 place-items-center rounded-full ring-2 ring-canvas ${dotStyle[item.type]}`}
+                    className={`relative z-[1] grid h-12 w-12 shrink-0 place-items-center rounded-full shadow-[0_0_0_4px_rgb(251_246_238)] ${nodeStyle[item.type]}`}
                   >
-                    <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                    <Icon size={20} weight="duotone" aria-hidden="true" />
                   </span>
-                  <article className="ml-4 rounded-card bg-surface p-3.5 ring-1 ring-hairline">
-                    <div className="flex items-start gap-3">
-                      <span
-                        className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg ${dotStyle[item.type]}`}
-                      >
-                        <Icon size={16} weight="duotone" aria-hidden="true" />
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <h4 className="font-display text-base font-semibold text-ink">
-                            {item.title}
-                          </h4>
-                          {item.badge ? (
-                            <Badge variant="sky">{item.badge}</Badge>
-                          ) : null}
-                        </div>
-                        <p className="mt-0.5 text-xs font-semibold text-subtle">
-                          {formatLocalizedDate(item.date, locale)}
-                        </p>
-                        {item.description ? (
-                          <p className="mt-2 text-sm leading-6 text-muted">
-                            {item.description}
-                          </p>
-                        ) : null}
-                        {item.tags?.length ? (
-                          <div className="mt-2 flex flex-wrap gap-1">
-                            {item.tags.slice(0, 6).map((tag) => (
-                              <Badge key={tag} variant="neutral">
-                                {tag}
-                              </Badge>
-                            ))}
-                          </div>
-                        ) : null}
-                        {item.photos?.length ? (
-                          <div className="mt-2.5 flex gap-1.5 overflow-x-auto thin-scroll">
-                            {item.photos.map((photo) => (
-                              <img
-                                key={photo}
-                                src={photo}
-                                alt=""
-                                loading="lazy"
-                                className="h-20 w-20 shrink-0 rounded-lg object-cover ring-1 ring-hairline"
-                              />
-                            ))}
-                          </div>
-                        ) : (
-                          <span className="mt-2 inline-flex items-center gap-1 text-2xs font-semibold text-subtle">
-                            <Camera size={11} weight="fill" aria-hidden="true" />
-                            {t("noPhoto")}
-                          </span>
-                        )}
-                      </div>
+                  <article className="min-w-0 flex-1 rounded-card bg-surface p-4 shadow-soft ring-1 ring-hairline">
+                    <div className="flex items-start justify-between gap-2">
+                      <Pill tone={pillTone[item.type]} size="sm">
+                        {kindLabel(item)}
+                      </Pill>
+                      <p className="text-2xs font-semibold text-subtle">
+                        {formatLocalizedDate(item.date, locale)}
+                      </p>
                     </div>
+                    <h4 className="mt-2 font-display text-xl font-semibold leading-snug text-ink">
+                      {item.title}
+                    </h4>
+                    {item.description ? (
+                      <p className="mt-1.5 text-sm leading-6 text-muted">
+                        {item.description}
+                      </p>
+                    ) : null}
+                    {item.photos?.length ? (
+                      <div
+                        className={`mt-3 grid gap-1.5 ${
+                          item.photos.length === 1
+                            ? "grid-cols-1"
+                            : item.photos.length === 2
+                              ? "grid-cols-2"
+                              : "grid-cols-3"
+                        }`}
+                      >
+                        {item.photos.slice(0, 3).map((photo) => (
+                          <img
+                            key={photo}
+                            src={photo}
+                            alt=""
+                            loading="lazy"
+                            className="aspect-[4/3] w-full rounded-lg object-cover ring-1 ring-hairline"
+                          />
+                        ))}
+                      </div>
+                    ) : null}
+                    {item.tags?.length ? (
+                      <div className="mt-3 flex flex-wrap gap-1">
+                        {item.tags.slice(0, 6).map((tag) => (
+                          <Pill key={tag} tone="sunken" size="sm">
+                            {tag}
+                          </Pill>
+                        ))}
+                      </div>
+                    ) : null}
+                    {!item.photos?.length && !item.description ? (
+                      <span className="mt-2 inline-flex items-center gap-1 text-2xs font-semibold text-subtle">
+                        <Camera size={11} weight="fill" aria-hidden="true" />
+                        {t("noPhoto")}
+                      </span>
+                    ) : null}
                   </article>
                 </li>
               );

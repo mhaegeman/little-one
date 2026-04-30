@@ -338,7 +338,7 @@ export function JournalClient() {
                     className={cn(
                       "focus-ring rounded-pill px-2.5 py-1 text-xs font-semibold ring-1 transition-colors",
                       child.id === activeChild.id
-                        ? "bg-sage-500 text-white ring-sage-500"
+                        ? "bg-mint-300 text-mint-ink ring-mint-300"
                         : "bg-surface text-muted ring-hairline hover:bg-sunken"
                     )}
                   >
@@ -350,13 +350,13 @@ export function JournalClient() {
           </div>
 
           {usingDemo ? (
-            <div className="mt-3 flex items-center gap-2 rounded-lg bg-sage-50 p-2.5 text-xs text-sage-700 ring-1 ring-sage-100">
+            <div className="mt-3 flex items-center gap-2 rounded-lg bg-mint-50 p-2.5 text-xs text-mint-ink ring-1 ring-mint-100">
               <ShieldCheck className="mt-0.5 shrink-0" size={14} weight="fill" aria-hidden="true" />
               <span className="flex-1">{t("demoBanner")}</span>
               {!signedIn ? (
                 <Link
                   href="/profile?next=/journal"
-                  className="focus-ring inline-flex items-center gap-1 rounded-pill bg-sage-500 px-2.5 py-1 text-2xs font-bold uppercase tracking-[0.08em] text-white hover:bg-sage-600"
+                  className="focus-ring inline-flex items-center gap-1 rounded-pill bg-mint-300 px-2.5 py-1 text-2xs font-bold uppercase tracking-[0.08em] text-mint-ink hover:bg-mint-200"
                 >
                   {t("demoBannerCta")}
                   <ArrowRight size={11} weight="bold" aria-hidden="true" />
@@ -443,7 +443,7 @@ export function JournalClient() {
                       className={cn(
                         "focus-ring inline-flex items-center gap-1 rounded-pill px-2 py-0.5 text-2xs font-semibold ring-1 transition-colors",
                         active
-                          ? "bg-sage-500 text-white ring-sage-500"
+                          ? "bg-mint-300 text-mint-ink ring-mint-300"
                           : "bg-sunken text-muted ring-hairline hover:text-ink"
                       )}
                     >
@@ -463,7 +463,7 @@ export function JournalClient() {
                   <button
                     type="button"
                     onClick={() => setFilterTag(null)}
-                    className="focus-ring text-2xs font-bold uppercase tracking-wide text-warm-600 hover:text-warm-700"
+                    className="focus-ring text-2xs font-bold uppercase tracking-[0.14em] text-peach-ink hover:text-peach-300"
                   >
                     {t("filter.clearTag")}
                   </button>
@@ -506,7 +506,7 @@ export function JournalClient() {
         {/* Aula footer */}
         <aside className="mt-6 rounded-card bg-surface p-4 ring-1 ring-hairline">
           <div className="flex items-start gap-2">
-            <Sparkle size={16} weight="fill" className="mt-0.5 text-warm-500" aria-hidden="true" />
+            <Sparkle size={16} weight="fill" className="mt-0.5 text-peach-300" aria-hidden="true" />
             <div>
               <h3 className="font-display text-base font-semibold text-ink">{t("aulaSectionTitle")}</h3>
               <p className="mt-1 text-sm leading-6 text-muted">
@@ -596,7 +596,7 @@ function FilterChip({
       className={cn(
         "focus-ring inline-flex h-8 items-center gap-1.5 rounded-pill px-2.5 text-xs font-semibold ring-1 transition-colors",
         active
-          ? "bg-sage-500 text-white ring-sage-500"
+          ? "bg-ink text-canvas ring-ink"
           : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
       )}
     >
@@ -605,7 +605,7 @@ function FilterChip({
       <span
         className={cn(
           "grid h-4 min-w-[1rem] place-items-center rounded-full px-1 text-2xs font-bold",
-          active ? "bg-white/25 text-white" : "bg-sunken text-muted"
+          active ? "bg-canvas/25 text-canvas" : "bg-sunken text-muted"
         )}
       >
         {count}

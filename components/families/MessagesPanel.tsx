@@ -370,7 +370,7 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
                             className={cn(
                               "max-w-[80%] rounded-2xl px-3 py-1.5 text-sm leading-snug",
                               mine
-                                ? "rounded-br-md bg-sage-500 text-white"
+                                ? "rounded-br-md bg-mint-300 text-mint-ink"
                                 : "rounded-bl-md bg-sunken text-ink ring-1 ring-hairline"
                             )}
                           >
@@ -378,7 +378,7 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
                             <p
                               className={cn(
                                 "mt-0.5 text-2xs font-semibold",
-                                mine ? "text-sage-100" : "text-subtle"
+                                mine ? "text-mint-ink/70" : "text-subtle"
                               )}
                             >
                               {formatTime(message.createdAt, locale)}

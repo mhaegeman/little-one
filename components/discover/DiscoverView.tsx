@@ -230,7 +230,7 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
             className={cn(
               "focus-ring inline-flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold ring-1 transition-colors",
               savedOnly
-                ? "bg-warm-50 text-warm-600 ring-warm-200"
+                ? "bg-peach-50 text-peach-ink ring-peach-200"
                 : "bg-sunken text-muted ring-hairline hover:text-ink"
             )}
             title={`${favorites.length} ${t("saved")}`}
@@ -245,7 +245,9 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
               <span
                 className={cn(
                   "grid h-5 min-w-[1.25rem] place-items-center rounded-full px-1 text-2xs font-bold",
-                  savedOnly ? "bg-warm-500 text-white" : "bg-surface text-muted ring-1 ring-hairline"
+                  savedOnly
+                    ? "bg-peach-300 text-peach-ink"
+                    : "bg-surface text-muted ring-1 ring-hairline"
                 )}
               >
                 {favorites.length}
@@ -261,7 +263,7 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
             <Faders size={15} weight="bold" aria-hidden="true" />
             {t("filters")}
             {activeFilterCount > 0 ? (
-              <span className="grid h-5 min-w-[1.25rem] place-items-center rounded-full bg-sage-500 px-1 text-2xs font-bold text-white">
+              <span className="grid h-5 min-w-[1.25rem] place-items-center rounded-full bg-mint-300 px-1 text-2xs font-bold text-mint-ink">
                 {activeFilterCount}
               </span>
             ) : null}
@@ -329,7 +331,7 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
             <button
               type="button"
               onClick={resetFilters}
-              className="focus-ring ml-1 text-2xs font-bold uppercase tracking-wide text-warm-600 hover:text-warm-700"
+              className="focus-ring ml-1 text-2xs font-bold uppercase tracking-[0.14em] text-peach-ink hover:text-peach-300"
             >
               {t("resetAll")}
             </button>
@@ -410,13 +412,13 @@ export function DiscoverView({ venues, events }: DiscoverViewProps) {
 function ChipDismiss({ label, onClear }: { label: string; onClear: () => void }) {
   const t = useTranslations("discover");
   return (
-    <span className="inline-flex h-7 items-center gap-1 rounded-pill bg-sage-100 pl-2.5 pr-1 text-2xs font-semibold text-sage-700 ring-1 ring-sage-200">
+    <span className="inline-flex h-7 items-center gap-1 rounded-pill bg-mint-50 pl-2.5 pr-1 text-2xs font-semibold text-mint-ink ring-1 ring-mint-100">
       {label}
       <button
         type="button"
         onClick={onClear}
         aria-label={t("removeFilter", { label })}
-        className="focus-ring grid h-5 w-5 place-items-center rounded-full hover:bg-sage-200"
+        className="focus-ring grid h-5 w-5 place-items-center rounded-full hover:bg-mint-100"
       >
         <X size={11} weight="bold" aria-hidden="true" />
       </button>
@@ -477,7 +479,7 @@ function FilterPanel({
             max={72}
             value={ageMin}
             onChange={(event) => setAgeMin(Math.min(Number(event.target.value), ageMax))}
-            className="w-full accent-sage-500"
+            className="w-full accent-mint-300"
           />
           <input
             aria-label={t("ageMaxLabel")}
@@ -486,7 +488,7 @@ function FilterPanel({
             max={72}
             value={ageMax}
             onChange={(event) => setAgeMax(Math.max(Number(event.target.value), ageMin))}
-            className="w-full accent-sage-500"
+            className="w-full accent-mint-300"
           />
         </div>
       </div>
@@ -504,7 +506,7 @@ function FilterPanel({
                 className={cn(
                   "focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors",
                   active
-                    ? "bg-sage-500 text-white ring-sage-500"
+                    ? "bg-mint-300 text-mint-ink ring-mint-300"
                     : "bg-surface text-ink ring-hairline hover:bg-sunken"
                 )}
               >
@@ -550,7 +552,7 @@ function FilterPanel({
           type="checkbox"
           checked={openNow}
           onChange={(event) => setOpenNow(event.target.checked)}
-          className="h-4 w-4 accent-sage-500"
+          className="h-4 w-4 accent-mint-300"
         />
       </label>
 

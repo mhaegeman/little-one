@@ -115,17 +115,17 @@ export function JournalCalendar({
               className={cn(
                 "focus-ring relative flex h-14 min-w-[68px] flex-col items-start justify-end overflow-hidden rounded-lg px-2 py-1.5 ring-1 transition-colors",
                 isExpanded
-                  ? "bg-sage-100 text-sage-700 ring-sage-400"
+                  ? "bg-peach-50 text-peach-ink ring-peach-300"
                   : isActive
-                    ? "bg-sage-100 text-sage-700 ring-sage-300"
-                    : "bg-sunken text-ink ring-hairline hover:ring-sage-200"
+                    ? "bg-peach-50 text-peach-ink ring-peach-200"
+                    : "bg-sunken text-ink ring-hairline hover:ring-peach-100"
               )}
             >
               <span
                 aria-hidden="true"
                 className={cn(
                   "absolute inset-x-0 bottom-0 origin-bottom transition-all",
-                  isExpanded || isActive ? "bg-sage-300/60" : "bg-sage-200/60"
+                  isExpanded || isActive ? "bg-peach-200/70" : "bg-peach-100/60"
                 )}
                 style={{ height: `${fillPct}%` }}
               />
@@ -152,7 +152,7 @@ export function JournalCalendar({
                 setExpandedKey(null);
                 jumpToMonth(expanded.key);
               }}
-              className="focus-ring text-2xs font-bold uppercase tracking-wide text-warm-600 hover:text-warm-700"
+              className="focus-ring text-2xs font-bold uppercase tracking-[0.14em] text-peach-ink hover:text-peach-300"
             >
               {t("calendarGoToMonth")}
             </button>
@@ -227,13 +227,13 @@ function DayGrid({
                 "focus-ring relative grid aspect-square place-items-center rounded-md text-[11px] font-semibold transition-colors",
                 cell.count === 0
                   ? "bg-surface text-subtle ring-1 ring-hairline"
-                  : "text-sage-800"
+                  : "text-peach-ink"
               )}
               style={
                 cell.count > 0
                   ? {
-                      backgroundColor: `rgba(91, 131, 119, ${0.18 + intensity * 0.6})`,
-                      color: intensity > 0.5 ? "#FFFFFF" : "#33554C"
+                      backgroundColor: `rgba(232, 154, 117, ${0.22 + intensity * 0.65})`,
+                      color: "#7A3A1E"
                     }
                   : undefined
               }
@@ -242,7 +242,7 @@ function DayGrid({
               {cell.count > 1 ? (
                 <span
                   aria-hidden="true"
-                  className="absolute right-0.5 top-0.5 grid h-3 w-3 place-items-center rounded-full bg-warm-500 text-[8px] font-bold text-white"
+                  className="absolute right-0.5 top-0.5 grid h-3 w-3 place-items-center rounded-full bg-peach-300 text-[8px] font-bold text-peach-ink"
                 >
                   {cell.count}
                 </span>
