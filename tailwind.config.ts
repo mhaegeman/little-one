@@ -70,40 +70,6 @@ const config: Config = {
         primary: { DEFAULT: "#79B98A", ink: "#1F4D32" },
         accent: { DEFAULT: "#E89A75", ink: "#7A3A1E" },
 
-        // ─────────────────────────────────────────────────────────────
-        // Legacy scales — kept until components migrate to mint/peach.
-        // Do not use for new work.
-        sage: {
-          DEFAULT: "#5B8377",
-          50: "#EFF4F2",
-          100: "#DCE7E2",
-          200: "#BAD0C7",
-          300: "#94B5A8",
-          400: "#739A8B",
-          500: "#5B8377",
-          600: "#436C61",
-          700: "#33554C",
-          800: "#243C36",
-          900: "#172521"
-        },
-        warm: {
-          DEFAULT: "#C46A40",
-          50: "#FAEFE8",
-          100: "#F2DAC8",
-          200: "#E6B69A",
-          300: "#D88E69",
-          400: "#CA7548",
-          500: "#C46A40",
-          600: "#A55432",
-          700: "#7E3F25"
-        },
-        sand: {
-          50: "#FBF7EF",
-          100: "#F4EFE2",
-          200: "#E8DDC2",
-          300: "#D8C8A0"
-        },
-
         // Status (kept; could be re-keyed to Pastel inks later)
         success: "#1F4D32",
         warning: "#6E4F0D",

@@ -431,7 +431,7 @@ export function MapEditTool({ venues, saveEnabled }: MapEditToolProps) {
                 className={cn(
                   "rounded-pill px-2 py-0.5 text-2xs font-semibold ring-1 transition",
                   categoryFilter === cat
-                    ? "bg-sage-500 text-white ring-sage-500"
+                    ? "bg-mint-300 text-white ring-mint-300"
                     : "bg-sunken text-muted ring-hairline hover:text-ink"
                 )}
               >
@@ -445,7 +445,7 @@ export function MapEditTool({ venues, saveEnabled }: MapEditToolProps) {
             className={cn(
               "rounded-pill px-2 py-0.5 text-2xs font-semibold ring-1 transition",
               onlyEdited
-                ? "bg-warm-500 text-white ring-warm-500"
+                ? "bg-peach-300 text-white ring-peach-300"
                 : "bg-sunken text-muted ring-hairline hover:text-ink"
             )}
           >
@@ -464,13 +464,13 @@ export function MapEditTool({ venues, saveEnabled }: MapEditToolProps) {
                   onClick={() => selectVenue(venue.id)}
                   className={cn(
                     "flex w-full items-start gap-2 rounded-lg px-2 py-1.5 text-left transition",
-                    isActive ? "bg-sage-100 ring-1 ring-sage-300" : "hover:bg-sunken"
+                    isActive ? "bg-mint-50 ring-1 ring-mint-200" : "hover:bg-sunken"
                   )}
                 >
                   <span
                     className={cn(
                       "mt-1 inline-block h-2 w-2 shrink-0 rounded-full",
-                      isEdited ? "bg-warm-500" : "bg-transparent ring-1 ring-hairline"
+                      isEdited ? "bg-peach-300" : "bg-transparent ring-1 ring-hairline"
                     )}
                     aria-hidden
                   />
@@ -514,7 +514,7 @@ export function MapEditTool({ venues, saveEnabled }: MapEditToolProps) {
             </p>
           ) : null}
           {saveMessage ? (
-            <p className={cn("text-2xs", saveStatus === "error" ? "text-danger" : "text-sage-700")}>
+            <p className={cn("text-2xs", saveStatus === "error" ? "text-danger" : "text-mint-ink")}>
               {saveMessage}
             </p>
           ) : null}
@@ -535,7 +535,7 @@ export function MapEditTool({ venues, saveEnabled }: MapEditToolProps) {
                 <button
                   type="button"
                   onClick={() => resetEdit(selected.id)}
-                  className="shrink-0 rounded-pill bg-sunken px-2 py-0.5 text-2xs font-semibold text-muted hover:text-warm-600"
+                  className="shrink-0 rounded-pill bg-sunken px-2 py-0.5 text-2xs font-semibold text-muted hover:text-peach-ink"
                 >
                   Reset
                 </button>
@@ -551,7 +551,7 @@ export function MapEditTool({ venues, saveEnabled }: MapEditToolProps) {
               </div>
               <div className="flex items-center justify-between gap-2">
                 <dt className="text-muted">Current</dt>
-                <dd className={cn("font-mono", selectedEdit ? "text-warm-700" : "text-ink")}>
+                <dd className={cn("font-mono", selectedEdit ? "text-peach-ink" : "text-ink")}>
                   {(selectedEdit?.lat ?? selected.lat).toFixed(6)},{" "}
                   {(selectedEdit?.lng ?? selected.lng).toFixed(6)}
                   {distanceFromOriginal !== null ? (

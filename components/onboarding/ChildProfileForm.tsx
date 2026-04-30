@@ -83,7 +83,7 @@ export function ChildProfileForm({ onCreated }: ChildProfileFormProps) {
   return (
     <form onSubmit={submitChild} className="rounded-card bg-surface p-5 ring-1 ring-hairline">
       <div className="flex items-center gap-2">
-        <Baby size={18} weight="duotone" className="text-sage-700" aria-hidden="true" />
+        <Baby size={18} weight="duotone" className="text-mint-ink" aria-hidden="true" />
         <h2 className="font-display text-xl font-semibold text-ink">Barnets profil</h2>
       </div>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">

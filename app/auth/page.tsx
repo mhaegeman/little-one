@@ -89,7 +89,7 @@ export default async function AuthPage({
 
         <div className="relative mx-auto grid max-w-[1100px] gap-10 px-5 py-12 md:px-10 md:py-16 lg:grid-cols-[1.05fr_440px] lg:items-center lg:gap-14">
           <section>
-            <p className="text-2xs font-bold uppercase tracking-[0.18em] text-warm-500">
+            <p className="text-2xs font-bold uppercase tracking-[0.18em] text-peach-300">
               {t("eyebrow")}
             </p>
             <h1 className="mt-2 font-display text-4xl font-semibold leading-[1.05] text-ink sm:text-5xl">
@@ -102,22 +102,22 @@ export default async function AuthPage({
 
             <ul className="mt-6 grid gap-2 sm:grid-cols-2">
               <FeaturePoint
-                icon={<Sparkle size={14} weight="fill" className="text-warm-500" aria-hidden="true" />}
+                icon={<Sparkle size={14} weight="fill" className="text-peach-300" aria-hidden="true" />}
                 title={tProfile("tailoredFeed")}
                 body={tProfile("tailoredFeedBody")}
               />
               <FeaturePoint
-                icon={<Compass size={14} weight="fill" className="text-warm-500" aria-hidden="true" />}
+                icon={<Compass size={14} weight="fill" className="text-peach-300" aria-hidden="true" />}
                 title={tProfile("curatedOutings")}
                 body={tProfile("curatedOutingsBody")}
               />
               <FeaturePoint
-                icon={<ShieldCheck size={14} weight="fill" className="text-warm-500" aria-hidden="true" />}
+                icon={<ShieldCheck size={14} weight="fill" className="text-peach-300" aria-hidden="true" />}
                 title={tProfile("sharedFamilySpace")}
                 body={tProfile("sharedFamilySpaceBody")}
               />
               <FeaturePoint
-                icon={<Key size={14} weight="fill" className="text-warm-500" aria-hidden="true" />}
+                icon={<Key size={14} weight="fill" className="text-peach-300" aria-hidden="true" />}
                 title={tProfile("magicLink")}
                 body={tProfile("magicLinkBody")}
               />
@@ -166,7 +166,7 @@ function FeaturePoint({
 }) {
   return (
     <li className="flex items-start gap-2 rounded-card bg-surface p-3 ring-1 ring-hairline">
-      <span className="mt-0.5 grid h-6 w-6 place-items-center rounded-full bg-warm-50 ring-1 ring-warm-100">
+      <span className="mt-0.5 grid h-6 w-6 place-items-center rounded-full bg-peach-50 ring-1 ring-peach-100">
         {icon}
       </span>
       <div>

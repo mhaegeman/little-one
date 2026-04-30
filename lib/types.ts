@@ -98,6 +98,16 @@ export type Child = {
 
 export type TimelineItemType = "milestone" | "activity" | "aula";
 
+export type ReactionKind = "heart" | "clap" | "smile" | "star";
+
+export type Reaction = {
+  id: string;
+  kind: ReactionKind;
+  userId: string;
+  displayName: string | null;
+  createdAt: string;
+};
+
 export type TimelineItem = {
   id: string;
   type: TimelineItemType;
@@ -107,6 +117,7 @@ export type TimelineItem = {
   photos?: string[];
   badge?: string;
   tags?: string[];
+  reactions?: Reaction[];
 };
 
 export type MilestoneType =

@@ -32,11 +32,6 @@
   --color-accent-ink: var(--color-peach-ink);
 
   --focus-ring: rgba(121, 185, 138, 0.35);
-
-  /* Legacy aliases — kept until components migrate. */
-  --accent-sage: #5b8377;
-  --accent-sage-strong: #33554c;
-  --accent-warm: #c46a40;
 }
 
 * {

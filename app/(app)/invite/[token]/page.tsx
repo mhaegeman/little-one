@@ -95,7 +95,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
     <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
       <div className="mx-auto grid max-w-5xl gap-4 lg:grid-cols-[1fr_440px]">
         <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
-          <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">
+          <p className="text-2xs font-bold uppercase tracking-[0.16em] text-peach-300">
             Du er inviteret
           </p>
           <h1 className="mt-1 font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">
@@ -113,13 +113,13 @@ export default async function InvitePage({ params }: InvitePageProps) {
           {invite.message ? (
             <div className="mt-4 flex items-start gap-2.5 rounded-card bg-sunken p-3 ring-1 ring-hairline">
               <HandHeart
-                className="mt-0.5 shrink-0 text-warm-500"
+                className="mt-0.5 shrink-0 text-peach-300"
                 size={18}
                 weight="fill"
                 aria-hidden="true"
               />
               <div>
-                <p className="text-2xs font-bold uppercase tracking-[0.14em] text-sage-700">
+                <p className="text-2xs font-bold uppercase tracking-[0.14em] text-mint-ink">
                   Hilsen fra {invite.invitedByName ?? "familien"}
                 </p>
                 <p className="mt-0.5 text-sm leading-6 text-ink">{invite.message}</p>
@@ -131,7 +131,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
             <ShieldCheck
               size={14}
               weight="fill"
-              className="mt-0.5 shrink-0 text-sage-500"
+              className="mt-0.5 shrink-0 text-mint-300"
               aria-hidden="true"
             />
             <p>

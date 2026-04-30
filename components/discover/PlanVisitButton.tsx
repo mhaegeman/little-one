@@ -84,7 +84,7 @@ export function PlanVisitButton({
     return (
       <div className={className}>
         <div className="flex flex-col gap-2 sm:flex-row">
-          <span className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-sage-100 px-3 text-sm font-semibold text-sage-700 ring-1 ring-sage-200">
+          <span className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-mint-50 px-3 text-sm font-semibold text-mint-ink ring-1 ring-mint-100">
             <CheckCircle size={14} weight="fill" aria-hidden="true" />
             {t("plannedLabel", { date: formatLocalizedDate(existing.date, locale) })}
           </span>

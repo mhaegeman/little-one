@@ -356,7 +356,7 @@ function ConnectionRow({
   const locale = useLocale();
   return (
     <div className="flex items-start gap-3">
-      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-sunken text-sage-700 ring-1 ring-hairline">
+      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-sunken text-mint-ink ring-1 ring-hairline">
         <UsersThree size={18} weight="duotone" aria-hidden="true" />
       </span>
       <div className="min-w-0 flex-1">

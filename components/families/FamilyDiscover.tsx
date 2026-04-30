@@ -139,7 +139,7 @@ export function FamilyDiscover({ me, primaryFamily }: Props) {
         <button
           type="button"
           onClick={() => setFiltersOpen(true)}
-          className="focus-ring inline-flex h-10 items-center gap-2 rounded-lg bg-sunken px-3 text-sm font-semibold text-ink ring-1 ring-hairline hover:bg-sand-100"
+          className="focus-ring inline-flex h-10 items-center gap-2 rounded-lg bg-sunken px-3 text-sm font-semibold text-ink ring-1 ring-hairline hover:bg-canvas"
         >
           <Faders size={15} weight="bold" aria-hidden="true" />
           {t("filters")}

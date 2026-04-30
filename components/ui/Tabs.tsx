@@ -47,7 +47,7 @@ export function Tabs<T extends string>({
             {active ? (
               <span
                 aria-hidden="true"
-                className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-sage-500"
+                className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-mint-300"
               />
             ) : null}
           </button>

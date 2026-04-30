@@ -96,7 +96,7 @@ export function LocationControl({ userLocation, onChange }: LocationControlProps
           <button
             type="button"
             onClick={() => onChange(null)}
-            className="focus-ring inline-flex items-center gap-1 rounded-pill bg-sunken px-2 py-0.5 text-2xs font-semibold text-muted hover:text-warm-600"
+            className="focus-ring inline-flex items-center gap-1 rounded-pill bg-sunken px-2 py-0.5 text-2xs font-semibold text-muted hover:text-peach-ink"
           >
             <X size={10} weight="bold" aria-hidden="true" />
             Ryd
@@ -105,7 +105,7 @@ export function LocationControl({ userLocation, onChange }: LocationControlProps
       </div>
 
       {userLocation ? (
-        <p className="mt-2 inline-flex items-center gap-1.5 rounded-pill bg-sage-100 px-2 py-0.5 text-2xs font-semibold text-sage-700">
+        <p className="mt-2 inline-flex items-center gap-1.5 rounded-pill bg-mint-50 px-2 py-0.5 text-2xs font-semibold text-mint-ink">
           <MapPin size={11} weight="fill" aria-hidden="true" />
           {userLocation.label}
         </p>

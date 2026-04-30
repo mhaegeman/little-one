@@ -233,9 +233,9 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
       wrapper.setAttribute("aria-label", t("yourLocation"));
       const dot = document.createElement("span");
       dot.className =
-        "relative grid h-4 w-4 place-items-center rounded-full bg-warm-500 ring-[3px] ring-warm-500/30 shadow-sm";
+        "relative grid h-4 w-4 place-items-center rounded-full bg-peach-300 ring-[3px] ring-peach-300/30 shadow-sm";
       dot.innerHTML =
-        '<span class="absolute inset-0 -z-10 animate-ping rounded-full bg-warm-500/40"></span>';
+        '<span class="absolute inset-0 -z-10 animate-ping rounded-full bg-peach-300/40"></span>';
       wrapper.appendChild(dot);
       userMarkerRef.current = new maplibregl.Marker({ element: wrapper, anchor: "center" })
         .setLngLat([userLocation.lng, userLocation.lat])
@@ -346,7 +346,7 @@ function SelectedCard({
     <div className="pointer-events-none absolute bottom-3 left-3 right-3 sm:right-auto sm:max-w-sm">
       <Link
         href={`/venues/${venue.id}`}
-        className="focus-ring pointer-events-auto flex gap-2 overflow-hidden rounded-card bg-surface/96 p-1.5 shadow-lift ring-1 ring-hairline backdrop-blur transition hover:ring-sage-300"
+        className="focus-ring pointer-events-auto flex gap-2 overflow-hidden rounded-card bg-surface/96 p-1.5 shadow-lift ring-1 ring-hairline backdrop-blur transition hover:ring-mint-200"
       >
         {venue.photos[0] ? (
           <img
@@ -426,7 +426,7 @@ function updateClusterStyle(inner: HTMLElement, count: number) {
   // Scale by count (logarithmic so 50 doesn't dwarf 5)
   const size = Math.min(72, 36 + Math.log2(Math.max(2, count)) * 6);
   inner.className =
-    "grid place-items-center rounded-full bg-sage-500 text-white font-display font-semibold ring-[3px] ring-white shadow-lift transition-transform duration-150 ease-out hover:scale-105";
+    "grid place-items-center rounded-full bg-mint-300 text-white font-display font-semibold ring-[3px] ring-white shadow-lift transition-transform duration-150 ease-out hover:scale-105";
   inner.style.width = `${size}px`;
   inner.style.height = `${size}px`;
   inner.style.fontSize = `${Math.max(12, Math.min(18, size / 4))}px`;
@@ -455,25 +455,25 @@ function pinSvg(category: VenueCategory, selected: boolean) {
 }
 
 function categoryHex(category: VenueCategory) {
-  // Aligned with the new sage/warm palette
+  // Pastel Toy-Box palette — distinct hue per category for map markers.
   switch (category) {
     case "cafe":
-      return "#C46A40"; // warm
+      return "#E89A75"; // peach-300
     case "playground":
-      return "#5B8377"; // sage
+      return "#79B98A"; // mint-300
     case "indoor_play":
-      return "#B47A1F"; // warning
+      return "#6E4F0D"; // butter-ink
     case "cinema":
-      return "#3F6F84"; // info
+      return "#1F4254"; // sky-ink
     case "library":
-      return "#8C6B40"; // sand-700
+      return "#E5B441"; // butter-300
     case "swimming":
-      return "#2D6670"; // teal-info
+      return "#74A4BF"; // sky-300
     case "theatre":
-      return "#A55432"; // warm-600
+      return "#7A3A1E"; // peach-ink
     case "event":
-      return "#C46A40"; // warm
+      return "#1F4D32"; // mint-ink
     default:
-      return "#33554C"; // sage-700
+      return "#2A2723"; // ink
   }
 }

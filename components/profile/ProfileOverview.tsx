@@ -33,7 +33,7 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
     <div className="grid gap-4 lg:grid-cols-3">
       <section className="rounded-card bg-surface p-5 ring-1 ring-hairline lg:col-span-2">
         <div className="flex items-center gap-2">
-          <Sparkle size={16} weight="fill" className="text-warm-500" aria-hidden="true" />
+          <Sparkle size={16} weight="fill" className="text-peach-300" aria-hidden="true" />
           <h2 className="font-display text-xl font-semibold text-ink">{t("readyTitle")}</h2>
         </div>
         <p className="mt-1 text-sm leading-6 text-muted">
@@ -41,7 +41,7 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
         </p>
 
         {completeness.missing.length === 0 ? (
-          <p className="mt-3 rounded-lg bg-sage-100 p-3 text-sm font-semibold text-sage-700 ring-1 ring-sage-200">
+          <p className="mt-3 rounded-lg bg-mint-50 p-3 text-sm font-semibold text-mint-ink ring-1 ring-mint-100">
             {t("profileComplete")}
           </p>
         ) : (
@@ -57,7 +57,7 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
                 <button
                   type="button"
                   onClick={() => onJumpTo("preferences")}
-                  className="focus-ring inline-flex items-center gap-1 rounded-md text-2xs font-bold uppercase tracking-wide text-warm-600 hover:text-warm-700"
+                  className="focus-ring inline-flex items-center gap-1 rounded-md text-2xs font-bold uppercase tracking-wide text-peach-ink hover:text-peach-ink"
                 >
                   {t("add")}
                   <ArrowRight size={11} weight="bold" aria-hidden="true" />
@@ -76,7 +76,7 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
               <button
                 type="button"
                 onClick={() => onJumpTo("preferences")}
-                className="focus-ring mt-1.5 inline-flex items-center gap-1 rounded-pill bg-sunken px-2.5 py-1 text-xs font-semibold text-muted ring-1 ring-hairline hover:bg-sand-100"
+                className="focus-ring mt-1.5 inline-flex items-center gap-1 rounded-pill bg-sunken px-2.5 py-1 text-xs font-semibold text-muted ring-1 ring-hairline hover:bg-canvas"
               >
                 <Heart size={12} weight="fill" aria-hidden="true" />
                 {t("chooseCategories")}
@@ -84,7 +84,7 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
             ) : (
               <div className="mt-1.5 flex flex-wrap gap-1">
                 {interests.map((category) => (
-                  <Badge key={category} variant="sage">
+                  <Badge key={category} variant="mint">
                     {tTaxonomy(category as VenueCategory)}
                   </Badge>
                 ))}
@@ -100,7 +100,7 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
               <button
                 type="button"
                 onClick={() => onJumpTo("preferences")}
-                className="focus-ring mt-1.5 inline-flex items-center gap-1 rounded-pill bg-sunken px-2.5 py-1 text-xs font-semibold text-muted ring-1 ring-hairline hover:bg-sand-100"
+                className="focus-ring mt-1.5 inline-flex items-center gap-1 rounded-pill bg-sunken px-2.5 py-1 text-xs font-semibold text-muted ring-1 ring-hairline hover:bg-canvas"
               >
                 <MapPinArea size={12} weight="fill" aria-hidden="true" />
                 {t("addNeighbourhoods")}
@@ -138,7 +138,7 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
               <button
                 type="button"
                 onClick={() => onJumpTo("preferences")}
-                className="focus-ring mt-1.5 text-sm font-semibold text-warm-600 hover:text-warm-700"
+                className="focus-ring mt-1.5 text-sm font-semibold text-peach-ink hover:text-peach-ink"
               >
                 {t("setAgeRange")}
               </button>
@@ -165,13 +165,13 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
       <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Users size={16} weight="fill" className="text-sage-700" aria-hidden="true" />
+            <Users size={16} weight="fill" className="text-mint-ink" aria-hidden="true" />
             <h2 className="font-display text-lg font-semibold text-ink">{t("familyTitle")}</h2>
           </div>
           <button
             type="button"
             onClick={() => onJumpTo("family")}
-            className="focus-ring text-2xs font-bold uppercase tracking-wide text-warm-600 hover:text-warm-700"
+            className="focus-ring text-2xs font-bold uppercase tracking-wide text-peach-ink hover:text-peach-ink"
           >
             {t("seeAll")}
           </button>
@@ -203,7 +203,7 @@ export function ProfileOverview({ profile, members, onJumpTo }: Props) {
                       className="h-8 w-8 rounded-lg object-cover ring-2 ring-surface"
                     />
                   ) : (
-                    <span className="grid h-8 w-8 place-items-center rounded-lg bg-surface font-display text-xs font-semibold text-sage-700 ring-2 ring-surface">
+                    <span className="grid h-8 w-8 place-items-center rounded-lg bg-surface font-display text-xs font-semibold text-mint-ink ring-2 ring-surface">
                       {initials || "?"}
                     </span>
                   )}

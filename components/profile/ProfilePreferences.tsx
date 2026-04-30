@@ -142,7 +142,7 @@ export function ProfilePreferences({ profile, onSave }: Props) {
   return (
     <form onSubmit={submit} className="space-y-4">
       <SectionCard
-        icon={<UserCircle size={16} weight="fill" className="text-sage-700" aria-hidden="true" />}
+        icon={<UserCircle size={16} weight="fill" className="text-mint-ink" aria-hidden="true" />}
         title={t("personalInfo")}
         subtitle={t("personalInfoSubtitle")}
       >
@@ -180,7 +180,7 @@ export function ProfilePreferences({ profile, onSave }: Props) {
       </SectionCard>
 
       <SectionCard
-        icon={<Heart size={16} weight="fill" className="text-warm-500" aria-hidden="true" />}
+        icon={<Heart size={16} weight="fill" className="text-peach-300" aria-hidden="true" />}
         title={t("interests")}
         subtitle={t("interestsSubtitle")}
       >
@@ -194,7 +194,7 @@ export function ProfilePreferences({ profile, onSave }: Props) {
                 onClick={() => toggleCategory(category)}
                 className={`focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors ${
                   active
-                    ? "bg-sage-500 text-white ring-sage-500"
+                    ? "bg-mint-300 text-white ring-mint-300"
                     : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                 }`}
               >
@@ -214,7 +214,7 @@ export function ProfilePreferences({ profile, onSave }: Props) {
                 onClick={() => setIndoorPreference(value)}
                 className={`focus-ring rounded-lg px-3 py-2.5 text-sm font-semibold ring-1 transition-colors ${
                   active
-                    ? "bg-sage-500 text-white ring-sage-500"
+                    ? "bg-mint-300 text-white ring-mint-300"
                     : "bg-surface text-ink ring-hairline hover:bg-sunken"
                 }`}
               >
@@ -240,7 +240,7 @@ export function ProfilePreferences({ profile, onSave }: Props) {
                 onClick={() => toggleNeighbourhood(hood)}
                 className={`focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors ${
                   active
-                    ? "bg-sage-700 text-white ring-sage-700"
+                    ? "bg-mint-ink text-white ring-mint-ink"
                     : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                 }`}
               >
@@ -252,7 +252,7 @@ export function ProfilePreferences({ profile, onSave }: Props) {
       </SectionCard>
 
       <SectionCard
-        icon={<Sparkle size={16} weight="fill" className="text-warm-500" aria-hidden="true" />}
+        icon={<Sparkle size={16} weight="fill" className="text-peach-300" aria-hidden="true" />}
         title={t("childAge")}
         subtitle={t("childAgeSubtitle")}
       >
@@ -264,7 +264,7 @@ export function ProfilePreferences({ profile, onSave }: Props) {
             type="checkbox"
             checked={trackChild}
             onChange={(event) => setTrackChild(event.target.checked)}
-            className="h-4 w-4 accent-sage-500"
+            className="h-4 w-4 accent-mint-300"
           />
         </label>
 
@@ -283,7 +283,7 @@ export function ProfilePreferences({ profile, onSave }: Props) {
               max={72}
               value={ageMin}
               onChange={(event) => setAgeMin(Math.min(Number(event.target.value), ageMax))}
-              className="w-full accent-sage-500"
+              className="w-full accent-mint-300"
             />
             <input
               aria-label={t("ageRange")}
@@ -292,14 +292,14 @@ export function ProfilePreferences({ profile, onSave }: Props) {
               max={72}
               value={ageMax}
               onChange={(event) => setAgeMax(Math.max(Number(event.target.value), ageMin))}
-              className="w-full accent-sage-500"
+              className="w-full accent-mint-300"
             />
           </div>
         ) : null}
       </SectionCard>
 
       <SectionCard
-        icon={<SlidersHorizontal size={16} weight="bold" className="text-sage-700" aria-hidden="true" />}
+        icon={<SlidersHorizontal size={16} weight="bold" className="text-mint-ink" aria-hidden="true" />}
         title={t("accountSection")}
         subtitle={t("accountSubtitle")}
       >
@@ -317,7 +317,7 @@ export function ProfilePreferences({ profile, onSave }: Props) {
                   onClick={() => setRole(roleKey)}
                   className={`focus-ring rounded-lg px-2 py-2 text-xs font-semibold ring-1 transition-colors ${
                     active
-                      ? "bg-sage-500 text-white ring-sage-500"
+                      ? "bg-mint-300 text-white ring-mint-300"
                       : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                   }`}
                 >
@@ -342,7 +342,7 @@ export function ProfilePreferences({ profile, onSave }: Props) {
                   onClick={() => setLocale(value)}
                   className={`focus-ring rounded-lg px-2 py-2 text-xs font-semibold uppercase tracking-[0.16em] ring-1 transition-colors ${
                     active
-                      ? "bg-sage-500 text-white ring-sage-500"
+                      ? "bg-mint-300 text-white ring-mint-300"
                       : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                   }`}
                 >
@@ -355,14 +355,14 @@ export function ProfilePreferences({ profile, onSave }: Props) {
 
         <label className="mt-3 flex items-center justify-between gap-3 rounded-lg bg-sunken p-2.5 ring-1 ring-hairline">
           <span className="flex items-start gap-1.5 text-sm font-semibold text-ink">
-            <BellRinging size={14} weight="fill" className="mt-0.5 text-warm-500" aria-hidden="true" />
+            <BellRinging size={14} weight="fill" className="mt-0.5 text-peach-300" aria-hidden="true" />
             {t("notifications")}
           </span>
           <input
             type="checkbox"
             checked={notifyEmail}
             onChange={(event) => setNotifyEmail(event.target.checked)}
-            className="h-4 w-4 accent-sage-500"
+            className="h-4 w-4 accent-mint-300"
           />
         </label>
       </SectionCard>
@@ -379,7 +379,7 @@ export function ProfilePreferences({ profile, onSave }: Props) {
           )}
         </Button>
         {status === "saved" ? (
-          <span className="flex items-center gap-1 text-sm font-semibold text-sage-700">
+          <span className="flex items-center gap-1 text-sm font-semibold text-mint-ink">
             <CheckCircle size={14} weight="fill" aria-hidden="true" />
             {t("savedIndicator")}
           </span>

@@ -24,16 +24,16 @@ export const categoryDescriptions: Record<VenueCategory, string> = {
 
 export const categoryBadgeVariant: Record<
   VenueCategory,
-  "warm" | "sage" | "warning" | "sky" | "sand"
+  "peach" | "mint" | "butter" | "sky" | "neutral"
 > = {
-  cafe: "warm",
-  playground: "sage",
-  indoor_play: "warning",
+  cafe: "peach",
+  playground: "mint",
+  indoor_play: "butter",
   cinema: "sky",
-  library: "sand",
+  library: "neutral",
   swimming: "sky",
-  theatre: "warm",
-  event: "warm"
+  theatre: "peach",
+  event: "peach"
 };
 
 export const categories = Object.keys(categoryLabels) as VenueCategory[];

@@ -1,5 +1,6 @@
 import { ArrowRight, Check } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import Link from "next/link";
 import { buttonClass } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -13,18 +14,17 @@ export function Grandparents() {
     >
       <div className="mx-auto grid max-w-[1240px] items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
         <div className="relative order-2 lg:order-1">
-          <div className="relative aspect-[4/5] w-full max-w-[460px] overflow-hidden rounded-2xl ring-1 ring-hairline">
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 bg-gradient-to-br from-peach-100 via-butter-50 to-mint-100"
+          <div className="relative aspect-[4/5] w-full max-w-[460px] overflow-hidden rounded-2xl bg-sunken ring-1 ring-hairline">
+            <Image
+              src="/photography/grandparents-baby-smile.webp"
+              alt={t("portraitImageAlt")}
+              fill
+              sizes="(min-width: 1024px) 460px, (min-width: 768px) 50vw, 90vw"
+              className="object-cover"
             />
             <div
               aria-hidden="true"
-              className="absolute -bottom-12 -right-10 h-60 w-60 rounded-full bg-peach-200/70 blur-2xl"
-            />
-            <div
-              aria-hidden="true"
-              className="absolute left-10 top-12 h-44 w-44 rounded-full bg-butter-200/60 blur-2xl"
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink/30 to-transparent"
             />
             <div className="absolute bottom-5 left-5 inline-flex items-center gap-2 rounded-pill bg-surface/95 px-3 py-1.5 text-xs font-semibold text-ink ring-1 ring-hairline backdrop-blur-sm">
               <span

@@ -275,10 +275,10 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
                   onClick={() => setActiveThreadId(thread.id)}
                   className={cn(
                     "focus-ring flex w-full items-start gap-2.5 rounded-lg px-2 py-2 text-left transition-colors",
-                    active ? "bg-sage-100 text-sage-700" : "text-ink hover:bg-sunken"
+                    active ? "bg-mint-50 text-mint-ink" : "text-ink hover:bg-sunken"
                   )}
                 >
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-sunken text-sage-700">
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-sunken text-mint-ink">
                     <UsersThree size={16} weight="duotone" aria-hidden="true" />
                   </span>
                   <span className="min-w-0 flex-1">
@@ -324,7 +324,7 @@ export function MessagesPanel({ me, primaryFamily }: Props) {
               >
                 <ArrowLeft size={14} weight="bold" aria-hidden="true" />
               </button>
-              <span className="grid h-9 w-9 place-items-center rounded-lg bg-sunken text-sage-700 ring-1 ring-hairline">
+              <span className="grid h-9 w-9 place-items-center rounded-lg bg-sunken text-mint-ink ring-1 ring-hairline">
                 <UsersThree size={16} weight="duotone" aria-hidden="true" />
               </span>
               <div className="min-w-0 flex-1">
