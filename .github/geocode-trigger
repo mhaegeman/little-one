@@ -1,0 +1,10 @@
+# Bump the timestamp below to trigger a run of the Geocode venues workflow.
+# The first non-comment line is passed verbatim as args to scripts/geocode-venues.ts.
+# Examples:
+#   (empty)                 dry-run, threshold 250m
+#   --threshold=400         dry-run with wider threshold
+#   --apply                 write updates within threshold to lib/data/venues.ts
+#   --apply --threshold=400
+#
+--apply
+# trigger: 2026-04-30T16:15Z (apply round 2: 5 newly eligible)

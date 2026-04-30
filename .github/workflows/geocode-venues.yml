@@ -1,0 +1,99 @@
+name: Geocode venues
+
+# Runs the bulk-geocode script (scripts/geocode-venues.ts) on a GitHub-hosted
+# runner — they have unrestricted egress, unlike most CI sandboxes — and
+# commits the report (and any --apply'd venue edits) back to the triggering
+# branch so the result is reviewable in the repo.
+#
+# Trigger options:
+#   - workflow_dispatch: run from the GitHub UI with custom args
+#   - push: bump the timestamp inside .github/geocode-trigger to invoke a run.
+#     The first non-comment line of that file becomes the script's CLI args.
+
+on:
+  workflow_dispatch:
+    inputs:
+      args:
+        description: "Args for npm run geocode:venues (e.g. --apply --threshold=250)"
+        type: string
+        default: ""
+  push:
+    paths:
+      - .github/geocode-trigger
+      - scripts/geocode-venues.ts
+      - .github/workflows/geocode-venues.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: geocode-venues-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  geocode:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # Use the default GITHUB_TOKEN to push back; permissions: contents:write above.
+          persist-credentials: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Resolve script args
+        id: args
+        shell: bash
+        run: |
+          set -euo pipefail
+          DISPATCH_ARGS="${{ inputs.args }}"
+          if [ -n "$DISPATCH_ARGS" ]; then
+            ARGS="$DISPATCH_ARGS"
+          elif [ -f .github/geocode-trigger ]; then
+            ARGS="$(grep -v '^[[:space:]]*#' .github/geocode-trigger | grep -v '^[[:space:]]*$' | head -n1 | xargs || true)"
+          else
+            ARGS=""
+          fi
+          echo "args=$ARGS" >> "$GITHUB_OUTPUT"
+          echo "Resolved args: $ARGS"
+
+      - name: Run geocoder
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p scripts
+          # tee preserves the report even if npm run fails; pipefail surfaces failures.
+          npm run geocode:venues -- ${{ steps.args.outputs.args }} 2>&1 | tee scripts/last-geocode-report.txt
+
+      - name: Commit results back to branch
+        shell: bash
+        env:
+          BRANCH: ${{ github.ref_name }}
+          RUN_ID: ${{ github.run_id }}
+          ARGS: ${{ steps.args.outputs.args }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/last-geocode-report.txt
+          # lib/data/venues.ts only changes when --apply was passed; add if dirty.
+          if ! git diff --quiet -- lib/data/venues.ts; then
+            git add lib/data/venues.ts
+          fi
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          MSG="chore(geocode): report from run ${RUN_ID}"
+          if [ -n "$ARGS" ]; then MSG="$MSG (args: ${ARGS})"; fi
+          git commit -m "$MSG"
+          # Pull any concurrent commits to avoid race; safe rebase since we only added files.
+          git pull --rebase origin "$BRANCH" || true
+          git push origin "HEAD:${BRANCH}"

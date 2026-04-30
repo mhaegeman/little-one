@@ -1,0 +1,112 @@
+
+> lille-liv@0.1.0 geocode:venues
+> tsx scripts/geocode-venues.ts --apply
+
+Geocoding 62 venue(s) against Nominatim
+Mode: APPLY | threshold: 10000 m
+
+[ 1/62] = the-living-room              Δ  <1m  [place/house]  The Living Room
+[ 2/62] = granola                      Δ  <1m  [place/house]  Granola
+[ 3/62] = absalon                      Δ  <1m  [place/house]  Absalon
+[ 4/62] = bar50-danhostel              Δ  <1m  [place/house]  BAR50 Child-friendly Cafe
+[ 5/62] = mad-og-kaffe-vesterbro       Δ  <1m  [place/house]  Mad & Kaffe Vesterbro
+[ 6/62] → superkilen                   Δ 497m  [place/house]  Superkilen
+[ 7/62] ✗ taarnlegepladsen — no Nominatim match for "Fælledparken, 2100 København Ø"
+[ 8/62] → trafiklegepladsen            Δ 614m  [place/house]  Trafiklegepladsen
+[ 9/62] ✗ kongens-have-legeplads — no Nominatim match for "Øster Voldgade 4, 1350 København K"
+[10/62] = valbyparken-naturlegeplads   Δ  <1m  [place/house]  Naturlegepladsen i Valbyparken
+[11/62] ! konditaget-luders            Δ 312m  [highway/residential]  Konditaget Lüders
+[12/62] ✗ havnegade-trampoliner — no Nominatim match for "Havnegade, 1058 København K"
+[13/62] = skydebanehaven               Δ  <1m  [place/house]  Skydebanehaven
+[14/62] ✗ amager-strandpark — no Nominatim match for "Amager Strand Promenaden, 2300 København S"
+[15/62] = experimentarium              Δ  <1m  [place/house]  Experimentarium
+[16/62] = dinos-legeland               Δ  <1m  [place/house]  Dinos Legeland
+[17/62] = remisen                      Δ  <1m  [place/house]  Remisen
+[18/62] = ku-be                        Δ  <1m  [place/house]  KU.BE
+[19/62] = den-blaa-planet              Δ  <1m  [place/house]  Den Blå Planet
+[20/62] = boernenes-museum             Δ  <1m  [place/house]  Børnenes Museum
+[21/62] = cinemateket                  Δ  <1m  [place/house]  Cinemateket
+[22/62] = hovedbiblioteket-laes        Δ  <1m  [place/house]  Hovedbiblioteket LÆS
+[23/62] = biblioteket-rentemestervej   Δ  <1m  [place/house]  BIBLIOTEKET Rentemestervej
+[24/62] = oesterbro-bibliotek          Δ  <1m  [place/house]  Østerbro Bibliotek
+[25/62] = frederiksberg-hovedbibliotek Δ  <1m  [place/house]  Frederiksberg Hovedbibliotek
+[26/62] = valby-bibliotek              Δ  <1m  [place/house]  Valby Bibliotek
+[27/62] = bibliotekshuset              Δ  <1m  [place/house]  Bibliotekshuset
+[28/62] = dgi-byen-svoemning           Δ  <1m  [place/house]  DGI Byen Svømmehal
+[29/62] = valby-vandkulturhus          Δ  <1m  [place/house]  Valby Vandkulturhus
+[30/62] = oebro-hallen                 Δ  <1m  [place/house]  Øbro-Hallen
+[31/62] = bellahoej-svoemmestadion     Δ  <1m  [place/house]  Bellahøj Svømmestadion
+[32/62] → det-lille-teater             Δ 174m  [place/house]  Det Lille Teater
+[33/62] ✗ marionet-teatret — no Nominatim match for "Kongens Have, 1350 København K"
+[34/62] = eventyrteatret-tivoli        Δ  <1m  [place/house]  Eventyrteatret i Tivoli
+[35/62] = kongelige-teater-de-smaa-synger Δ  <1m  [place/house]  Det Kongelige Teater
+[36/62] = copenhagen-zoo               Δ  <1m  [place/house]  København Zoo
+[37/62] = tivoli-gardens               Δ  <1m  [place/house]  Tivoli
+[38/62] = little-house-oesterbro       Δ  <1m  [place/house]  Little House Østerbro
+[39/62] = little-house-noerrebro       Δ  <1m  [place/house]  Little House Nørrebro
+[40/62] = little-house-amager          Δ  <1m  [place/house]  Little House Amager
+[41/62] = little-house-valby           Δ  <1m  [place/house]  Little House Valby
+[42/62] → little-house-sydhavn         Δ1.18km  [place/house]  Little House Sydhavn
+[43/62] = paludan-bogcafe              Δ  <1m  [place/house]  Paludan Bogcafé
+[44/62] = frederiksberg-have           Δ  <1m  [place/house]  Frederiksberg Have
+[45/62] ! soendermarken                Δ 995m  [highway/residential]  Søndermarken
+[46/62] = karens-minde-kulturhus       Δ  <1m  [place/house]  Karens Minde Kulturhus
+[47/62] = bavnehoej-friluftsbad        Δ  <1m  [place/house]  Bavnehøj Friluftsbad
+[48/62] = sydhavnstippen               Δ  <1m  [place/house]  Sydhavnstippen
+[49/62] ! utterslev-mose               Δ1.61km  [information/board]  Utterslev Mose
+[50/62] = botanisk-have                Δ  <1m  [place/house]  Botanisk Have
+[51/62] = assistens-kirkegaard         Δ  <1m  [place/house]  Assistens Kirkegård
+[52/62] = oerstedsparken               Δ  <1m  [place/house]  Ørstedsparken
+[53/62] ! ishoj-strandpark             Δ3.33km  [highway/secondary]  Ishøj Strandpark
+[54/62] → havnebadet-islands-brygge    Δ 455m  [place/house]  Havnebadet Islands Brygge
+[55/62] ! dyrehaven                    Δ2.04km  [highway/bus_stop]  Dyrehaven
+[56/62] = bellevue-strand              Δ  <1m  [place/house]  Bellevue Strand
+[57/62] = bakken                       Δ  <1m  [place/house]  Bakken (Dyrehavsbakken)
+[58/62] = louisiana-museum             Δ  <1m  [place/house]  Louisiana Museum of Modern Art
+[59/62] = vikingeskibsmuseet           Δ  <1m  [place/house]  Vikingeskibsmuseet
+[60/62] = frilandsmuseet               Δ  <1m  [place/house]  Frilandsmuseet
+[61/62] = arken-museum                 Δ  <1m  [place/house]  ARKEN Museum for Moderne Kunst
+[62/62] = copenhagen-contemporary      Δ  <1m  [place/house]  Copenhagen Contemporary
+
+=== Summary ===
+Already aligned (Δ < 1m):    47
+Eligible to apply:           5
+Flagged (coarse / over cap): 5
+No Nominatim match:          5
+Errors:                      0
+
+Flagged venues — review manually in /admin/map-tool:
+  • konditaget-luders  Δ 312m  Konditaget Lüders  — coarse match (highway/residential)
+      addr:      Helsinkigade 30, 2150 Nordhavn
+      current:   55.711, 12.5968
+      nominatim: 55.7081991, 12.5964155  [highway/residential]
+      OSM says:  Helsinkigade, Sundmolen, Nordhavn, København, Københavns Kommune, Region Hovedstaden, 2150, Danmark
+  • soendermarken  Δ 995m  Søndermarken  — coarse match (highway/residential)
+      addr:      Søndermarken, 2000 Frederiksberg
+      current:   55.6764, 12.5128
+      nominatim: 55.6682503, 12.5193711  [highway/residential]
+      OSM says:  Bag Søndermarken, Frederiksberg, Frederiksberg Kommune, Region Hovedstaden, 1805, Danmark
+  • utterslev-mose  Δ1.61km  Utterslev Mose  — coarse match (information/board)
+      addr:      Utterslev Mose, 2700 Brønshøj
+      current:   55.7145, 12.5105
+      nominatim: 55.7089155, 12.4867894  [information/board]
+      OSM says:  Utterslev Mose, Pilesvinget, Brønshøj, København, Københavns Kommune, Region Hovedstaden, 2700, Danmark
+  • ishoj-strandpark  Δ3.33km  Ishøj Strandpark  — coarse match (highway/secondary)
+      addr:      Ishøj Strandvej, 2635 Ishøj
+      current:   55.6044, 12.2993
+      nominatim: 55.603032, 12.3522747  [highway/secondary]
+      OSM says:  Ishøj Strandvej, Ishøj, Ishøj Kommune, Region Hovedstaden, 2635, Danmark
+  • dyrehaven  Δ2.04km  Dyrehaven  — coarse match (highway/bus_stop)
+      addr:      Dyrehaven, 2930 Klampenborg
+      current:   55.7734, 12.5521
+      nominatim: 55.7750786, 12.5845234  [highway/bus_stop]
+      OSM says:  Dyrehaven, Dyrehavevej, Ordrup, Klampenborg, Gentofte Kommune, Region Hovedstaden, 2930, Danmark
+
+No Nominatim match — review manually:
+  • taarnlegepladsen  Fælledparken, 2100 København Ø
+  • kongens-have-legeplads  Øster Voldgade 4, 1350 København K
+  • havnegade-trampoliner  Havnegade, 1058 København K
+  • amager-strandpark  Amager Strand Promenaden, 2300 København S
+  • marionet-teatret  Kongens Have, 1350 København K
+
+✓ Wrote 5 update(s) to lib/data/venues.ts.
