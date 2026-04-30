@@ -202,6 +202,10 @@
       opacity: 0.10;
     }
 
+    /* Cover image used in venue cards / hero / capture photo */
+    .cover { position: relative; overflow: hidden; border-radius: 24px; background: var(--sunken); }
+    .cover > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+
     /* SCENE 1 — opening */
     #s1 .scene-content {
       display: grid; place-items: center;
@@ -238,7 +242,8 @@
       padding: 28px;
       display: flex; gap: 24px; align-items: center;
     }
-    #s2 .venue .ph { width: 160px; height: 160px; flex: none; }
+    #s2 .venue .ph,
+    #s2 .venue .cover { width: 160px; height: 160px; flex: none; }
     #s2 .venue .v-title { font-family: var(--font-display); font-weight: 500; font-size: 44px; color: var(--ink); letter-spacing: -0.02em; }
     #s2 .venue .v-meta { font-size: 24px; color: var(--subtle); margin-top: 8px; }
     #s2 .venue .v-pills { display: flex; gap: 10px; margin-top: 16px; }
@@ -481,24 +486,28 @@
             </div>
 
             <div class="card venue feed-card" id="s2-v1">
-              <div class="ph mint"></div>
+              <div class="cover">
+                <img src="../../../(marketing)/_components/faelledparken_playground.jpg" alt="" />
+              </div>
               <div>
-                <div class="v-title">Plantebørnehaven</div>
-                <div class="v-meta">Indendørs leg · Nørrebro · 0,8 km</div>
+                <div class="v-title">Fælledparken</div>
+                <div class="v-meta">Park &amp; legeplads · Østerbro · 1,2 km</div>
                 <div class="v-pills">
                   <span class="pill mint">0–3 år</span>
-                  <span class="pill sky">Inde</span>
+                  <span class="pill sky">Ude</span>
                 </div>
               </div>
             </div>
 
             <div class="card venue feed-card" id="s2-v2">
-              <div class="ph butter"></div>
+              <div class="cover">
+                <img src="../../../(marketing)/_components/absalon-cafe.jpg" alt="" />
+              </div>
               <div>
-                <div class="v-title">Kaffe og Køkken</div>
-                <div class="v-meta">Cafe · Vesterbro · 0,4 km</div>
+                <div class="v-title">Absalon</div>
+                <div class="v-meta">Spisested · Vesterbro · 0,8 km</div>
                 <div class="v-pills">
-                  <span class="pill butter">Klapvogn-plads</span>
+                  <span class="pill butter">Familiebrunch</span>
                 </div>
               </div>
             </div>
@@ -506,11 +515,11 @@
             <div class="card venue feed-card" id="s2-v3">
               <div class="ph sky"></div>
               <div>
-                <div class="v-title">Fælledparken</div>
-                <div class="v-meta">Park · Østerbro · 1,2 km</div>
+                <div class="v-title">Plantebørnehaven</div>
+                <div class="v-meta">Indendørs · Nørrebro · 1,5 km</div>
                 <div class="v-pills">
-                  <span class="pill sky">Læ</span>
-                  <span class="pill mint">Legeplads</span>
+                  <span class="pill sky">0–3 år</span>
+                  <span class="pill mint">Inde</span>
                 </div>
               </div>
             </div>
@@ -530,15 +539,16 @@
               <span>9:25</span>
               <span class="ind"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>
             </div>
-            <div id="s3-hero" class="hero-img ph mint" style="color: var(--mint-ink);">
+            <div id="s3-hero" class="hero-img cover">
+              <img src="../../../(marketing)/_components/faelledparken_playground.jpg" alt="" />
               <div class="badge"><span style="display:inline-block;width:14px;height:14px;border-radius:999px;background:var(--mint-300);"></span>Åbent nu</div>
             </div>
             <div class="v-detail">
-              <h2 id="s3-title">Plantebørnehaven</h2>
-              <div class="meta" id="s3-meta">Indendørs leg blandt grønne planter · Nørrebro</div>
+              <h2 id="s3-title">Fælledparken</h2>
+              <div class="meta" id="s3-meta">Storbylegeplads med klatretårn og bløde bakker · Østerbro</div>
               <div class="pills" id="s3-pills">
                 <span class="pill mint">0–3 år</span>
-                <span class="pill sky">Inde</span>
+                <span class="pill sky">Ude</span>
                 <span class="pill butter">Plads til klapvogn</span>
               </div>
             </div>
@@ -568,9 +578,11 @@
               </div>
             </div>
             <div class="capture">
-              <div class="ph-photo ph peach" id="s4-photo" style="color:var(--peach-ink);"></div>
+              <div class="ph-photo cover" id="s4-photo">
+                <img src="../../../(marketing)/_components/baby_smile.png" alt="" />
+              </div>
               <div class="card peach capture-card" id="s4-card">
-                <div class="eyebrow" style="color: var(--peach-ink);">I dag · Plantebørnehaven</div>
+                <div class="eyebrow" style="color: var(--peach-ink);">I dag · Fælledparken</div>
                 <div class="ttl" id="s4-ttl">Første smil til en blomst.</div>
                 <div class="who">Asta · 4 mdr.</div>
               </div>
@@ -625,7 +637,7 @@
               <div class="node"></div>
               <div class="body">
                 <div class="new-tag">Lige tilføjet</div>
-                <div class="when" style="color: var(--peach-ink); opacity: 0.7;">I dag · Plantebørnehaven</div>
+                <div class="when" style="color: var(--peach-ink); opacity: 0.7;">I dag · Fælledparken</div>
                 <div class="ttl">Første smil til en blomst.</div>
               </div>
             </div>
@@ -658,7 +670,7 @@
 
             <div class="echo" id="s6-echo">
               <div class="meta">
-                <span style="font-size: 22px; font-weight:700; text-transform:uppercase; letter-spacing:0.14em;">I dag · Plantebørnehaven</span>
+                <span style="font-size: 22px; font-weight:700; text-transform:uppercase; letter-spacing:0.14em;">I dag · Fælledparken</span>
               </div>
               <div class="ttl">Første smil til en blomst.</div>
               <div class="reactions" id="s6-reactions">
@@ -754,7 +766,7 @@
     tl.from("#s2-v2", { y: 100, autoAlpha: 0, duration: 0.55, ease: "power3.out" }, 3.0);
     tl.from("#s2-v3", { y: 100, autoAlpha: 0, duration: 0.55, ease: "power3.out" }, 3.15);
 
-    // Tap ripple on Plantebørnehaven (v1) before shader fires
+    // Tap ripple on Fælledparken (v1) before shader fires
     tl.to("#s2-tap", { autoAlpha: 0.9, scale: 1.0, duration: 0.18, ease: "power2.out" }, 4.05);
     tl.to("#s2-tap", { autoAlpha: 0, scale: 1.6, duration: 0.4, ease: "power2.out" }, 4.18);
     // Card press feedback

@@ -3,17 +3,19 @@
 import {
   CheckCircle,
   Heart,
-  House,
   Leaf,
-  MapPin,
   Sun
 } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
+import Image, { type StaticImageData } from "next/image";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Avatar } from "@/components/ui/Avatar";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Pill } from "@/components/ui/Pill";
 import { cn } from "@/lib/utils";
+import absalonImg from "./absalon-cafe.jpg";
+import babyFlowerImg from "./baby_smile.png";
+import playgroundImg from "./faelledparken_playground.jpg";
 
 // Scene durations roughly match the brand-reel handoff:
 // scenes/index-landscape.html — 2.0s / 2.5s / 2.5s / 2.5s / 2.0s / 2.0s.
@@ -220,7 +222,8 @@ function SceneDiscover() {
       >
         <VenueRow
           tone="mint"
-          icon={<Leaf size={20} weight="fill" />}
+          image={playgroundImg}
+          imageAlt=""
           title={t("scene2Venue1Title")}
           sub={t("scene2Venue1Sub")}
           pills={[
@@ -237,7 +240,8 @@ function SceneDiscover() {
       >
         <VenueRow
           tone="butter"
-          icon={<House size={20} weight="fill" />}
+          image={absalonImg}
+          imageAlt=""
           title={t("scene2Venue2Title")}
           sub={t("scene2Venue2Sub")}
           pills={[{ label: t("scene2Venue2Pill1"), tone: "butter" }]}
@@ -250,7 +254,7 @@ function SceneDiscover() {
       >
         <VenueRow
           tone="sky"
-          icon={<MapPin size={20} weight="fill" />}
+          icon={<Leaf size={20} weight="fill" />}
           title={t("scene2Venue3Title")}
           sub={t("scene2Venue3Sub")}
           pills={[
@@ -274,13 +278,17 @@ const venueTints: Record<VenueTone, string> = {
 function VenueRow({
   tone,
   icon,
+  image,
+  imageAlt,
   title,
   sub,
   pills,
   highlighted
 }: {
   tone: VenueTone;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
+  image?: StaticImageData;
+  imageAlt?: string;
   title: string;
   sub: string;
   pills: { label: string; tone: "mint" | "peach" | "butter" | "sky" }[];
@@ -288,14 +296,26 @@ function VenueRow({
 }) {
   return (
     <div className="flex items-start gap-2.5 rounded-lg bg-surface p-2.5 ring-1 ring-hairline">
-      <div
-        className={cn(
-          "grid h-12 w-12 shrink-0 place-items-center rounded-md",
-          venueTints[tone]
-        )}
-      >
-        {icon}
-      </div>
+      {image ? (
+        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-md">
+          <Image
+            src={image}
+            alt={imageAlt ?? ""}
+            fill
+            sizes="48px"
+            className="object-cover"
+          />
+        </div>
+      ) : (
+        <div
+          className={cn(
+            "grid h-12 w-12 shrink-0 place-items-center rounded-md",
+            venueTints[tone]
+          )}
+        >
+          {icon}
+        </div>
+      )}
       <div className="min-w-0 flex-1">
         <div className="truncate text-[13px] font-semibold tracking-tight text-ink">
           {title}
@@ -328,25 +348,20 @@ function SceneVenue() {
     <div className="relative h-full w-full">
       <div
         data-anim="rise-lg"
-        className="relative mx-3 mt-1 h-[230px] overflow-hidden rounded-lg bg-mint-100 text-mint-ink ring-1 ring-mint-200"
+        className="relative mx-3 mt-1 h-[230px] overflow-hidden rounded-lg ring-1 ring-mint-200"
       >
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 opacity-25"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(135deg, currentColor 0 1px, transparent 1px 18px)"
-          }}
+        <Image
+          src={playgroundImg}
+          alt=""
+          fill
+          sizes="(max-width: 420px) 296px, 320px"
+          className="object-cover"
+          priority
         />
-        <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-pill bg-surface px-2.5 py-1 text-[10px] font-semibold text-ink shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
+        <div className="absolute left-3 top-3 z-10 inline-flex items-center gap-1.5 rounded-pill bg-surface px-2.5 py-1 text-[10px] font-semibold text-ink shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
           <span className="block h-1.5 w-1.5 rounded-full bg-mint-300" />
           {t("scene3OpenNow")}
         </div>
-        <Leaf
-          size={56}
-          weight="fill"
-          className="absolute bottom-6 right-6 text-mint-300/70"
-        />
       </div>
 
       <div className="px-4">
@@ -415,20 +430,14 @@ function SceneCapture() {
       <div
         data-anim="rise-lg"
         style={{ animationDelay: "160ms" }}
-        className="relative mt-3 h-[190px] overflow-hidden rounded-lg bg-peach-50 text-peach-300 ring-1 ring-peach-100"
+        className="relative mt-3 h-[190px] overflow-hidden rounded-lg ring-1 ring-peach-100"
       >
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 opacity-30"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(135deg, currentColor 0 1px, transparent 1px 18px)"
-          }}
-        />
-        <Leaf
-          size={62}
-          weight="fill"
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-peach-300/70"
+        <Image
+          src={babyFlowerImg}
+          alt=""
+          fill
+          sizes="(max-width: 420px) 288px, 304px"
+          className="object-cover"
         />
       </div>
 

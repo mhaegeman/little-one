@@ -49,7 +49,7 @@ npx hyperframes render index.html -o lille-liv-reel.mp4
 | ----- | --------- | ------------------------------------------- | ----- |
 | 1     | 0–2.0s    | App opens · "God morgen, Maja"              | Logo float, italic accent on name |
 | 2     | 2.0–4.5s  | Discover feed reveals · weather + venues    | Counter on temp, sun pulse, card stagger, tap ripple |
-| 3     | 4.5–7.0s  | Plantebørnehaven detail                     | Ken Burns on hero photo, save-button pulse |
+| 3     | 4.5–7.0s  | Fælledparken detail                         | Ken Burns on hero photo, save-button pulse |
 | 4     | 7.0–9.5s  | Journal capture · "Første smil til en blomst" | Photo zoom, saved-toast bounce |
 | 5     | 9.5–11.5s | Astas timeline · the new moment slots in   | Timeline draws, node pulses on the new entry |
 | 6     | 11.5–13.5s| Mormor sender et hjerte                     | Notification drops in + reaction stagger |
