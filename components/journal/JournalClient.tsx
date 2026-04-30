@@ -16,7 +16,7 @@ import {
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ActivityForm } from "@/components/journal/ActivityForm";
 import { JournalCalendar } from "@/components/journal/JournalCalendar";
 import { MilestoneForm } from "@/components/journal/MilestoneForm";
@@ -83,6 +83,10 @@ export function JournalClient() {
   const [reactionMap, setReactionMap] = useState<Map<string, Reaction[]>>(
     () => new Map()
   );
+  // Optimistic reactions whose insert hasn't returned but that the user has
+  // already toggled off. The add path checks this set when the insert
+  // resolves and deletes the just-saved row instead of reflecting it.
+  const pendingDeletionsRef = useRef<Set<string>>(new Set());
 
   const demoTimeline: TimelineItem[] = useMemo(() => [
     {
@@ -364,6 +368,14 @@ export function JournalClient() {
       setReactionMap(next);
 
       if (currentUserId) {
+        // The reaction's insert may still be in flight — its id is a
+        // `local-*` placeholder and isn't a row on the server yet. Mark it
+        // for deletion in the add path's success handler instead of firing
+        // a no-op DELETE that races the pending INSERT.
+        if (mine.id.startsWith("local-")) {
+          pendingDeletionsRef.current.add(mine.id);
+          return;
+        }
         const supabase = createClient();
         if (supabase) {
           const ok = await removeReaction(supabase, mine.id);
@@ -404,6 +416,19 @@ export function JournalClient() {
         userId: currentUserId,
         displayName: reactorIdentity.displayName
       });
+
+      // The user toggled the reaction back off while the insert was in
+      // flight (handleToggleReaction took the `local-*` branch and
+      // recorded the optimistic id here). Honour that by deleting the
+      // just-saved row and leaving local state alone — it already shows
+      // the reaction as removed.
+      if (pendingDeletionsRef.current.delete(optimistic.id)) {
+        if (saved) {
+          await removeReaction(supabase, saved.id);
+        }
+        return;
+      }
+
       if (saved) {
         // Replace optimistic with saved
         setReactionMap((current) => {

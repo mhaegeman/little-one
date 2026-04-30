@@ -190,11 +190,34 @@ on public.journal_reactions for select
 using (private.user_can_view_child(child_id));
 
 drop policy if exists "Users insert own journal reactions" on public.journal_reactions;
+-- The integrity arm (`entry_id` matches an actual milestone / activity for
+-- this child) is enforced server-side so a misbehaving client can't insert
+-- reactions pointing at nonexistent or unrelated entries. The parent-row
+-- RLS already lets family members read any row they're allowed to react
+-- to, so this EXISTS works under the caller's privileges.
 create policy "Family members insert own journal reactions"
 on public.journal_reactions for insert
 with check (
   user_id = auth.uid()
   and private.user_can_view_child(child_id)
+  and (
+    (
+      entry_type = 'milestone'
+      and exists (
+        select 1 from public.milestones m
+        where m.id = journal_reactions.entry_id
+          and m.child_id = journal_reactions.child_id
+      )
+    )
+    or (
+      entry_type = 'activity'
+      and exists (
+        select 1 from public.activities_log a
+        where a.id = journal_reactions.entry_id
+          and a.child_id = journal_reactions.child_id
+      )
+    )
+  )
 );
 
 drop policy if exists "Users delete own journal reactions" on public.journal_reactions;
