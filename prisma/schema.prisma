@@ -127,6 +127,7 @@ model Family {
   updatedAt   DateTime       @updatedAt @map("updated_at")
   members     FamilyMember[]
   invites     FamilyInvite[]
+  children    Child[]
 
   @@map("families")
 }
@@ -174,18 +175,21 @@ model FamilyInvite {
 model Child {
   id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId        String          @map("user_id") @db.Uuid
+  familyId      String?         @map("family_id") @db.Uuid
   name          String
   dateOfBirth   DateTime        @map("date_of_birth") @db.Date
   photoUrl      String?         @map("photo_url")
   gender        String?
   createdAt     DateTime        @default(now()) @map("created_at")
   updatedAt     DateTime        @updatedAt @map("updated_at")
+  family        Family?         @relation(fields: [familyId], references: [id], onDelete: SetNull)
   milestones    Milestone[]
   activityLogs  ActivityLog[]
   aulaLinks     AulaConnection[]
   aulaHighlights AulaHighlight[]
 
   @@index([userId])
+  @@index([familyId])
   @@map("children")
 }
 
