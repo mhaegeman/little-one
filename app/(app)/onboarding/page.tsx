@@ -1,6 +1,7 @@
 import { getLocale } from "next-intl/server";
 import { redirect } from "next/navigation";
-import { OnboardingFinalizer } from "@/components/onboarding/OnboardingFinalizer";
+import { FamilyOnboardingWizard } from "@/components/onboarding/FamilyOnboardingWizard";
+import { loadFamiliesForUser, loadOwnProfile } from "@/lib/family";
 import { createClient } from "@/lib/supabase/server";
 
 type SearchParams = Record<string, string | string[] | undefined>;
@@ -27,44 +28,58 @@ export default async function OnboardingPage({
   const locale = await getLocale();
   const effectiveLocale: "da" | "en" = locale === "en" ? "en" : "da";
 
-  let userId: string | null = null;
-  if (supabase) {
-    const {
-      data: { user }
-    } = await supabase.auth.getUser();
-    if (!user) {
-      redirect(`/auth?next=${encodeURIComponent("/onboarding")}`);
-    }
-    userId = user.id;
+  if (!supabase) {
+    return (
+      <div className="px-4 pt-24 sm:px-6 lg:px-8 lg:pt-8">
+        <div className="mx-auto max-w-3xl">
+          <p className="rounded-lg bg-[#FBF1D9] p-2.5 text-xs text-warning ring-1 ring-[#F0DFB1]">
+            Supabase env vars are missing.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
-    // Already-onboarded users should not be stuck here — send them on.
-    const { data: profile } = await supabase
-      .from("family_profiles")
-      .select("onboarding_completed_at")
-      .eq("user_id", user.id)
-      .maybeSingle();
-    if (profile?.onboarding_completed_at) {
-      redirect(next);
-    }
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+  if (!user) {
+    redirect(`/auth?next=${encodeURIComponent("/onboarding")}`);
+  }
+
+  const [profile, memberships] = await Promise.all([
+    loadOwnProfile(supabase, user.id).catch(() => null),
+    loadFamiliesForUser(supabase, user.id).catch(() => [])
+  ]);
+
+  // Already-onboarded users should not be stuck here.
+  if (profile?.onboardingCompletedAt) {
+    redirect(next);
+  }
+
+  // Invitees who landed here directly own no family — send them to /profile.
+  // The /auth/callback path also marks their onboarding complete, but if they
+  // somehow reach this page, fall through gracefully.
+  const ownedFamily =
+    memberships.find((entry) => entry.role === "owner")?.family ??
+    memberships[0]?.family ??
+    null;
+
+  if (!ownedFamily) {
+    redirect(next);
   }
 
   return (
     <div className="px-4 pt-24 sm:px-6 lg:px-8 lg:pt-8">
       <div className="mx-auto max-w-3xl">
-        <p className="text-sm font-bold uppercase tracking-[0.16em] text-rust">Velkommen</p>
-        <h1 className="mt-2 font-display text-4xl font-semibold text-ink">Opret barnets profil</h1>
-        <p className="mt-3 max-w-xl text-base leading-7 text-ink/70">
-          Barnets profil binder journal, udflugter og kommende Aula-glimt sammen.
-        </p>
-        <div className="mt-6">
-          {userId ? (
-            <OnboardingFinalizer userId={userId} next={next} locale={effectiveLocale} />
-          ) : (
-            <p className="rounded-lg bg-[#FBF1D9] p-2.5 text-xs text-warning ring-1 ring-[#F0DFB1]">
-              Supabase env vars are missing.
-            </p>
-          )}
-        </div>
+        <FamilyOnboardingWizard
+          userId={user.id}
+          userEmail={user.email ?? null}
+          family={ownedFamily}
+          profile={profile}
+          next={next}
+          locale={effectiveLocale}
+        />
       </div>
     </div>
   );

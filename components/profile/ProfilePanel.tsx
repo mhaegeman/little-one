@@ -12,10 +12,11 @@ import {
   UserCircle,
   Users
 } from "@phosphor-icons/react/dist/ssr";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FamilyCard } from "@/components/profile/FamilyCard";
+import { FamilyChildren } from "@/components/profile/FamilyChildren";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ProfileOverview } from "@/components/profile/ProfileOverview";
 import { ProfilePreferences } from "@/components/profile/ProfilePreferences";
@@ -78,6 +79,8 @@ export function ProfilePanel() {
   const tSections = useTranslations("profile.sections");
   const tPage = useTranslations("profilePage");
   const tAccount = useTranslations("accountSection");
+  const activeLocale = useLocale();
+  const childrenLocale: "da" | "en" = activeLocale === "en" ? "en" : "da";
   const searchParams = useSearchParams();
   const router = useRouter();
   const rawNext = searchParams.get("next");
@@ -495,6 +498,7 @@ export function ProfilePanel() {
                     ))}
                   </div>
                 )}
+                {user ? <FamilyChildren userId={user.id} locale={childrenLocale} /> : null}
               </div>
             ) : null}
 
