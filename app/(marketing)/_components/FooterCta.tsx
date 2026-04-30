@@ -27,14 +27,14 @@ export function FooterCta() {
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
-              href="/auth"
+              href="/profile?next=/journal"
               className={buttonClass({ variant: "primary", size: "xl" })}
             >
               <span>{t("ctaPrimary")}</span>
               <ArrowRight size={18} weight="bold" />
             </Link>
             <Link
-              href="/auth"
+              href="/profile"
               className={buttonClass({ variant: "ghost", size: "xl" })}
             >
               {t("ctaSecondary")}
