@@ -37,8 +37,8 @@ import {
   markOnboardingComplete,
   updateFamily,
   upsertOwnProfile
-} from "@/lib/family";
-import { createClient } from "@/lib/supabase/client";
+} from "@/lib/services/family";
+import { createClient } from "@/lib/db/supabase/client";
 import type {
   Family,
   FamilyProfile,

@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { LOCALE_COOKIE, isLocale, type Locale } from "@/i18n/request";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 
 const COOKIE_OPTIONS = {
   path: "/",

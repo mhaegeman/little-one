@@ -4,7 +4,7 @@ import { Baby, Plus } from "@phosphor-icons/react/dist/ssr";
 import { useEffect, useState } from "react";
 import { ChildProfileForm } from "@/components/onboarding/ChildProfileForm";
 import { Button } from "@/components/ui/Button";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/db/supabase/client";
 import { formatChildAge } from "@/lib/utils";
 import type { Child } from "@/lib/types";
 

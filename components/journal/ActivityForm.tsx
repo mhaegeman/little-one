@@ -12,7 +12,7 @@ import { TagInput } from "@/components/ui/TagInput";
 import { Textarea } from "@/components/ui/Textarea";
 import { useToast } from "@/components/ui/Toaster";
 import { venues } from "@/lib/data/venues";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/db/supabase/client";
 import type { TimelineItem } from "@/lib/types";
 
 type ActivityFormProps = {

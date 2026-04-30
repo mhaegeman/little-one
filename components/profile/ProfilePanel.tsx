@@ -37,8 +37,8 @@ import {
   revokeFamilyInvite,
   updateFamily,
   upsertOwnProfile
-} from "@/lib/family";
-import { createClient } from "@/lib/supabase/client";
+} from "@/lib/services/family";
+import { createClient } from "@/lib/db/supabase/client";
 import { cn } from "@/lib/utils";
 import type { Family, FamilyInvite, FamilyMember, FamilyProfile } from "@/lib/types";
 

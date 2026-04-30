@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { categoryBadgeVariant } from "@/lib/data/taxonomy";
 import { events as allEvents, venues as allVenues } from "@/lib/data/venues";
-import { recommendEvents, recommendVenues } from "@/lib/profile";
+import { recommendEvents, recommendVenues } from "@/lib/services/profile";
 import type { FamilyProfile, VenueCategory } from "@/lib/types";
 import { formatLocalizedDate, monthRangeLabel } from "@/lib/utils";
 

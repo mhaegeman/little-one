@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { syncAulaHighlights } from "@/lib/aula";
+import { syncAulaHighlights } from "@/lib/integrations/aula";
 
 export async function POST(request: Request) {
   return runAulaSync(request);

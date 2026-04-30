@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { PhotoUploader } from "@/components/ui/PhotoUploader";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/db/supabase/client";
 
 type ChildProfileFormProps = {
   onCreated?: (child: { id: string; name: string; dateOfBirth: string; photoUrl?: string }) => void;

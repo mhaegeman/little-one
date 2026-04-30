@@ -21,12 +21,14 @@ import { useToast } from "@/components/ui/Toaster";
 import {
   cancelOutgoingConnection,
   loadConnectionsForFamily,
-  loadPublicProfileForFamily,
   respondToConnection,
-  type FamilyConnection,
+  type FamilyConnection
+} from "@/lib/services/connections";
+import {
+  loadPublicProfileForFamily,
   type FamilyPublicProfile
-} from "@/lib/social";
-import { createClient } from "@/lib/supabase/client";
+} from "@/lib/services/visibility";
+import { createClient } from "@/lib/db/supabase/client";
 import type { Family } from "@/lib/types";
 import { formatLocalizedDate } from "@/lib/utils";
 

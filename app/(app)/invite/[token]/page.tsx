@@ -1,6 +1,6 @@
 import { HandHeart, ShieldCheck } from "@phosphor-icons/react/dist/ssr";
 import { LoginForm } from "@/components/auth/LoginForm";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 
 type InvitePageProps = {
   params: Promise<{ token: string }>;

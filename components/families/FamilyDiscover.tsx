@@ -11,14 +11,13 @@ import { Sheet } from "@/components/ui/Sheet";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useToast } from "@/components/ui/Toaster";
 import { categories, neighbourhoods } from "@/lib/data/taxonomy";
+import { loadConnectionsForFamily, type FamilyConnection } from "@/lib/services/connections";
 import {
   AGE_BAND_VALUES,
   discoverFamilies,
-  loadConnectionsForFamily,
-  type FamilyConnection,
   type FamilyPublicProfile
-} from "@/lib/social";
-import { createClient } from "@/lib/supabase/client";
+} from "@/lib/services/visibility";
+import { createClient } from "@/lib/db/supabase/client";
 import type { Family, Neighbourhood, VenueCategory } from "@/lib/types";
 import { cn } from "@/lib/utils";
 

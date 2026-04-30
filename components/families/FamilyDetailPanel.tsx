@@ -28,20 +28,22 @@ import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
 import { useToast } from "@/components/ui/Toaster";
 import { categoryBadgeVariant } from "@/lib/data/taxonomy";
-import { loadFamiliesForUser, loadFamilyMembers } from "@/lib/family";
+import { loadFamiliesForUser, loadFamilyMembers } from "@/lib/services/family";
 import {
   blockFamily,
   countOutgoingRequestsToday,
-  getOrCreateThread,
   loadConnectionBetween,
-  loadPublicProfileForFamily,
   MAX_REQUESTS_PER_DAY,
   reportFamily,
   sendConnectionRequest,
-  type FamilyConnection,
+  type FamilyConnection
+} from "@/lib/services/connections";
+import { getOrCreateThread } from "@/lib/services/messaging";
+import {
+  loadPublicProfileForFamily,
   type FamilyPublicProfile
-} from "@/lib/social";
-import { createClient } from "@/lib/supabase/client";
+} from "@/lib/services/visibility";
+import { createClient } from "@/lib/db/supabase/client";
 import type { Family, FamilyMember, VenueCategory } from "@/lib/types";
 
 type Props = {

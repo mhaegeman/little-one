@@ -29,7 +29,7 @@ import { Input } from "@/components/ui/Input";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Sheet } from "@/components/ui/Sheet";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/db/supabase/client";
 import type { Child, TimelineItem, TimelineItemType } from "@/lib/types";
 import { cn, formatChildAge } from "@/lib/utils";
 
