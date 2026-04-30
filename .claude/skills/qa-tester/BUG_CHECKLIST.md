@@ -15,7 +15,7 @@ Concrete patterns to probe while exercising the app. Not exhaustive — use judg
 
 - **Magic-link form** — empty submit, garbage email, double-click submit, very long email.
 - **Callback** — paste a fake/expired `?code=` into `/auth/callback` and confirm a friendly error, not a stack trace.
-- **Logged-out user** hitting `/(app)/*` routes — must redirect, not 500 or leak data.
+- **Logged-out user** hitting authenticated routes (`/discover`, `/journal`, `/families`, `/profile`, `/onboarding`, `/venues/<id>`, `/families/<id>`, `/admin/*`) — must redirect, not 500 or leak data.
 - **Logged-in user without onboarding** hitting feature routes — should funnel into `/onboarding`.
 - **RLS leak** — open `/families/[id]` for an id that belongs to another household; confirm 404/forbidden, not a populated page.
 - **Service-role usage from client** — only a code-review check, but worth grepping `SERVICE_ROLE` in `components/` if you suspect a leak.

@@ -40,7 +40,14 @@ Then start the dev server in the background:
 npm run dev   # run_in_background: true
 ```
 
-Wait for the server to be ready by polling `http://localhost:3000` (use Monitor with an `until curl -sf http://localhost:3000 >/dev/null; do sleep 2; done` loop — do not `sleep` blindly).
+Detect the actual base URL — don't assume `localhost:3000`. `next dev` honours `--port` / `PORT` and may already have port 3000 taken. Use the Monitor tool on the dev server's stdout and grep for the line `next` prints (e.g. `- Local: http://localhost:3001`); capture that URL into a variable (call it `BASE_URL`) and use it for every subsequent fetch.
+
+```bash
+# Wait for readiness once BASE_URL is known
+until curl -sf "$BASE_URL" >/dev/null; do sleep 2; done
+```
+
+If the user set a non-default port via `PORT=...` or has a `.env`/`vercel.json` override, prefer that. If you can't find the URL in stdout after ~30s, ask the user rather than guessing.
 
 If the user has a working DB, do **not** re-seed unless they ask — `npm run db:seed` is destructive. If the DB looks empty (e.g. `/discover` shows no venues), ask before seeding.
 
@@ -50,7 +57,7 @@ Use whichever interactive driver is available, **in this order of preference**:
 
 1. **Playwright MCP** (`mcp__playwright__*`) — full click/scroll/screenshot. Best.
 2. **Chrome DevTools MCP / browser-use MCP** — same idea, different vendor.
-3. **`WebFetch`** against `http://localhost:3000/...` — read-only HTML/text. Cannot click; use to verify routes render, redirects work, status codes, meta tags, server-rendered copy, missing-translation strings.
+3. **`WebFetch`** against `$BASE_URL/...` (the URL captured in step 2) — read-only HTML/text. Cannot click; use to verify routes render, redirects work, status codes, meta tags, server-rendered copy, missing-translation strings.
 4. **`curl`** via Bash — for status codes, headers, JSON API responses, redirects.
 5. **Code-only fallback** — read the page/component source, the matching service in `lib/services/`, and the i18n keys in `messages/`. Prefix issues with `[Static analysis]` and lower confidence accordingly.
 
@@ -62,18 +69,20 @@ Cover these in order (skip anything outside the requested scope). For each, swit
 
 | Route | What to exercise |
 |---|---|
-| `/` (marketing) | Hero CTAs, language toggle, footer links, mobile nav, header sign-in link |
+| `/` (marketing landing) | Hero CTAs, language toggle, footer links, mobile nav, header sign-in link |
 | `/auth` | Magic-link form: empty submit, invalid email, valid email, double-submit, error toast copy in DA + EN |
 | `/auth/callback` | Hit it with bad/expired `code` param — does it fail gracefully? |
 | `/onboarding` | Multi-step form: skip, back, validation, long names, special chars, emoji, Danish chars (æøå), submit |
-| `/(app)/discover` | Map pan/zoom, marker cluster click, list/map toggle, filters (category, neighbourhood, age), search, empty results, deep link with filters in URL, favorite toggle |
-| `/(app)/venues/[id]` | Photo gallery, info, map, reviews, bad/missing id (404), share button |
-| `/(app)/journal` | Add entry, photo upload, edit, delete, long text, dates in the future, dates pre-birth, milestone tags, empty state |
-| `/(app)/families` | Browse, filters, profile completeness gate, blocked-user behavior |
-| `/(app)/families/[id]` | View, send connection request, message thread, block, report, missing id (404) |
-| `/(app)/invite/[token]` | Valid token, expired token, already-used token, wrong-account |
-| `/(app)/profile` | Edit fields, avatar upload, visibility toggle, preferences, sign out |
-| `/(app)/admin/map-tool` | Auth gate (non-admin must be blocked), tool itself if admin |
+| `/discover` | Map pan/zoom, marker cluster click, list/map toggle, filters (category, neighbourhood, age), search, empty results, deep link with filters in URL, favorite toggle |
+| `/venues/<id>` | Photo gallery, info, map, reviews, bad/missing id (404), share button |
+| `/journal` | Add entry, photo upload, edit, delete, long text, dates in the future, dates pre-birth, milestone tags, empty state |
+| `/families` | Browse, filters, profile completeness gate, blocked-user behavior |
+| `/families/<id>` | View, send connection request, message thread, block, report, missing id (404) |
+| `/invite/<token>` | Valid token, expired token, already-used token, wrong-account |
+| `/profile` | Edit fields, avatar upload, visibility toggle, preferences, sign out |
+| `/admin/map-tool` | Auth gate (non-admin must be blocked), tool itself if admin |
+
+> Route groups in `app/(app)/...` and `app/(marketing)/...` are filesystem-only — they are **not** part of the public URL. Always use the paths above (no parens).
 
 For every interaction, watch for the bug categories in `BUG_CHECKLIST.md`.
 
