@@ -1,78 +1,78 @@
 
 > lille-liv@0.1.0 geocode:venues
-> tsx scripts/geocode-venues.ts --apply
+> tsx scripts/geocode-venues.ts
 
 Geocoding 62 venue(s) against Nominatim
-Mode: APPLY | threshold: 10000 m
+Mode: dry-run | threshold: 10000 m
 
-[ 1/62] → the-living-room              Δ 217m  [place/house]  The Living Room
-[ 2/62] → granola                      Δ  10m  [place/house]  Granola
-[ 3/62] → absalon                      Δ 557m  [place/house]  Absalon
-[ 4/62] → bar50-danhostel              Δ 179m  [place/house]  BAR50 Child-friendly Cafe
-[ 5/62] → mad-og-kaffe-vesterbro       Δ 394m  [place/house]  Mad & Kaffe Vesterbro
-[ 6/62] ✗ superkilen — no Nominatim match for "Nørrebrogade / Heimdalsgade, 2200 København N"
+[ 1/62] = the-living-room              Δ  <1m  [place/house]  The Living Room
+[ 2/62] = granola                      Δ  <1m  [place/house]  Granola
+[ 3/62] = absalon                      Δ  <1m  [place/house]  Absalon
+[ 4/62] = bar50-danhostel              Δ  <1m  [place/house]  BAR50 Child-friendly Cafe
+[ 5/62] = mad-og-kaffe-vesterbro       Δ  <1m  [place/house]  Mad & Kaffe Vesterbro
+[ 6/62] → superkilen                   Δ 497m  [place/house]  Superkilen
 [ 7/62] ✗ taarnlegepladsen — no Nominatim match for "Fælledparken, 2100 København Ø"
-[ 8/62] ✗ trafiklegepladsen — no Nominatim match for "Fælledparken, Gunnar Nu Hansens Plads, 2100 København Ø"
+[ 8/62] → trafiklegepladsen            Δ 614m  [place/house]  Trafiklegepladsen
 [ 9/62] ✗ kongens-have-legeplads — no Nominatim match for "Øster Voldgade 4, 1350 København K"
-[10/62] → valbyparken-naturlegeplads   Δ 225m  [place/house]  Naturlegepladsen i Valbyparken
+[10/62] = valbyparken-naturlegeplads   Δ  <1m  [place/house]  Naturlegepladsen i Valbyparken
 [11/62] ! konditaget-luders            Δ 312m  [highway/residential]  Konditaget Lüders
 [12/62] ✗ havnegade-trampoliner — no Nominatim match for "Havnegade, 1058 København K"
-[13/62] → skydebanehaven               Δ 273m  [place/house]  Skydebanehaven
+[13/62] = skydebanehaven               Δ  <1m  [place/house]  Skydebanehaven
 [14/62] ✗ amager-strandpark — no Nominatim match for "Amager Strand Promenaden, 2300 København S"
-[15/62] → experimentarium              Δ 227m  [place/house]  Experimentarium
-[16/62] → dinos-legeland               Δ1.37km  [place/house]  Dinos Legeland
-[17/62] → remisen                      Δ 890m  [place/house]  Remisen
-[18/62] → ku-be                        Δ1.10km  [place/house]  KU.BE
-[19/62] → den-blaa-planet              Δ 139m  [place/house]  Den Blå Planet
-[20/62] → boernenes-museum             Δ  38m  [place/house]  Børnenes Museum
-[21/62] → cinemateket                  Δ 251m  [place/house]  Cinemateket
-[22/62] → hovedbiblioteket-laes        Δ  54m  [place/house]  Hovedbiblioteket LÆS
-[23/62] → biblioteket-rentemestervej   Δ 763m  [place/house]  BIBLIOTEKET Rentemestervej
-[24/62] → oesterbro-bibliotek          Δ1.28km  [place/house]  Østerbro Bibliotek
-[25/62] → frederiksberg-hovedbibliotek Δ  84m  [place/house]  Frederiksberg Hovedbibliotek
-[26/62] → valby-bibliotek              Δ 524m  [place/house]  Valby Bibliotek
-[27/62] → bibliotekshuset              Δ1.14km  [place/house]  Bibliotekshuset
-[28/62] → dgi-byen-svoemning           Δ 316m  [place/house]  DGI Byen Svømmehal
-[29/62] → valby-vandkulturhus          Δ1.54km  [place/house]  Valby Vandkulturhus
-[30/62] → oebro-hallen                 Δ 420m  [place/house]  Øbro-Hallen
-[31/62] → bellahoej-svoemmestadion     Δ 944m  [place/house]  Bellahøj Svømmestadion
-[32/62] ✗ det-lille-teater — no Nominatim match for "Lavendelstræde 5-7, 1462 København K"
+[15/62] = experimentarium              Δ  <1m  [place/house]  Experimentarium
+[16/62] = dinos-legeland               Δ  <1m  [place/house]  Dinos Legeland
+[17/62] = remisen                      Δ  <1m  [place/house]  Remisen
+[18/62] = ku-be                        Δ  <1m  [place/house]  KU.BE
+[19/62] = den-blaa-planet              Δ  <1m  [place/house]  Den Blå Planet
+[20/62] = boernenes-museum             Δ  <1m  [place/house]  Børnenes Museum
+[21/62] = cinemateket                  Δ  <1m  [place/house]  Cinemateket
+[22/62] = hovedbiblioteket-laes        Δ  <1m  [place/house]  Hovedbiblioteket LÆS
+[23/62] = biblioteket-rentemestervej   Δ  <1m  [place/house]  BIBLIOTEKET Rentemestervej
+[24/62] = oesterbro-bibliotek          Δ  <1m  [place/house]  Østerbro Bibliotek
+[25/62] = frederiksberg-hovedbibliotek Δ  <1m  [place/house]  Frederiksberg Hovedbibliotek
+[26/62] = valby-bibliotek              Δ  <1m  [place/house]  Valby Bibliotek
+[27/62] = bibliotekshuset              Δ  <1m  [place/house]  Bibliotekshuset
+[28/62] = dgi-byen-svoemning           Δ  <1m  [place/house]  DGI Byen Svømmehal
+[29/62] = valby-vandkulturhus          Δ  <1m  [place/house]  Valby Vandkulturhus
+[30/62] = oebro-hallen                 Δ  <1m  [place/house]  Øbro-Hallen
+[31/62] = bellahoej-svoemmestadion     Δ  <1m  [place/house]  Bellahøj Svømmestadion
+[32/62] → det-lille-teater             Δ 174m  [place/house]  Det Lille Teater
 [33/62] ✗ marionet-teatret — no Nominatim match for "Kongens Have, 1350 København K"
-[34/62] → eventyrteatret-tivoli        Δ 175m  [place/house]  Eventyrteatret i Tivoli
-[35/62] → kongelige-teater-de-smaa-synger Δ  17m  [place/house]  Det Kongelige Teater
-[36/62] → copenhagen-zoo               Δ 147m  [place/house]  København Zoo
-[37/62] → tivoli-gardens               Δ 193m  [place/house]  Tivoli
-[38/62] → little-house-oesterbro       Δ  90m  [place/house]  Little House Østerbro
-[39/62] → little-house-noerrebro       Δ 833m  [place/house]  Little House Nørrebro
-[40/62] → little-house-amager          Δ2.58km  [place/house]  Little House Amager
-[41/62] → little-house-valby           Δ 305m  [place/house]  Little House Valby
-[42/62] ✗ little-house-sydhavn — no Nominatim match for "Pladehals Allé 28 st., 2450 København SV"
-[43/62] → paludan-bogcafe              Δ 153m  [place/house]  Paludan Bogcafé
-[44/62] → frederiksberg-have           Δ 340m  [place/house]  Frederiksberg Have
+[34/62] = eventyrteatret-tivoli        Δ  <1m  [place/house]  Eventyrteatret i Tivoli
+[35/62] = kongelige-teater-de-smaa-synger Δ  <1m  [place/house]  Det Kongelige Teater
+[36/62] = copenhagen-zoo               Δ  <1m  [place/house]  København Zoo
+[37/62] = tivoli-gardens               Δ  <1m  [place/house]  Tivoli
+[38/62] = little-house-oesterbro       Δ  <1m  [place/house]  Little House Østerbro
+[39/62] = little-house-noerrebro       Δ  <1m  [place/house]  Little House Nørrebro
+[40/62] = little-house-amager          Δ  <1m  [place/house]  Little House Amager
+[41/62] = little-house-valby           Δ  <1m  [place/house]  Little House Valby
+[42/62] → little-house-sydhavn         Δ1.18km  [place/house]  Little House Sydhavn
+[43/62] = paludan-bogcafe              Δ  <1m  [place/house]  Paludan Bogcafé
+[44/62] = frederiksberg-have           Δ  <1m  [place/house]  Frederiksberg Have
 [45/62] ! soendermarken                Δ 995m  [highway/residential]  Søndermarken
-[46/62] → karens-minde-kulturhus       Δ 593m  [place/house]  Karens Minde Kulturhus
-[47/62] → bavnehoej-friluftsbad        Δ 462m  [place/house]  Bavnehøj Friluftsbad
-[48/62] → sydhavnstippen               Δ 597m  [place/house]  Sydhavnstippen
+[46/62] = karens-minde-kulturhus       Δ  <1m  [place/house]  Karens Minde Kulturhus
+[47/62] = bavnehoej-friluftsbad        Δ  <1m  [place/house]  Bavnehøj Friluftsbad
+[48/62] = sydhavnstippen               Δ  <1m  [place/house]  Sydhavnstippen
 [49/62] ! utterslev-mose               Δ1.61km  [information/board]  Utterslev Mose
-[50/62] → botanisk-have                Δ  69m  [place/house]  Botanisk Have
-[51/62] → assistens-kirkegaard         Δ 676m  [place/house]  Assistens Kirkegård
-[52/62] → oerstedsparken               Δ 438m  [place/house]  Ørstedsparken
+[50/62] = botanisk-have                Δ  <1m  [place/house]  Botanisk Have
+[51/62] = assistens-kirkegaard         Δ  <1m  [place/house]  Assistens Kirkegård
+[52/62] = oerstedsparken               Δ  <1m  [place/house]  Ørstedsparken
 [53/62] ! ishoj-strandpark             Δ3.33km  [highway/secondary]  Ishøj Strandpark
-[54/62] → havnebadet-islands-brygge    Δ 355m  [place/house]  Havnebadet Islands Brygge
-[55/62] ! dyrehaven                    Δ2.00km  [highway/bus_stop]  Dyrehaven
-[56/62] → bellevue-strand              Δ1.26km  [place/house]  Bellevue Strand
-[57/62] → bakken                       Δ 164m  [place/house]  Bakken (Dyrehavsbakken)
-[58/62] → louisiana-museum             Δ 215m  [place/house]  Louisiana Museum of Modern Art
-[59/62] → vikingeskibsmuseet           Δ 309m  [place/house]  Vikingeskibsmuseet
-[60/62] → frilandsmuseet               Δ2.25km  [place/house]  Frilandsmuseet
-[61/62] → arken-museum                 Δ6.36km  [place/house]  ARKEN Museum for Moderne Kunst
-[62/62] → copenhagen-contemporary      Δ 344m  [place/house]  Copenhagen Contemporary
+[54/62] → havnebadet-islands-brygge    Δ 455m  [place/house]  Havnebadet Islands Brygge
+[55/62] ! dyrehaven                    Δ2.04km  [highway/bus_stop]  Dyrehaven
+[56/62] = bellevue-strand              Δ  <1m  [place/house]  Bellevue Strand
+[57/62] = bakken                       Δ  <1m  [place/house]  Bakken (Dyrehavsbakken)
+[58/62] = louisiana-museum             Δ  <1m  [place/house]  Louisiana Museum of Modern Art
+[59/62] = vikingeskibsmuseet           Δ  <1m  [place/house]  Vikingeskibsmuseet
+[60/62] = frilandsmuseet               Δ  <1m  [place/house]  Frilandsmuseet
+[61/62] = arken-museum                 Δ  <1m  [place/house]  ARKEN Museum for Moderne Kunst
+[62/62] = copenhagen-contemporary      Δ  <1m  [place/house]  Copenhagen Contemporary
 
 === Summary ===
-Already aligned (Δ < 1m):    0
-Eligible to apply:           48
+Already aligned (Δ < 1m):    47
+Eligible to apply:           5
 Flagged (coarse / over cap): 5
-No Nominatim match:          9
+No Nominatim match:          5
 Errors:                      0
 
 Flagged venues — review manually in /admin/map-tool:
@@ -96,21 +96,17 @@ Flagged venues — review manually in /admin/map-tool:
       current:   55.6044, 12.2993
       nominatim: 55.603032, 12.3522747  [highway/secondary]
       OSM says:  Ishøj Strandvej, Ishøj, Ishøj Kommune, Region Hovedstaden, 2635, Danmark
-  • dyrehaven  Δ2.00km  Dyrehaven  — coarse match (highway/bus_stop)
+  • dyrehaven  Δ2.04km  Dyrehaven  — coarse match (highway/bus_stop)
       addr:      Dyrehaven, 2930 Klampenborg
       current:   55.7734, 12.5521
-      nominatim: 55.7745164, 12.5840692  [highway/bus_stop]
-      OSM says:  Dyrehaven, Christiansholmsvej, Ordrup, Klampenborg, Gentofte Kommune, Region Hovedstaden, 2930, Danmark
+      nominatim: 55.7750786, 12.5845234  [highway/bus_stop]
+      OSM says:  Dyrehaven, Dyrehavevej, Ordrup, Klampenborg, Gentofte Kommune, Region Hovedstaden, 2930, Danmark
 
 No Nominatim match — review manually:
-  • superkilen  Nørrebrogade / Heimdalsgade, 2200 København N
   • taarnlegepladsen  Fælledparken, 2100 København Ø
-  • trafiklegepladsen  Fælledparken, Gunnar Nu Hansens Plads, 2100 København Ø
   • kongens-have-legeplads  Øster Voldgade 4, 1350 København K
   • havnegade-trampoliner  Havnegade, 1058 København K
   • amager-strandpark  Amager Strand Promenaden, 2300 København S
-  • det-lille-teater  Lavendelstræde 5-7, 1462 København K
   • marionet-teatret  Kongens Have, 1350 København K
-  • little-house-sydhavn  Pladehals Allé 28 st., 2450 København SV
 
-✓ Wrote 48 update(s) to lib/data/venues.ts.
+(Dry-run) Re-run with --apply to write 5 update(s) to lib/data/venues.ts.
