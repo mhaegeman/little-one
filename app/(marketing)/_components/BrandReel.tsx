@@ -70,7 +70,6 @@ export function BrandReel() {
             ref={videoRef}
             src={PORTRAIT_SRC}
             poster={PORTRAIT_POSTER}
-            autoPlay
             muted
             playsInline
             loop
