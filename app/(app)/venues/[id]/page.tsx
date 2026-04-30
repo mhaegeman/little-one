@@ -61,7 +61,7 @@ export default async function VenuePage({ params }: VenuePageProps) {
     <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
       <article className="mx-auto max-w-5xl">
         <Link
-          href="/"
+          href="/discover"
           className="focus-ring inline-flex h-9 items-center gap-1.5 rounded-pill bg-surface px-3 text-xs font-semibold text-muted ring-1 ring-hairline transition-colors hover:text-ink"
         >
           <ArrowLeft size={13} weight="bold" aria-hidden="true" />

@@ -10,7 +10,7 @@ const config = [
     }
   },
   {
-    ignores: [".next/**", "node_modules/**", "mobile/**"]
+    ignores: [".next/**", "node_modules/**", "mobile/**", "app/design/**"]
   }
 ];
 

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { saveVenueCoords, type SaveResult } from "@/app/admin/map-tool/actions";
+import { saveVenueCoords, type SaveResult } from "@/app/(app)/admin/map-tool/actions";
 import { categoryBadgeVariant } from "@/lib/data/taxonomy";
 import { Badge } from "@/components/ui/Badge";
 import type { Venue, VenueCategory } from "@/lib/types";

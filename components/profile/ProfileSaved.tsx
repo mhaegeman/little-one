@@ -28,7 +28,7 @@ export function ProfileSaved() {
         title="Ingen gemte steder endnu"
         description="Tryk på hjertet på et sted i Opdag for at gemme det her."
         action={
-          <Link href="/">
+          <Link href="/discover">
             <Button variant="secondary">
               <Compass size={14} weight="fill" aria-hidden="true" />
               Gå til Opdag

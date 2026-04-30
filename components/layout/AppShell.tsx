@@ -18,7 +18,7 @@ import { useViewTransitionRouter } from "@/hooks/useViewTransitionRouter";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/", key: "discover", icon: Compass },
+  { href: "/discover", key: "discover", icon: Compass },
   { href: "/journal", key: "journal", icon: NotePencil },
   { href: "/families", key: "families", icon: UsersThree },
   { href: "/profile", key: "profile", icon: UserCircle }
@@ -55,13 +55,13 @@ export function AppShell({ children }: { children: ReactNode }) {
         aria-label="Hovednavigation"
       >
         <Link
-          href="/"
+          href="/discover"
           className="focus-ring mb-2 flex items-center gap-2.5 rounded-lg px-1.5 py-1"
           aria-label={tApp("name")}
         >
           <span
             aria-hidden="true"
-            className="grid h-9 w-9 place-items-center rounded-xl bg-sage-500 text-white shadow-sm"
+            className="grid h-9 w-9 place-items-center rounded-xl bg-mint-300 text-white shadow-sm"
           >
             <span className="font-display text-lg font-semibold leading-none">LL</span>
           </span>
@@ -91,7 +91,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <nav className="mt-5 flex flex-col gap-0.5" aria-label="Sektioner">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+            const active = pathname.startsWith(item.href);
             return (
               <Link
                 key={item.href}
@@ -113,13 +113,13 @@ export function AppShell({ children }: { children: ReactNode }) {
                 }}
                 className={cn(
                   "focus-ring relative flex h-9 items-center gap-2.5 rounded-lg px-2.5 text-sm font-semibold transition-colors duration-150 ease-nordic",
-                  active ? "text-sage-700" : "text-muted hover:bg-sunken hover:text-ink"
+                  active ? "text-mint-ink" : "text-muted hover:bg-sunken hover:text-ink"
                 )}
               >
                 {active ? (
                   <span
                     aria-hidden="true"
-                    className="absolute inset-0 -z-10 rounded-lg bg-sage-100"
+                    className="absolute inset-0 -z-10 rounded-lg bg-mint-50"
                     style={{ viewTransitionName: "nav-active-desktop" }}
                   />
                 ) : null}
@@ -146,10 +146,10 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       {/* Mobile top bar */}
       <header className="fixed left-0 right-0 top-0 z-30 flex h-14 items-center justify-between gap-2 border-b border-hairline bg-canvas/90 px-4 backdrop-blur lg:hidden">
-        <Link href="/" className="focus-ring flex items-center gap-2 rounded-lg px-1 py-1" aria-label={tApp("name")}>
+        <Link href="/discover" className="focus-ring flex items-center gap-2 rounded-lg px-1 py-1" aria-label={tApp("name")}>
           <span
             aria-hidden="true"
-            className="grid h-8 w-8 place-items-center rounded-lg bg-sage-500 text-white"
+            className="grid h-8 w-8 place-items-center rounded-lg bg-mint-300 text-white"
           >
             <span className="font-display text-sm font-semibold">LL</span>
           </span>
@@ -176,7 +176,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="relative grid grid-cols-4 gap-1">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+            const active = pathname.startsWith(item.href);
             return (
               <Link
                 key={item.href}
@@ -198,13 +198,13 @@ export function AppShell({ children }: { children: ReactNode }) {
                 }}
                 className={cn(
                   "focus-ring relative flex flex-col items-center justify-center gap-0.5 rounded-lg py-1.5 text-2xs font-semibold transition-colors duration-150 ease-nordic",
-                  active ? "text-sage-700" : "text-subtle hover:text-ink"
+                  active ? "text-mint-ink" : "text-subtle hover:text-ink"
                 )}
               >
                 {active ? (
                   <span
                     aria-hidden="true"
-                    className="absolute inset-0 -z-10 rounded-lg bg-sage-50"
+                    className="absolute inset-0 -z-10 rounded-lg bg-mint-50"
                     style={{ viewTransitionName: "nav-active-mobile" }}
                   />
                 ) : null}
