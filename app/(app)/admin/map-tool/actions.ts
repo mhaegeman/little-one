@@ -3,6 +3,8 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
+import { isAdminUser } from "@/lib/auth/admin";
+import { createClient } from "@/lib/db/supabase/server";
 
 const VENUES_FILE = path.join(process.cwd(), "lib", "data", "venues.ts");
 
@@ -68,6 +70,17 @@ export async function saveVenueCoords(
 ): Promise<SaveResult> {
   if (process.env.NODE_ENV === "production") {
     return { ok: false, error: "Disabled in production builds." };
+  }
+
+  const supabase = await createClient();
+  if (!supabase) {
+    return { ok: false, error: "Auth is not configured." };
+  }
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+  if (!user || !isAdminUser(user)) {
+    return { ok: false, error: "Not authorized." };
   }
 
   const parsed = updateSchema.safeParse(formData);
