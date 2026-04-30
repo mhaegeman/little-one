@@ -35,6 +35,8 @@ export default async function AuthPage({
 }) {
   const params = (await searchParams) ?? {};
   const nextParam = safeRedirect(pickString(params.next), "/journal");
+  const initialMode: "signin" | "signup" =
+    pickString(params.mode) === "signup" ? "signup" : "signin";
 
   const supabase = await createClient();
   if (supabase) {
@@ -117,7 +119,11 @@ export default async function AuthPage({
           </section>
 
           <div>
-            <LoginForm redirectTo={nextParam} locale={effectiveLocale} />
+            <LoginForm
+              redirectTo={nextParam}
+              locale={effectiveLocale}
+              initialMode={initialMode}
+            />
           </div>
         </div>
       </main>
