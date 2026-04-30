@@ -117,7 +117,8 @@ export function ProfilePreferences({ profile, onSave }: Props) {
         indoorPreference,
         childAgeMinMonths: trackChild ? ageMin : null,
         childAgeMaxMonths: trackChild ? ageMax : null,
-        notifyEmail
+        notifyEmail,
+        onboardingCompletedAt: profile?.onboardingCompletedAt ?? null
       });
       setStatus("saved");
       toast({

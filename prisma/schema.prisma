@@ -94,6 +94,7 @@ model FamilyProfile {
   childAgeMinMonths  Int?       @map("child_age_min_months")
   childAgeMaxMonths  Int?       @map("child_age_max_months")
   notifyEmail        Boolean    @default(true) @map("notify_email")
+  onboardingCompletedAt DateTime? @map("onboarding_completed_at")
   createdAt          DateTime   @default(now()) @map("created_at")
   updatedAt          DateTime   @updatedAt @map("updated_at")
 

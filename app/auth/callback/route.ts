@@ -29,5 +29,26 @@ export async function GET(request: Request) {
     return NextResponse.redirect(successUrl);
   }
 
+  // First-time users (no completed onboarding) get routed through /onboarding
+  // before hitting the requested destination. The wizard preserves `next` so
+  // the user lands where they originally intended once they're done.
+  if (supabase) {
+    const {
+      data: { user }
+    } = await supabase.auth.getUser();
+    if (user) {
+      const { data: profile } = await supabase
+        .from("family_profiles")
+        .select("onboarding_completed_at")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (!profile?.onboarding_completed_at) {
+        const onboardingUrl = new URL("/onboarding", requestUrl.origin);
+        if (next !== "/journal") onboardingUrl.searchParams.set("next", next);
+        return NextResponse.redirect(onboardingUrl);
+      }
+    }
+  }
+
   return NextResponse.redirect(new URL(next, requestUrl.origin));
 }
