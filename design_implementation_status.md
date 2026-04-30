@@ -9,16 +9,17 @@ Design source: `app/design/design_handoff_lille_liv/README.md` — read it first
 | **Design tokens** | `tailwind.config.ts` | Done — Pastel palette, Fraunces/DM Sans, radii, shadows, type scale all wired |
 | **Primitives** | `components/ui/` | Done — Button, Pill, Card, Avatar, Badge, Eyebrow, IconButton, Input, Sheet |
 | **Marketing landing** | `app/(marketing)/page.tsx` | Done — Nav, Hero (with phone preview + floating saved card), trust strip, three pillars, in-app preview, for-grandparents, FAQ, footer CTA, footer; copy in `messages/marketing.*` (DA verbatim + EN mirror) |
-| **Discover screen** | `app/(app)/discover/page.tsx` | Partial — route exists, fidelity unknown |
-| **Journal screen** | `app/(app)/journal/page.tsx` | Partial — route exists, fidelity unknown |
-| **Families screen** | `app/(app)/families/page.tsx` | Partial — route exists, fidelity unknown |
+| **Discover screen** | `app/(app)/discover/page.tsx` | Done — Today card now uses sky tones; venue list cards use right-side heart + age/indoor pills; filter chips use mint/peach per palette |
+| **Journal screen** | `app/(app)/journal/page.tsx` | Done — Timeline rebuilt with large tinted icon nodes, kind pill, photo grid, peach heatmap; filter chips use ink-on-canvas active state |
+| **Families screen** | `app/(app)/families/page.tsx` | Done — Discover/Connections/Messages all use mint/peach palette; FamilyPublicCard hover ring + footer eyebrow on Pastel tokens; chat bubbles on mint-300 |
 | **Brand reel embed** | — | Not started |
 
 ## Next priorities
 
-1. **Audit app screens** — compare Discover, Journal, Families against `explorations/app-screens.jsx` and close fidelity gaps (card layout, filter chips, timeline design, family member rows).
-2. **Brand reel** — embed `brand_reel/index-landscape.html` into the marketing hero (currently a CSS phone mock + floating saved card placeholder).
-3. **Photography** — replace the gradient placeholders in the grandparents portrait + app-preview hero card with licensed stock once procurement lands.
+1. **Brand reel** — embed `brand_reel/index-landscape.html` into the marketing hero (currently a CSS phone mock + floating saved card placeholder).
+2. **Photography** — replace the gradient placeholders in the grandparents portrait + app-preview hero card with licensed stock once procurement lands.
+3. **Reactions on journal moments** — the design includes long-press reaction picker + reactor avatar dots at the foot of each moment. Data model + UI not yet wired; Timeline reserves the structure but renders no reactor dots until the feature lands.
+4. **Remaining legacy `sage`/`warm` color callsites** — DiscoverMap markers/clusters still use sage/warm tokens; a follow-up pass should migrate to mint/peach before the legacy scales are removed from `tailwind.config.ts`.
 
 ## Do not
 

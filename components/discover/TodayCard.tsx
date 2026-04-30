@@ -78,33 +78,40 @@ export function TodayCard({ venues, userLocation }: Props) {
   return (
     <section
       aria-label={t("sectionLabel")}
-      className="relative mb-4 overflow-hidden rounded-card bg-gradient-to-br from-sage-50 via-canvas to-sand-50 p-3.5 ring-1 ring-hairline"
+      className="relative mb-4 overflow-hidden rounded-card bg-sky-50 p-3.5 ring-1 ring-sky-100"
     >
-      <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-sage-100/60 blur-2xl" aria-hidden="true" />
+      <div
+        className="pointer-events-none absolute -right-10 -top-12 h-44 w-44 rounded-full bg-sky-100/70 blur-2xl"
+        aria-hidden="true"
+      />
 
-      <div className="relative flex flex-wrap items-end justify-between gap-2">
-        <div>
-          <p className="flex items-center gap-1 text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">
-            <Sun size={11} weight="fill" aria-hidden="true" />
-            {t("eyebrow")}
-          </p>
-          <p className="mt-0.5 font-display text-lg font-semibold text-ink">
-            {greeting()}
-          </p>
+      <div className="relative flex flex-wrap items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-sky-100 text-sky-ink">
+            <Sun size={22} weight="fill" aria-hidden="true" />
+          </span>
+          <div className="min-w-0">
+            <p className="flex items-center gap-1 text-2xs font-bold uppercase tracking-[0.16em] text-sky-ink">
+              {t("eyebrow")}
+            </p>
+            <p className="mt-0.5 font-display text-lg font-semibold text-sky-ink">
+              {greeting()}
+            </p>
+          </div>
         </div>
         <div className="flex flex-wrap gap-1 text-2xs font-semibold text-muted">
           {favorites.length > 0 ? (
             <Link
               href="/profile?section=saved"
-              className="focus-ring inline-flex items-center gap-1 rounded-pill bg-surface px-2 py-1 ring-1 ring-hairline transition-colors hover:text-ink"
+              className="focus-ring inline-flex items-center gap-1 rounded-pill bg-surface px-2 py-1 ring-1 ring-sky-100 transition-colors hover:text-ink"
             >
-              <Heart size={11} weight="fill" className="text-warm-500" aria-hidden="true" />
+              <Heart size={11} weight="fill" className="text-peach-300" aria-hidden="true" />
               {t("savedCount", { count: favorites.length })}
             </Link>
           ) : null}
           {outings.length > 0 ? (
-            <span className="inline-flex items-center gap-1 rounded-pill bg-surface px-2 py-1 ring-1 ring-hairline">
-              <CalendarDots size={11} weight="fill" className="text-sage-700" aria-hidden="true" />
+            <span className="inline-flex items-center gap-1 rounded-pill bg-surface px-2 py-1 ring-1 ring-sky-100">
+              <CalendarDots size={11} weight="fill" className="text-sky-ink" aria-hidden="true" />
               {t("plannedCount", { count: outings.length })}
             </span>
           ) : null}
@@ -116,13 +123,13 @@ export function TodayCard({ venues, userLocation }: Props) {
         {plansToday.length > 0 ? (
           <Link
             href="/journal"
-            className="focus-ring flex items-start gap-2.5 rounded-lg bg-surface p-2.5 ring-1 ring-sage-200 transition-colors hover:ring-sage-400"
+            className="focus-ring flex items-start gap-2.5 rounded-lg bg-surface p-2.5 ring-1 ring-mint-100 transition-colors hover:ring-mint-300"
           >
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-sage-100 text-sage-700">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-mint-50 text-mint-ink">
               <CalendarCheck size={16} weight="fill" aria-hidden="true" />
             </span>
             <div className="min-w-0 flex-1">
-              <p className="text-2xs font-bold uppercase tracking-[0.12em] text-sage-700">
+              <p className="text-2xs font-bold uppercase tracking-[0.12em] text-mint-ink">
                 {t("planToday")}
               </p>
               <p className="truncate text-sm font-semibold text-ink">
@@ -138,7 +145,7 @@ export function TodayCard({ venues, userLocation }: Props) {
                 </p>
               )}
             </div>
-            <ArrowRight size={12} weight="bold" className="shrink-0 text-sage-700" aria-hidden="true" />
+            <ArrowRight size={12} weight="bold" className="shrink-0 text-mint-ink" aria-hidden="true" />
           </Link>
         ) : (
           <div className="flex items-start gap-2.5 rounded-lg bg-surface/70 p-2.5 ring-1 ring-hairline">
@@ -166,13 +173,13 @@ export function TodayCard({ venues, userLocation }: Props) {
               ? `/venues/${(nearby[0] as Venue).id}`
               : "/"
           }
-          className="focus-ring flex items-start gap-2.5 rounded-lg bg-surface p-2.5 ring-1 ring-hairline transition-colors hover:ring-sage-300"
+          className="focus-ring flex items-start gap-2.5 rounded-lg bg-surface p-2.5 ring-1 ring-hairline transition-colors hover:ring-peach-200"
         >
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-warm-50 text-warm-600">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-peach-50 text-peach-ink">
             <MapPin size={16} weight="fill" aria-hidden="true" />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-2xs font-bold uppercase tracking-[0.12em] text-warm-600">
+            <p className="text-2xs font-bold uppercase tracking-[0.12em] text-peach-ink">
               {userLocation ? t("nearestTo") : t("mostLoved")}
             </p>
             <ul className="mt-0.5 space-y-0.5">

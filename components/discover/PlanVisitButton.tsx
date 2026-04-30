@@ -120,7 +120,7 @@ export function PlanVisitButton({
         >
           <div className="flex items-start justify-between gap-2">
             <div>
-              <p className="text-2xs font-bold uppercase tracking-[0.14em] text-warm-500">
+              <p className="text-2xs font-bold uppercase tracking-[0.14em] text-peach-ink">
                 {t("planHeading")}
               </p>
               <p className="font-display text-sm font-semibold text-ink">{venueName}</p>

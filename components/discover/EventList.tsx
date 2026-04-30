@@ -24,7 +24,7 @@ export function EventList({ events }: { events: FamilyEvent[] }) {
     <section className="mt-8">
       <div className="mb-3 flex items-end justify-between gap-3">
         <div>
-          <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">{t("calendar")}</p>
+          <p className="text-2xs font-bold uppercase tracking-[0.18em] text-peach-ink">{t("calendar")}</p>
           <h2 className="font-display text-xl font-semibold text-ink">{t("events")}</h2>
         </div>
       </div>
@@ -34,7 +34,7 @@ export function EventList({ events }: { events: FamilyEvent[] }) {
             key={event.id}
             href={event.bookingUrl ?? "#"}
             target="_blank"
-            className="focus-ring group rounded-card bg-surface p-3.5 ring-1 ring-hairline transition-colors hover:ring-sage-300"
+            className="focus-ring group rounded-card bg-surface p-3.5 ring-1 ring-hairline transition-colors hover:ring-mint-200"
           >
             <Badge variant={categoryBadgeVariant[event.category]}>
               {tTaxonomy(event.category as VenueCategory)}

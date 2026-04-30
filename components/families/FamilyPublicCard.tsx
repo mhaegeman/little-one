@@ -68,8 +68,8 @@ export function FamilyPublicCard({ profile, connection, href }: Props) {
       className={cn(
         "focus-ring group block overflow-hidden rounded-card bg-surface ring-1 transition-colors duration-150 ease-nordic",
         connection?.status === "accepted"
-          ? "ring-sage-300 hover:ring-sage-400"
-          : "ring-hairline hover:ring-sage-200"
+          ? "ring-mint-200 hover:ring-mint-300"
+          : "ring-hairline hover:ring-mint-100"
       )}
     >
       <div className="grid gap-0 sm:grid-cols-[120px_1fr]">
@@ -83,8 +83,8 @@ export function FamilyPublicCard({ profile, connection, href }: Props) {
             />
           </div>
         ) : (
-          <div className="hidden h-full bg-gradient-to-br from-sage-100 via-canvas to-sand-100 sm:grid sm:place-items-center">
-            <UsersThree size={32} weight="duotone" className="text-sage-700" aria-hidden="true" />
+          <div className="hidden h-full bg-gradient-to-br from-mint-50 via-canvas to-peach-50 sm:grid sm:place-items-center">
+            <UsersThree size={32} weight="duotone" className="text-mint-ink" aria-hidden="true" />
           </div>
         )}
 
@@ -127,7 +127,7 @@ export function FamilyPublicCard({ profile, connection, href }: Props) {
             ))}
           </div>
 
-          <div className="mt-2 flex items-center justify-end gap-1.5 text-2xs font-semibold text-warm-600 group-hover:text-warm-700">
+          <div className="mt-2 flex items-center justify-end gap-1.5 text-2xs font-semibold text-peach-ink group-hover:text-peach-300">
             {connection?.status === "accepted" ? (
               <>
                 <ChatsCircle size={11} weight="fill" aria-hidden="true" />

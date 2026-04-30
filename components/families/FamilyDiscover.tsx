@@ -145,7 +145,7 @@ export function FamilyDiscover({ me, primaryFamily }: Props) {
           <Faders size={15} weight="bold" aria-hidden="true" />
           {t("filters")}
           {activeFilterCount > 0 ? (
-            <span className="grid h-5 min-w-[1.25rem] place-items-center rounded-full bg-sage-500 px-1 text-2xs font-bold text-white">
+            <span className="grid h-5 min-w-[1.25rem] place-items-center rounded-full bg-mint-300 px-1 text-2xs font-bold text-mint-ink">
               {activeFilterCount}
             </span>
           ) : null}
@@ -208,7 +208,7 @@ export function FamilyDiscover({ me, primaryFamily }: Props) {
                     className={cn(
                       "focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors",
                       active
-                        ? "bg-sage-500 text-white ring-sage-500"
+                        ? "bg-mint-300 text-mint-ink ring-mint-300"
                         : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                     )}
                   >
@@ -233,7 +233,7 @@ export function FamilyDiscover({ me, primaryFamily }: Props) {
                     className={cn(
                       "focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors",
                       active
-                        ? "bg-sage-500 text-white ring-sage-500"
+                        ? "bg-mint-300 text-mint-ink ring-mint-300"
                         : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                     )}
                   >
@@ -258,7 +258,7 @@ export function FamilyDiscover({ me, primaryFamily }: Props) {
                     className={cn(
                       "focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors",
                       active
-                        ? "bg-sage-500 text-white ring-sage-500"
+                        ? "bg-mint-300 text-mint-ink ring-mint-300"
                         : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                     )}
                   >
