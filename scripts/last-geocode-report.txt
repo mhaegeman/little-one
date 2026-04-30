@@ -10,9 +10,9 @@ Mode: APPLY | threshold: 10000 m
 [ 3/62] = absalon                      Δ  <1m  [place/house]  Absalon
 [ 4/62] = bar50-danhostel              Δ  <1m  [place/house]  BAR50 Child-friendly Cafe
 [ 5/62] = mad-og-kaffe-vesterbro       Δ  <1m  [place/house]  Mad & Kaffe Vesterbro
-[ 6/62] → superkilen                   Δ 497m  [place/house]  Superkilen
+[ 6/62] = superkilen                   Δ  <1m  [place/house]  Superkilen
 [ 7/62] ✗ taarnlegepladsen — no Nominatim match for "Fælledparken, 2100 København Ø"
-[ 8/62] → trafiklegepladsen            Δ 614m  [place/house]  Trafiklegepladsen
+[ 8/62] = trafiklegepladsen            Δ  <1m  [place/house]  Trafiklegepladsen
 [ 9/62] ✗ kongens-have-legeplads — no Nominatim match for "Øster Voldgade 4, 1350 København K"
 [10/62] = valbyparken-naturlegeplads   Δ  <1m  [place/house]  Naturlegepladsen i Valbyparken
 [11/62] ! konditaget-luders            Δ 312m  [highway/residential]  Konditaget Lüders
@@ -36,7 +36,7 @@ Mode: APPLY | threshold: 10000 m
 [29/62] = valby-vandkulturhus          Δ  <1m  [place/house]  Valby Vandkulturhus
 [30/62] = oebro-hallen                 Δ  <1m  [place/house]  Øbro-Hallen
 [31/62] = bellahoej-svoemmestadion     Δ  <1m  [place/house]  Bellahøj Svømmestadion
-[32/62] → det-lille-teater             Δ 174m  [place/house]  Det Lille Teater
+[32/62] = det-lille-teater             Δ  <1m  [place/house]  Det Lille Teater
 [33/62] ✗ marionet-teatret — no Nominatim match for "Kongens Have, 1350 København K"
 [34/62] = eventyrteatret-tivoli        Δ  <1m  [place/house]  Eventyrteatret i Tivoli
 [35/62] = kongelige-teater-de-smaa-synger Δ  <1m  [place/house]  Det Kongelige Teater
@@ -46,7 +46,7 @@ Mode: APPLY | threshold: 10000 m
 [39/62] = little-house-noerrebro       Δ  <1m  [place/house]  Little House Nørrebro
 [40/62] = little-house-amager          Δ  <1m  [place/house]  Little House Amager
 [41/62] = little-house-valby           Δ  <1m  [place/house]  Little House Valby
-[42/62] → little-house-sydhavn         Δ1.18km  [place/house]  Little House Sydhavn
+[42/62] = little-house-sydhavn         Δ  <1m  [place/house]  Little House Sydhavn
 [43/62] = paludan-bogcafe              Δ  <1m  [place/house]  Paludan Bogcafé
 [44/62] = frederiksberg-have           Δ  <1m  [place/house]  Frederiksberg Have
 [45/62] ! soendermarken                Δ 995m  [highway/residential]  Søndermarken
@@ -58,7 +58,7 @@ Mode: APPLY | threshold: 10000 m
 [51/62] = assistens-kirkegaard         Δ  <1m  [place/house]  Assistens Kirkegård
 [52/62] = oerstedsparken               Δ  <1m  [place/house]  Ørstedsparken
 [53/62] ! ishoj-strandpark             Δ3.33km  [highway/secondary]  Ishøj Strandpark
-[54/62] → havnebadet-islands-brygge    Δ 455m  [place/house]  Havnebadet Islands Brygge
+[54/62] = havnebadet-islands-brygge    Δ  <1m  [place/house]  Havnebadet Islands Brygge
 [55/62] ! dyrehaven                    Δ2.04km  [highway/bus_stop]  Dyrehaven
 [56/62] = bellevue-strand              Δ  <1m  [place/house]  Bellevue Strand
 [57/62] = bakken                       Δ  <1m  [place/house]  Bakken (Dyrehavsbakken)
@@ -69,8 +69,8 @@ Mode: APPLY | threshold: 10000 m
 [62/62] = copenhagen-contemporary      Δ  <1m  [place/house]  Copenhagen Contemporary
 
 === Summary ===
-Already aligned (Δ < 1m):    47
-Eligible to apply:           5
+Already aligned (Δ < 1m):    52
+Eligible to apply:           0
 Flagged (coarse / over cap): 5
 No Nominatim match:          5
 Errors:                      0
@@ -109,4 +109,4 @@ No Nominatim match — review manually:
   • amager-strandpark  Amager Strand Promenaden, 2300 København S
   • marionet-teatret  Kongens Have, 1350 København K
 
-✓ Wrote 5 update(s) to lib/data/venues.ts.
+Nothing to apply.
