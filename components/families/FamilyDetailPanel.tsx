@@ -235,7 +235,7 @@ export function FamilyDetailPanel({ familyId }: Props) {
 
   if (load.kind === "loading") {
     return (
-      <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+      <div className="px-4 pt-6 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl space-y-3">
           <Skeleton className="h-32 w-full" />
           <Skeleton className="h-12 w-full" />
@@ -246,7 +246,7 @@ export function FamilyDetailPanel({ familyId }: Props) {
 
   if (load.kind === "missing") {
     return (
-      <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+      <div className="px-4 pt-6 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl">
           <EmptyState
             icon={<UsersThree size={20} weight="duotone" aria-hidden="true" />}
@@ -268,7 +268,7 @@ export function FamilyDetailPanel({ familyId }: Props) {
 
   if (load.kind === "error") {
     return (
-      <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+      <div className="px-4 pt-6 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl rounded-card bg-peach-50 p-5 ring-1 ring-peach-100">
           <h1 className="font-display text-lg font-semibold text-danger">{t("errorTitle")}</h1>
           <p className="mt-2 text-sm text-muted">{load.message}</p>
@@ -291,7 +291,7 @@ export function FamilyDetailPanel({ familyId }: Props) {
   const isBlocked = connection?.status === "blocked";
 
   return (
-    <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+    <div className="px-4 pt-6 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
         <Link
           href="/families"

@@ -97,7 +97,7 @@ export function Timeline({ items, currentUserId, onToggleReaction }: TimelinePro
     <div className="space-y-6">
       {groups.map((group) => (
         <section key={group.key} id={`month-${group.key}`} className="scroll-mt-20">
-          <div className="sticky top-14 z-[1] -mx-4 mb-3 flex items-center gap-2 bg-canvas/95 px-4 py-1.5 backdrop-blur lg:top-0 lg:mx-0 lg:px-0">
+          <div className="sticky top-14 z-[1] -mx-4 mb-3 flex items-center gap-2 bg-canvas/95 px-4 py-1.5 backdrop-blur md:top-16 md:-mx-0 md:px-0">
             <h3 className="font-display text-sm font-semibold uppercase tracking-[0.12em] text-muted">
               {group.label}
             </h3>

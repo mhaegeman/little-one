@@ -58,7 +58,7 @@ export default async function VenuePage({ params }: VenuePageProps) {
     .filter((entry): entry is { url: string; credit: NonNullable<ReturnType<typeof getPhotoCredit>> } => entry !== null);
 
   return (
-    <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+    <div className="px-4 pt-6 sm:px-6 lg:px-8">
       <article className="mx-auto max-w-5xl">
         <Link
           href="/discover"
