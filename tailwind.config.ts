@@ -71,32 +71,9 @@ const config: Config = {
         accent: { DEFAULT: "#E89A75", ink: "#7A3A1E" },
 
         // ─────────────────────────────────────────────────────────────
-        // Legacy scales — kept until components migrate to mint/peach.
-        // Do not use for new work.
-        sage: {
-          DEFAULT: "#5B8377",
-          50: "#EFF4F2",
-          100: "#DCE7E2",
-          200: "#BAD0C7",
-          300: "#94B5A8",
-          400: "#739A8B",
-          500: "#5B8377",
-          600: "#436C61",
-          700: "#33554C",
-          800: "#243C36",
-          900: "#172521"
-        },
-        warm: {
-          DEFAULT: "#C46A40",
-          50: "#FAEFE8",
-          100: "#F2DAC8",
-          200: "#E6B69A",
-          300: "#D88E69",
-          400: "#CA7548",
-          500: "#C46A40",
-          600: "#A55432",
-          700: "#7E3F25"
-        },
+        // Legacy `sand` scale — kept until remaining ui/* callsites
+        // migrate to canvas/sunken/border. Sage and warm have been
+        // retired; do not reintroduce them.
         sand: {
           50: "#FBF7EF",
           100: "#F4EFE2",

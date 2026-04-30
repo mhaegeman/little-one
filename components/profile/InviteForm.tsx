@@ -56,7 +56,7 @@ export function InviteForm({ familyName, onSubmit }: Props) {
   if (status === "done" && shareUrl) {
     return (
       <div className="rounded-card bg-sunken p-4 ring-1 ring-hairline">
-        <p className="text-2xs font-bold uppercase tracking-[0.14em] text-warm-500">
+        <p className="text-2xs font-bold uppercase tracking-[0.14em] text-peach-300">
           {t("doneEyebrow")}
         </p>
         <h3 className="mt-0.5 font-display text-base font-semibold text-ink">
@@ -93,7 +93,7 @@ export function InviteForm({ familyName, onSubmit }: Props) {
             setInvitedEmail("");
             setMessage("");
           }}
-          className="focus-ring mt-3 text-sm font-semibold text-warm-600 underline-offset-4 hover:underline"
+          className="focus-ring mt-3 text-sm font-semibold text-peach-ink underline-offset-4 hover:underline"
         >
           {t("inviteAnother")}
         </button>
@@ -103,7 +103,7 @@ export function InviteForm({ familyName, onSubmit }: Props) {
 
   return (
     <form onSubmit={submit} className="rounded-card bg-sunken p-4 ring-1 ring-hairline">
-      <p className="text-2xs font-bold uppercase tracking-[0.14em] text-warm-500">
+      <p className="text-2xs font-bold uppercase tracking-[0.14em] text-peach-300">
         {t("eyebrow", { name: familyName })}
       </p>
       <h3 className="mt-0.5 font-display text-base font-semibold text-ink">
@@ -148,7 +148,7 @@ export function InviteForm({ familyName, onSubmit }: Props) {
                 onClick={() => setRole(roleKey)}
                 className={`focus-ring rounded-lg px-2 py-2 text-xs font-semibold ring-1 transition-colors ${
                   role === roleKey
-                    ? "bg-sage-500 text-white ring-sage-500"
+                    ? "bg-mint-300 text-white ring-mint-300"
                     : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                 }`}
               >
@@ -185,7 +185,7 @@ export function InviteForm({ familyName, onSubmit }: Props) {
       </Button>
 
       {status === "error" ? (
-        <p className="mt-3 rounded-lg bg-warm-50 p-2.5 text-sm font-semibold text-danger ring-1 ring-warm-100">
+        <p className="mt-3 rounded-lg bg-peach-50 p-2.5 text-sm font-semibold text-danger ring-1 ring-peach-100">
           {error}
         </p>
       ) : null}

@@ -139,7 +139,7 @@ export function VenueCard({
     return (
       <Link
         href={`/venues/${venue.id}`}
-        className="focus-ring group block overflow-hidden rounded-card bg-surface ring-1 ring-hairline transition-colors hover:ring-sage-300"
+        className="focus-ring group block overflow-hidden rounded-card bg-surface ring-1 ring-hairline transition-colors hover:ring-mint-200"
       >
         <div className="relative aspect-[4/3] overflow-hidden">
           <img
@@ -182,7 +182,7 @@ export function VenueCard({
   return (
     <Link
       href={`/venues/${venue.id}`}
-      className="focus-ring group grid overflow-hidden rounded-card bg-surface ring-1 ring-hairline transition-colors hover:ring-sage-300 sm:grid-cols-[140px_1fr]"
+      className="focus-ring group grid overflow-hidden rounded-card bg-surface ring-1 ring-hairline transition-colors hover:ring-mint-200 sm:grid-cols-[140px_1fr]"
     >
       <div className="relative h-32 overflow-hidden sm:h-full">
         <img

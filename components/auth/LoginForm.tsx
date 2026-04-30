@@ -199,7 +199,7 @@ export function LoginForm({
   if (status === "sent") {
     return (
       <div className="rounded-card bg-surface p-5 ring-1 ring-hairline">
-        <div className="flex items-center gap-2 text-sage-700">
+        <div className="flex items-center gap-2 text-mint-ink">
           <CheckCircle size={20} weight="fill" aria-hidden="true" />
           <h2 className="font-display text-xl font-semibold text-ink">{copy.sentTitle}</h2>
         </div>
@@ -212,7 +212,7 @@ export function LoginForm({
         <button
           type="button"
           onClick={() => setStatus("idle")}
-          className="focus-ring mt-4 text-sm font-semibold text-warm-600 underline-offset-4 hover:underline"
+          className="focus-ring mt-4 text-sm font-semibold text-peach-ink underline-offset-4 hover:underline"
         >
           {locale === "da" ? "Send igen" : "Resend"}
         </button>
@@ -226,7 +226,7 @@ export function LoginForm({
       className="rounded-card bg-surface p-5 ring-1 ring-hairline"
     >
       {invite ? (
-        <div className="mb-4 rounded-card bg-sage-700 p-4 text-white">
+        <div className="mb-4 rounded-card bg-mint-ink p-4 text-white">
           <div className="flex items-center gap-2 text-sand-100">
             <HandHeart size={16} weight="fill" aria-hidden="true" />
             <p className="text-2xs font-bold uppercase tracking-[0.16em]">
@@ -291,7 +291,7 @@ export function LoginForm({
                       onClick={() => setRole(roleKey)}
                       className={`focus-ring rounded-lg px-2 py-2 text-xs font-semibold ring-1 transition-colors ${
                         active
-                          ? "bg-sage-500 text-white ring-sage-500"
+                          ? "bg-mint-300 text-white ring-mint-300"
                           : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                       }`}
                     >
@@ -338,14 +338,14 @@ export function LoginForm({
         <button
           type="button"
           onClick={() => setMode(isSignup ? "signin" : "signup")}
-          className="focus-ring mt-3 block w-full text-center text-sm font-semibold text-warm-600 underline-offset-4 hover:underline"
+          className="focus-ring mt-3 block w-full text-center text-sm font-semibold text-peach-ink underline-offset-4 hover:underline"
         >
           {isSignup ? copy.toSignin : copy.toSignup}
         </button>
       ) : null}
 
       {status === "error" ? (
-        <p className="mt-3 rounded-lg bg-warm-50 p-2.5 text-sm font-semibold text-danger ring-1 ring-warm-100">
+        <p className="mt-3 rounded-lg bg-peach-50 p-2.5 text-sm font-semibold text-danger ring-1 ring-peach-100">
           {errorMessage || copy.error}
         </p>
       ) : null}

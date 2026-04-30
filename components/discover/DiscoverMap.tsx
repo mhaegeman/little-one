@@ -233,9 +233,9 @@ export function DiscoverMap({ venues, selectedVenueId, onSelect, userLocation }:
       wrapper.setAttribute("aria-label", t("yourLocation"));
       const dot = document.createElement("span");
       dot.className =
-        "relative grid h-4 w-4 place-items-center rounded-full bg-warm-500 ring-[3px] ring-warm-500/30 shadow-sm";
+        "relative grid h-4 w-4 place-items-center rounded-full bg-peach-300 ring-[3px] ring-peach-300/30 shadow-sm";
       dot.innerHTML =
-        '<span class="absolute inset-0 -z-10 animate-ping rounded-full bg-warm-500/40"></span>';
+        '<span class="absolute inset-0 -z-10 animate-ping rounded-full bg-peach-300/40"></span>';
       wrapper.appendChild(dot);
       userMarkerRef.current = new maplibregl.Marker({ element: wrapper, anchor: "center" })
         .setLngLat([userLocation.lng, userLocation.lat])
@@ -346,7 +346,7 @@ function SelectedCard({
     <div className="pointer-events-none absolute bottom-3 left-3 right-3 sm:right-auto sm:max-w-sm">
       <Link
         href={`/venues/${venue.id}`}
-        className="focus-ring pointer-events-auto flex gap-2 overflow-hidden rounded-card bg-surface/96 p-1.5 shadow-lift ring-1 ring-hairline backdrop-blur transition hover:ring-sage-300"
+        className="focus-ring pointer-events-auto flex gap-2 overflow-hidden rounded-card bg-surface/96 p-1.5 shadow-lift ring-1 ring-hairline backdrop-blur transition hover:ring-mint-200"
       >
         {venue.photos[0] ? (
           <img
@@ -426,7 +426,7 @@ function updateClusterStyle(inner: HTMLElement, count: number) {
   // Scale by count (logarithmic so 50 doesn't dwarf 5)
   const size = Math.min(72, 36 + Math.log2(Math.max(2, count)) * 6);
   inner.className =
-    "grid place-items-center rounded-full bg-sage-500 text-white font-display font-semibold ring-[3px] ring-white shadow-lift transition-transform duration-150 ease-out hover:scale-105";
+    "grid place-items-center rounded-full bg-mint-300 text-white font-display font-semibold ring-[3px] ring-white shadow-lift transition-transform duration-150 ease-out hover:scale-105";
   inner.style.width = `${size}px`;
   inner.style.height = `${size}px`;
   inner.style.fontSize = `${Math.max(12, Math.min(18, size / 4))}px`;

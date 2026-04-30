@@ -57,7 +57,7 @@ export function FamilyCard({
           // eslint-disable-next-line @next/next/no-img-element
           <img src={family.coverUrl} alt="" className="h-full w-full object-cover" />
         ) : (
-          <div className="h-full w-full bg-gradient-to-br from-sage-400 via-sage-600 to-sage-700" />
+          <div className="h-full w-full bg-gradient-to-br from-mint-300 via-mint-ink to-mint-ink" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-black/0" />
         <div className="absolute bottom-2.5 left-4 right-4 flex items-end justify-between text-white">
@@ -128,7 +128,7 @@ export function FamilyCard({
         <div className="mt-4">
           <div className="flex items-center justify-between">
             <h3 className="flex items-center gap-1.5 font-display text-base font-semibold text-ink">
-              <Users size={14} weight="fill" className="text-sage-700" aria-hidden="true" />
+              <Users size={14} weight="fill" className="text-mint-ink" aria-hidden="true" />
               {t("membersTitle")}
               <span className="text-xs font-semibold text-subtle">({members.length})</span>
             </h3>
@@ -166,7 +166,7 @@ export function FamilyCard({
                       className="h-10 w-10 rounded-lg object-cover ring-2 ring-surface"
                     />
                   ) : (
-                    <span className="grid h-10 w-10 place-items-center rounded-lg bg-surface font-display text-sm font-semibold text-sage-700 ring-2 ring-surface">
+                    <span className="grid h-10 w-10 place-items-center rounded-lg bg-surface font-display text-sm font-semibold text-mint-ink ring-2 ring-surface">
                       {initials || "?"}
                     </span>
                   )}
@@ -231,7 +231,7 @@ export function FamilyCard({
                       <button
                         type="button"
                         onClick={() => onRevokeInvite(invite.id)}
-                        className="focus-ring text-xs font-semibold text-warm-600 underline-offset-4 hover:underline"
+                        className="focus-ring text-xs font-semibold text-peach-ink underline-offset-4 hover:underline"
                       >
                         {t("revoke")}
                       </button>

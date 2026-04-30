@@ -359,7 +359,7 @@ export function FamilyOnboardingWizard({
   return (
     <section className="rounded-card bg-surface p-5 ring-1 ring-hairline sm:p-6">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">
+        <p className="text-2xs font-bold uppercase tracking-[0.16em] text-peach-300">
           {copy.eyebrow}
         </p>
         <p className="text-2xs font-semibold uppercase tracking-[0.14em] text-subtle">
@@ -375,7 +375,7 @@ export function FamilyOnboardingWizard({
             <span
               key={index}
               className={`h-1 flex-1 rounded-pill transition-colors ${
-                filled ? "bg-sage-500" : "bg-sunken"
+                filled ? "bg-mint-300" : "bg-sunken"
               }`}
             />
           );
@@ -390,7 +390,7 @@ export function FamilyOnboardingWizard({
       <div className="mt-5">
         {step === 1 ? (
           <StepCard
-            icon={<HouseLine size={16} weight="fill" className="text-sage-700" aria-hidden="true" />}
+            icon={<HouseLine size={16} weight="fill" className="text-mint-ink" aria-hidden="true" />}
             title={copy.family.title}
             subtitle={copy.family.subtitle}
           >
@@ -415,13 +415,13 @@ export function FamilyOnboardingWizard({
 
         {step === 2 ? (
           <StepCard
-            icon={<Users size={16} weight="fill" className="text-sage-700" aria-hidden="true" />}
+            icon={<Users size={16} weight="fill" className="text-mint-ink" aria-hidden="true" />}
             title={copy.members.title}
             subtitle={copy.members.subtitle}
           >
             <div>
               <h3 className="flex items-center gap-1.5 font-display text-base font-semibold text-ink">
-                <Baby size={14} weight="fill" className="text-warm-500" aria-hidden="true" />
+                <Baby size={14} weight="fill" className="text-peach-300" aria-hidden="true" />
                 {copy.members.childrenTitle}
               </h3>
               <p className="mt-0.5 text-xs text-muted">{copy.members.childrenSubtitle}</p>
@@ -454,7 +454,7 @@ export function FamilyOnboardingWizard({
                         <button
                           type="button"
                           onClick={() => removeChild(child.key)}
-                          className="focus-ring inline-flex h-9 items-center gap-1 rounded-pill px-2.5 text-xs font-semibold text-warm-600 hover:bg-warm-50"
+                          className="focus-ring inline-flex h-9 items-center gap-1 rounded-pill px-2.5 text-xs font-semibold text-peach-ink hover:bg-peach-50"
                           aria-label={copy.members.remove}
                         >
                           <Trash size={12} weight="bold" aria-hidden="true" />
@@ -527,7 +527,7 @@ export function FamilyOnboardingWizard({
                                 onClick={() => patchInvite(invite.key, { role: roleKey })}
                                 className={`focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors ${
                                   active
-                                    ? "bg-sage-500 text-white ring-sage-500"
+                                    ? "bg-mint-300 text-white ring-mint-300"
                                     : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                                 }`}
                               >
@@ -541,7 +541,7 @@ export function FamilyOnboardingWizard({
                         <button
                           type="button"
                           onClick={() => removeInvite(invite.key)}
-                          className="focus-ring inline-flex h-8 items-center gap-1 rounded-pill px-2.5 text-xs font-semibold text-warm-600 hover:bg-warm-50"
+                          className="focus-ring inline-flex h-8 items-center gap-1 rounded-pill px-2.5 text-xs font-semibold text-peach-ink hover:bg-peach-50"
                         >
                           <Trash size={12} weight="bold" aria-hidden="true" />
                           {copy.members.remove}
@@ -581,7 +581,7 @@ export function FamilyOnboardingWizard({
                     onClick={() => toggleNeighbourhood(hood)}
                     className={`focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors ${
                       active
-                        ? "bg-sage-700 text-white ring-sage-700"
+                        ? "bg-mint-ink text-white ring-mint-ink"
                         : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                     }`}
                   >
@@ -598,7 +598,7 @@ export function FamilyOnboardingWizard({
 
         {step === 4 ? (
           <StepCard
-            icon={<Heart size={16} weight="fill" className="text-warm-500" aria-hidden="true" />}
+            icon={<Heart size={16} weight="fill" className="text-peach-300" aria-hidden="true" />}
             title={copy.interests.title}
             subtitle={copy.interests.subtitle}
           >
@@ -612,7 +612,7 @@ export function FamilyOnboardingWizard({
                     onClick={() => toggleCategory(category)}
                     className={`focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors ${
                       active
-                        ? "bg-sage-500 text-white ring-sage-500"
+                        ? "bg-mint-300 text-white ring-mint-300"
                         : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                     }`}
                   >
@@ -629,7 +629,7 @@ export function FamilyOnboardingWizard({
       </div>
 
       {error ? (
-        <p className="mt-4 rounded-lg bg-warm-50 p-2.5 text-sm font-semibold text-danger ring-1 ring-warm-100">
+        <p className="mt-4 rounded-lg bg-peach-50 p-2.5 text-sm font-semibold text-danger ring-1 ring-peach-100">
           {error}
         </p>
       ) : null}

@@ -117,7 +117,7 @@ export function PlannedOutings({ childId, onAdd }: Props) {
           <CalendarDots
             size={14}
             weight="fill"
-            className="text-warm-500"
+            className="text-peach-300"
             aria-hidden="true"
           />
           <h2 className="font-display text-sm font-semibold text-ink">{t("title")}</h2>
@@ -186,7 +186,7 @@ export function PlannedOutings({ childId, onAdd }: Props) {
                   });
                 }}
                 aria-label={t("removePlan", { name: venue.name })}
-                className="focus-ring grid h-8 w-8 place-items-center rounded-md text-muted hover:bg-sand-100 hover:text-warm-600"
+                className="focus-ring grid h-8 w-8 place-items-center rounded-md text-muted hover:bg-sand-100 hover:text-peach-ink"
               >
                 <X size={12} weight="bold" aria-hidden="true" />
               </button>

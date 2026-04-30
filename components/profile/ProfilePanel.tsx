@@ -349,8 +349,8 @@ export function ProfilePanel() {
             className={cn(
               "mt-4 flex items-start gap-2 rounded-card p-3 ring-1",
               banner.type === "success"
-                ? "bg-sage-100 text-sage-700 ring-sage-200"
-                : "bg-warm-50 text-danger ring-warm-100"
+                ? "bg-mint-50 text-mint-ink ring-mint-100"
+                : "bg-peach-50 text-danger ring-peach-100"
             )}
           >
             <CheckCircle size={16} weight="fill" aria-hidden="true" className="mt-0.5" />
@@ -376,7 +376,7 @@ export function ProfilePanel() {
                       className={cn(
                         "focus-ring inline-flex h-9 shrink-0 items-center gap-1.5 rounded-pill px-3 text-xs font-semibold transition-colors",
                         active
-                          ? "bg-sage-500 text-white"
+                          ? "bg-mint-300 text-white"
                           : "bg-surface text-muted ring-1 ring-hairline hover:bg-sunken hover:text-ink"
                       )}
                     >
@@ -402,7 +402,7 @@ export function ProfilePanel() {
                     className={cn(
                       "focus-ring flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm font-semibold transition-colors",
                       active
-                        ? "bg-sage-100 text-sage-700"
+                        ? "bg-mint-50 text-mint-ink"
                         : "text-muted hover:bg-sunken hover:text-ink"
                     )}
                   >
@@ -412,7 +412,7 @@ export function ProfilePanel() {
                       <span
                         className={cn(
                           "block truncate text-2xs font-normal",
-                          active ? "text-sage-700/70" : "text-subtle"
+                          active ? "text-mint-ink/70" : "text-subtle"
                         )}
                       >
                         {tSections(`${entry.id}.description`)}
@@ -508,7 +508,7 @@ export function ProfilePanel() {
                   <ShieldCheck
                     size={16}
                     weight="fill"
-                    className="mt-0.5 text-sage-500"
+                    className="mt-0.5 text-mint-300"
                     aria-hidden="true"
                   />
                   <div>

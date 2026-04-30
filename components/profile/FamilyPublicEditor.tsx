@@ -137,7 +137,7 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
       <section className="rounded-card bg-surface p-4 ring-1 ring-hairline">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">
+            <p className="text-2xs font-bold uppercase tracking-[0.16em] text-peach-300">
               {tSection("publicTitle")}
             </p>
             <h2 className="mt-0.5 font-display text-lg font-semibold text-ink">
@@ -149,7 +149,7 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
             className={cn(
               "flex items-center gap-2 rounded-pill px-3 py-2 text-xs font-semibold ring-1 transition-colors",
               draft.searchable
-                ? "bg-sage-100 text-sage-700 ring-sage-200"
+                ? "bg-mint-50 text-mint-ink ring-mint-100"
                 : "bg-sunken text-muted ring-hairline"
             )}
           >
@@ -157,7 +157,7 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
               type="checkbox"
               checked={draft.searchable}
               onChange={(event) => setDraft({ ...draft, searchable: event.target.checked })}
-              className="h-4 w-4 accent-sage-500"
+              className="h-4 w-4 accent-mint-300"
               aria-label={tSection("visible")}
             />
             {draft.searchable ? (
@@ -219,7 +219,7 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
                 className={cn(
                   "focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors",
                   active
-                    ? "bg-sage-500 text-white ring-sage-500"
+                    ? "bg-mint-300 text-white ring-mint-300"
                     : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                 )}
               >
@@ -246,7 +246,7 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
                 className={cn(
                   "focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors",
                   active
-                    ? "bg-sage-500 text-white ring-sage-500"
+                    ? "bg-mint-300 text-white ring-mint-300"
                     : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                 )}
               >
@@ -273,7 +273,7 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
                 className={cn(
                   "focus-ring rounded-pill px-3 py-1.5 text-xs font-semibold ring-1 transition-colors",
                   active
-                    ? "bg-sage-500 text-white ring-sage-500"
+                    ? "bg-mint-300 text-white ring-mint-300"
                     : "bg-surface text-muted ring-hairline hover:bg-sunken hover:text-ink"
                 )}
               >
@@ -346,7 +346,7 @@ export function FamilyPublicEditor({ primaryFamily }: Props) {
             onChange={(event) =>
               setDraft({ ...draft, showParentFirstNames: event.target.checked })
             }
-            className="h-5 w-5 accent-sage-500"
+            className="h-5 w-5 accent-mint-300"
             aria-label={tSection("parentNamesTitle")}
           />
         </div>
@@ -397,7 +397,7 @@ function VisibilityCard({
       className={cn(
         "focus-ring rounded-lg p-3 text-left ring-1 transition-colors",
         active
-          ? "bg-sage-50 text-sage-800 ring-sage-300"
+          ? "bg-mint-50 text-mint-ink ring-mint-200"
           : "bg-sunken text-ink ring-hairline hover:bg-sand-100"
       )}
     >

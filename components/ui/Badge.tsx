@@ -23,8 +23,8 @@ const variants: Record<BadgeVariant, string> = {
   sky: "bg-sky-50 text-sky-ink ring-sky-100",
   ink: "bg-ink text-canvas ring-ink",
   // Legacy tones — kept for surfaces not yet migrated.
-  sage: "bg-sage-100 text-sage-700 ring-sage-200",
-  warm: "bg-warm-50 text-warm-600 ring-warm-100",
+  sage: "bg-mint-50 text-mint-ink ring-mint-100",
+  warm: "bg-peach-50 text-peach-ink ring-peach-100",
   sand: "bg-sand-100 text-muted ring-sand-200",
   success: "bg-mint-50 text-mint-ink ring-mint-100",
   warning: "bg-butter-50 text-butter-ink ring-butter-100",

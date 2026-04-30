@@ -83,7 +83,7 @@ export default async function VenuePage({ params }: VenuePageProps) {
               </div>
               {photoCredits.length > 0 ? (
                 <div className="border-t border-hairline px-3 py-2 text-2xs text-subtle">
-                  <span className="font-semibold uppercase tracking-[0.12em] text-warm-500">
+                  <span className="font-semibold uppercase tracking-[0.12em] text-peach-300">
                     {t("photoCreditsLabel")}
                   </span>
                   <ul className="mt-1 space-y-0.5">
@@ -189,7 +189,7 @@ function InfoTile({
 }) {
   return (
     <div className="rounded-lg bg-sunken p-2.5 ring-1 ring-hairline">
-      <div className="mb-1 flex items-center gap-1.5 text-warm-500">
+      <div className="mb-1 flex items-center gap-1.5 text-peach-300">
         {icon}
         <span className="text-2xs font-bold uppercase tracking-[0.12em]">{label}</span>
       </div>

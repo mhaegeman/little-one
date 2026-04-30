@@ -36,7 +36,7 @@ export function ProfileHeader({ email, profile, familyCount, ownerCount, onEdit 
 
   return (
     <section className="overflow-hidden rounded-card bg-surface ring-1 ring-hairline">
-      <div className="relative h-24 bg-gradient-to-br from-sage-400 via-sage-600 to-sage-700 sm:h-28">
+      <div className="relative h-24 bg-gradient-to-br from-mint-300 via-mint-ink to-mint-ink sm:h-28">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.2),transparent_60%)]" />
       </div>
 
@@ -51,14 +51,14 @@ export function ProfileHeader({ email, profile, familyCount, ownerCount, onEdit 
                 className="h-20 w-20 rounded-2xl object-cover ring-4 ring-surface sm:h-24 sm:w-24"
               />
             ) : (
-              <span className="grid h-20 w-20 place-items-center rounded-2xl bg-sand-100 font-display text-2xl font-semibold text-sage-700 ring-4 ring-surface sm:h-24 sm:w-24">
+              <span className="grid h-20 w-20 place-items-center rounded-2xl bg-sand-100 font-display text-2xl font-semibold text-mint-ink ring-4 ring-surface sm:h-24 sm:w-24">
                 {initials || <UserCircle size={28} weight="duotone" aria-hidden="true" />}
               </span>
             )}
           </div>
 
           <div className="flex-1">
-            <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">
+            <p className="text-2xs font-bold uppercase tracking-[0.16em] text-peach-300">
               {t("eyebrow")}
             </p>
             <h1 className="mt-0.5 font-display text-2xl font-semibold leading-tight text-ink sm:text-3xl">
@@ -115,7 +115,7 @@ export function ProfileHeader({ email, profile, familyCount, ownerCount, onEdit 
           </div>
           <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-surface">
             <div
-              className="h-full rounded-full bg-sage-500 transition-all"
+              className="h-full rounded-full bg-mint-300 transition-all"
               style={{ width: `${completeness.percent}%` }}
               role="progressbar"
               aria-valuenow={completeness.percent}

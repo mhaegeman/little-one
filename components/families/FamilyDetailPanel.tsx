@@ -267,7 +267,7 @@ export function FamilyDetailPanel({ familyId }: Props) {
   if (load.kind === "error") {
     return (
       <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
-        <div className="mx-auto max-w-3xl rounded-card bg-warm-50 p-5 ring-1 ring-warm-100">
+        <div className="mx-auto max-w-3xl rounded-card bg-peach-50 p-5 ring-1 ring-peach-100">
           <h1 className="font-display text-lg font-semibold text-danger">{t("errorTitle")}</h1>
           <p className="mt-2 text-sm text-muted">{load.message}</p>
         </div>
@@ -305,13 +305,13 @@ export function FamilyDetailPanel({ familyId }: Props) {
               <img src={profile.coverUrl ?? ""} alt="" className="h-full w-full object-cover" />
             </div>
           ) : (
-            <div className="h-20 bg-gradient-to-br from-sage-100 via-canvas to-sand-100" />
+            <div className="h-20 bg-gradient-to-br from-mint-50 via-canvas to-sand-100" />
           )}
 
           <div className="p-5 sm:p-6">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <p className="text-2xs font-bold uppercase tracking-[0.16em] text-warm-500">
+                <p className="text-2xs font-bold uppercase tracking-[0.16em] text-peach-300">
                   {t("eyebrow")}
                 </p>
                 <h1 className="mt-1 font-display text-3xl font-semibold leading-tight text-ink">
