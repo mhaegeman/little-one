@@ -703,5 +703,148 @@
     "strengthLabel": "Profilstyrke",
     "percentDone": "{percent}% færdig",
     "fieldsDone": "{score} af {total} felter udfyldt"
+  },
+  "marketing": {
+    "metaTitle": "Lille Liv — Familieliv i København, samlet og roligt",
+    "metaDescription": "Find steder. Gem øjeblikkene. Sammen. En familieguide og privat journal for forældre med børn 0–6 år i København.",
+    "nav": {
+      "findPlaces": "Find steder",
+      "journal": "Journal",
+      "families": "Familier",
+      "about": "Om os",
+      "login": "Log ind",
+      "createFamily": "Opret familie",
+      "openMenu": "Åbn menu",
+      "closeMenu": "Luk menu"
+    },
+    "hero": {
+      "eyebrow": "Familieguide for København · 0–6 år",
+      "headlineLine1": "Find steder.",
+      "headlineLine2": "Gem øjeblikkene.",
+      "headlineLine3": "Sammen.",
+      "lede": "Lille Liv samler caféer, legepladser, biblioteker og museer i København — og en privat journal pr. barn, hvor I og bedsteforældre kan dele hverdagsglimt og milepæle.",
+      "ctaPrimary": "Opret familie — gratis",
+      "ctaSecondary": "Se 60 sek. tur",
+      "socialProof": "+1.200 forældre i København bruger Lille Liv",
+      "phoneEyebrow": "Opdag",
+      "phoneGreeting": "God formiddag, Maja",
+      "phoneSearch": "Cafe, legeplads, Østerbro…",
+      "phoneToday": "I dag · 14°",
+      "phoneTodaySub": "Perfekt til Fælledparken",
+      "phoneVenue1Title": "Plantebørnehaven",
+      "phoneVenue1Sub": "Indendørs leg · Nørrebro",
+      "phoneVenue2Title": "Kaffe og Køkken",
+      "phoneVenue2Sub": "Cafe · Vesterbro · 0,4 km",
+      "savedTitle": "Just saved",
+      "savedBody": "Mormor sendte et hjerte til Astas øjeblik 💛"
+    },
+    "trust": {
+      "label": "Omtalt i",
+      "items": ["Berlingske", "Politiken", "Magasinet KBH", "Børn i Byen", "TV 2 Lorry"]
+    },
+    "pillars": {
+      "eyebrow": "Hvad er Lille Liv?",
+      "title": "Tre rum til familielivet —",
+      "titleItalic": "roligt samlet",
+      "items": {
+        "discover": {
+          "title": "Find steder",
+          "body": "Udvalgte caféer med plads til klapvogn, legepladser med læ, biblioteker med højtlæsning og museer der inviterer de små indenfor.",
+          "footer": "Filtrér på alder, bydel og vejr"
+        },
+        "journal": {
+          "title": "Gem øjeblikkene",
+          "body": "En privat tidslinje pr. barn: milepæle, små ture og hverdagsglimt. Ingen offentlig deling — kun jer og dem I vælger.",
+          "footer": "RLS-sikret · EU-hosted"
+        },
+        "share": {
+          "title": "Del med dem I vælger",
+          "body": "Inviter bedsteforældre, dagplejer eller medforælder. Alle ser det samme — og kan reagere med et hjerte, et klap eller et smil.",
+          "footer": "Op til 6 medlemmer"
+        }
+      }
+    },
+    "appPreview": {
+      "eyebrow": "Sådan ser det ud",
+      "title": "Hverdagens små glimt — samlet for hvert barn.",
+      "body": "Tilføj et øjeblik fra cafeen, parken eller derhjemme. Mormor og morfar får det samme rolige feed — og kan sende et hjerte tilbage.",
+      "timelineHeader": "Astas tidslinje",
+      "timelineToday": "I dag",
+      "timelineYesterday": "I går · Fælledparken",
+      "moment1Title": "Første gang på rutsjebanen",
+      "moment1Caption": "Asta turde selv. Vi klappede begge to.",
+      "moment2Title": "Boller på Nørrebro",
+      "moment2Caption": "Hjem til middagsluren med fyldt mave.",
+      "reactionTitle": "Mormor",
+      "reactionBody": "sendte et hjerte til Astas øjeblik 💛",
+      "reactionTime": "nu"
+    },
+    "grandparents": {
+      "eyebrow": "Til bedsteforældre",
+      "title": "Følg med — uden at spørge.",
+      "body": "Lille Liv er bygget så bedsteforældre, der måske ikke bor i København, kan følge med i hverdagen uden at være på Facebook eller Instagram. Ingen offentlige feeds, ingen reklamer — bare jeres børn og børnebørn.",
+      "bullet1": "Et roligt feed med billeder og små historier",
+      "bullet2": "Reagér med hjerte, klap eller smil — ingen kommentarspor",
+      "bullet3": "Virker på telefon, tablet og computer",
+      "cta": "Inviter mormor",
+      "portraitCaption": "Mormor Birgit · Aarhus"
+    },
+    "faq": {
+      "eyebrow": "Spørgsmål & svar",
+      "title": "Det vi oftest bliver spurgt om",
+      "items": [
+        {
+          "q": "Er journalen virkelig privat?",
+          "a": "Ja. Hvert barns journal er privat pr. familie og delt kun med dem I selv inviterer. Vi bruger Postgres Row-Level Security, så ingen anden familie — eller Lille Liv selv — kan se jeres øjeblikke. Hosting ligger i EU."
+        },
+        {
+          "q": "Hvad koster det?",
+          "a": "Lille Liv er gratis under beta. Vi tilføjer et familieabonnement senere — eksisterende familier får besked først, og de første 30 dage forbliver altid gratis."
+        },
+        {
+          "q": "Hvilken aldersgruppe er det til?",
+          "a": "0–6 år. Stederne er kurateret til småbørnsfamilier — caféer med plads til klapvogn, legepladser med læ, biblioteker med højtlæsning. Når jeres barn fylder seks, kan I tage journalen med jer som eksport."
+        },
+        {
+          "q": "Findes Lille Liv på iOS og Android?",
+          "a": "Vi starter på web (virker i Safari og Chrome på iOS og Android), og en native app følger i løbet af året. Det I bygger op nu, følger med over."
+        },
+        {
+          "q": "Kan jeg tage mine data med mig?",
+          "a": "Ja. Eksport af hele journalen som JSON + alle billeder i original opløsning er gratis og altid tilgængelig fra Profil → Konto. Ingen lock-in."
+        },
+        {
+          "q": "Hvad med GDPR og børns billeder?",
+          "a": "I ejer billederne. Vi gemmer dem i EU, krypteret, med adgang kun for de familiemedlemmer I selv har inviteret. Vi sælger aldrig data, og vi træner ikke AI-modeller på jeres indhold."
+        }
+      ]
+    },
+    "footerCta": {
+      "eyebrow": "Kom i gang",
+      "title": "Lille Liv venter — gratis under beta.",
+      "body": "Opret familien på et minut. Inviter mormor, morfar og medforælder bagefter.",
+      "ctaPrimary": "Opret familie — gratis",
+      "ctaSecondary": "Log ind"
+    },
+    "footer": {
+      "tagline": "Familieliv i København, samlet og roligt. Lavet af to forældre på orlov i Nordvest.",
+      "columnProduct": "Produkt",
+      "columnCompany": "Selskab",
+      "columnLegal": "Juridisk",
+      "links": {
+        "discover": "Find steder",
+        "journal": "Journal",
+        "families": "Familier",
+        "about": "Om os",
+        "contact": "Kontakt",
+        "blog": "Blog",
+        "privacy": "Privatliv",
+        "terms": "Vilkår",
+        "cookies": "Cookies"
+      },
+      "copyright": "© 2026 Lille Liv ApS · København",
+      "madeWith": "Lavet med omtanke i København",
+      "languageLabel": "Sprog"
+    }
   }
 }
