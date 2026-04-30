@@ -162,6 +162,133 @@ textarea {
   }
 }
 
+/* Brand reel — animated mobile journey embedded in the marketing hero.
+   Keyframes are namespaced (`reel-*`) and only consumed inside `.reel-stage`. */
+@keyframes reel-scene-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes reel-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes reel-rise-lg {
+  from {
+    opacity: 0;
+    transform: translateY(36px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes reel-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes reel-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes reel-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes reel-draw {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes reel-pulse-soft {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+@keyframes reel-node-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 3px var(--color-peach),
+      0 0 0 6px var(--bg-canvas);
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px var(--color-peach),
+      0 0 0 9px var(--bg-canvas);
+  }
+}
+
+.reel-stage [data-anim="scene"] {
+  animation: reel-scene-in 320ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+.reel-stage [data-anim="rise"] {
+  animation: reel-rise 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.reel-stage [data-anim="rise-lg"] {
+  animation: reel-rise-lg 640ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.reel-stage [data-anim="pop"] {
+  animation: reel-pop 520ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.reel-stage [data-anim="drop"] {
+  animation: reel-drop 640ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.reel-stage [data-anim="slide-in"] {
+  animation: reel-slide-in 460ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.reel-stage [data-anim="draw"] {
+  transform-origin: top center;
+  animation: reel-draw 640ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.reel-stage [data-anim="pulse"] {
+  animation: reel-pulse-soft 1800ms ease-in-out infinite;
+  transform-origin: center;
+}
+.reel-stage [data-anim="node-pulse"] {
+  animation: reel-node-pulse 1600ms ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reel-stage [data-anim] {
+    animation: none !important;
+  }
+}
+
 /* Skip link */
 .skip-link {
   position: absolute;
