@@ -13,9 +13,9 @@ export function MarketingNav() {
   const [open, setOpen] = useState(false);
 
   const links = [
-    { href: "#pillars", label: t("findPlaces") },
-    { href: "#preview", label: t("journal") },
-    { href: "#grandparents", label: t("families") },
+    { href: "/discover", label: t("findPlaces") },
+    { href: "/journal", label: t("journal") },
+    { href: "/families", label: t("families") },
     { href: "#faq", label: t("about") }
   ];
 
@@ -35,26 +35,36 @@ export function MarketingNav() {
           aria-label="Primary"
           className="hidden items-center gap-7 text-sm font-medium text-muted md:flex"
         >
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="focus-ring rounded-md transition-colors hover:text-ink"
-            >
-              {link.label}
-            </a>
-          ))}
+          {links.map((link) =>
+            link.href.startsWith("#") ? (
+              <a
+                key={link.href}
+                href={link.href}
+                className="focus-ring rounded-md transition-colors hover:text-ink"
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="focus-ring rounded-md transition-colors hover:text-ink"
+              >
+                {link.label}
+              </Link>
+            )
+          )}
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
           <Link
-            href="/auth"
+            href="/profile"
             className={buttonClass({ variant: "ghost", size: "sm" })}
           >
             {t("login")}
           </Link>
           <Link
-            href="/auth"
+            href="/profile?next=/journal"
             className={buttonClass({ variant: "primary", size: "sm" })}
           >
             {t("createFamily")}
@@ -78,19 +88,31 @@ export function MarketingNav() {
             aria-label="Mobile"
             className="mx-auto flex max-w-[1240px] flex-col gap-1 px-5 py-4"
           >
-            {links.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="focus-ring rounded-md px-2 py-2.5 text-base font-medium text-ink hover:bg-sunken"
-              >
-                {link.label}
-              </a>
-            ))}
+            {links.map((link) =>
+              link.href.startsWith("#") ? (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className="focus-ring rounded-md px-2 py-2.5 text-base font-medium text-ink hover:bg-sunken"
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className="focus-ring rounded-md px-2 py-2.5 text-base font-medium text-ink hover:bg-sunken"
+                >
+                  {link.label}
+                </Link>
+              )
+            )}
             <div className="mt-2 flex items-center gap-2">
               <Link
-                href="/auth"
+                href="/profile"
+                onClick={() => setOpen(false)}
                 className={buttonClass({
                   variant: "ghost",
                   size: "md",
@@ -100,7 +122,8 @@ export function MarketingNav() {
                 {t("login")}
               </Link>
               <Link
-                href="/auth"
+                href="/profile?next=/journal"
+                onClick={() => setOpen(false)}
                 className={buttonClass({
                   variant: "primary",
                   size: "md",
