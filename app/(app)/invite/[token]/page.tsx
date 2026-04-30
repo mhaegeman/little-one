@@ -92,7 +92,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
   }
 
   return (
-    <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+    <div className="px-4 pt-6 sm:px-6 lg:px-8">
       <div className="mx-auto grid max-w-5xl gap-4 lg:grid-cols-[1fr_440px]">
         <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
           <p className="text-2xs font-bold uppercase tracking-[0.16em] text-peach-300">

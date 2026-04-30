@@ -9,7 +9,17 @@
     "families": "Familier",
     "profile": "Profil",
     "search": "Søg",
-    "skipToContent": "Spring til indhold"
+    "skipToContent": "Spring til indhold",
+    "signIn": "Log ind",
+    "signUp": "Opret familie",
+    "signOut": "Log ud",
+    "goToApp": "Gå til app",
+    "quickLog": "Tilføj til journal",
+    "openMenu": "Åbn menu",
+    "closeMenu": "Luk menu",
+    "userMenu": "Kontomenu",
+    "myAccount": "Profil & indstillinger",
+    "myFamily": "Min familie"
   },
   "common": {
     "save": "Gem",

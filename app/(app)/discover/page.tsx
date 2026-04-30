@@ -7,7 +7,7 @@ export default function DiscoverPage() {
   return (
     <Suspense
       fallback={
-        <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+        <div className="px-4 pt-6 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-[1400px] space-y-3">
             <Skeleton className="h-10 w-64" />
             <Skeleton className="h-12 w-full" />

@@ -23,7 +23,7 @@ export function LockedPreview({
   const href = `/auth?next=${encodeURIComponent(redirectTo)}`;
 
   return (
-    <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+    <div className="px-4 pt-6 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-2xl">
         <section className="rounded-card bg-surface p-6 ring-1 ring-hairline">
           <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-mint-50 text-mint-ink ring-1 ring-mint-50">

@@ -316,7 +316,7 @@ export function ProfilePanel() {
   if (!signedIn) {
     if (!supabaseAvailable) {
       return (
-        <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+        <div className="px-4 pt-6 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl rounded-card bg-surface p-5 ring-1 ring-hairline">
             <p className="rounded-lg bg-[#FBF1D9] p-2.5 text-xs text-warning ring-1 ring-[#F0DFB1]">
               {tPage("supabaseNotice")}
@@ -336,7 +336,7 @@ export function ProfilePanel() {
   }
 
   return (
-    <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+    <div className="px-4 pt-6 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <PageHeader
           eyebrow={tPage("settingsEyebrow")}

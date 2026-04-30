@@ -15,7 +15,7 @@ export default async function FamilyDetailPage({ params }: Props) {
   return (
     <Suspense
       fallback={
-        <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+        <div className="px-4 pt-6 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl space-y-3">
             <Skeleton className="h-8 w-40" />
             <Skeleton className="h-32 w-full" />

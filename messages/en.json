@@ -9,7 +9,17 @@
     "families": "Families",
     "profile": "Profile",
     "search": "Search",
-    "skipToContent": "Skip to content"
+    "skipToContent": "Skip to content",
+    "signIn": "Log in",
+    "signUp": "Create family",
+    "signOut": "Sign out",
+    "goToApp": "Go to app",
+    "quickLog": "Add to journal",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "userMenu": "Account menu",
+    "myAccount": "Profile & settings",
+    "myFamily": "My family"
   },
   "common": {
     "save": "Save",

@@ -77,7 +77,7 @@ export function FamiliesPanel() {
 
   if (loading) {
     return (
-      <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+      <div className="px-4 pt-6 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl space-y-3">
           <Skeleton className="h-8 w-40" />
           <Skeleton className="h-12 w-full" />
@@ -89,7 +89,7 @@ export function FamiliesPanel() {
 
   if (!supabaseAvailable) {
     return (
-      <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+      <div className="px-4 pt-6 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl rounded-card bg-surface p-5 ring-1 ring-hairline">
           <p className="text-2xs font-bold uppercase tracking-[0.18em] text-peach-ink">{t("eyebrow")}</p>
           <h1 className="mt-1 font-display text-2xl font-semibold text-ink">{t("loginRequiredTitle")}</h1>
@@ -114,7 +114,7 @@ export function FamiliesPanel() {
 
   if (!primaryFamily) {
     return (
-      <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+      <div className="px-4 pt-6 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl rounded-card bg-surface p-5 ring-1 ring-hairline">
           <p className="text-2xs font-bold uppercase tracking-[0.18em] text-peach-ink">{t("eyebrow")}</p>
           <h1 className="mt-1 font-display text-2xl font-semibold text-ink">{t("noFamilyTitle")}</h1>
@@ -125,7 +125,7 @@ export function FamiliesPanel() {
   }
 
   return (
-    <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+    <div className="px-4 pt-6 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-5xl">
         <PageHeader
           eyebrow={t("eyebrow")}
