@@ -2,10 +2,8 @@
 
 import {
   CheckCircle,
-  Compass,
   Eye,
   Heart,
-  Key,
   Sparkle,
   ShieldCheck,
   SignOut,
@@ -17,7 +15,6 @@ import {
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { LoginForm } from "@/components/auth/LoginForm";
 import { FamilyCard } from "@/components/profile/FamilyCard";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ProfileOverview } from "@/components/profile/ProfileOverview";
@@ -188,6 +185,14 @@ export function ProfilePanel() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
+  // Redirect signed-out visitors to the dedicated /auth page so the magic-link
+  // flow lives in one canonical surface.
+  useEffect(() => {
+    if (loading || signedIn || !supabaseAvailable) return;
+    const next = encodeURIComponent(safeNext ?? "/profile");
+    router.replace(`/auth?next=${next}`);
+  }, [loading, signedIn, supabaseAvailable, router, safeNext]);
+
   async function logout() {
     const supabase = createClient();
     if (!supabase) {
@@ -306,48 +311,22 @@ export function ProfilePanel() {
   }
 
   if (!signedIn) {
+    if (!supabaseAvailable) {
+      return (
+        <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
+          <div className="mx-auto max-w-2xl rounded-card bg-surface p-5 ring-1 ring-hairline">
+            <p className="rounded-lg bg-[#FBF1D9] p-2.5 text-xs text-warning ring-1 ring-[#F0DFB1]">
+              {tPage("supabaseNotice")}
+            </p>
+          </div>
+        </div>
+      );
+    }
     return (
-      <div className="px-4 pt-16 sm:px-6 lg:px-8 lg:pt-6">
-        <div className="mx-auto grid max-w-5xl gap-4 lg:grid-cols-[1fr_420px]">
-          <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
-            <p className="text-2xs font-bold uppercase tracking-[0.18em] text-warm-500">
-              {tPage("loggedOutEyebrow")}
-            </p>
-            <h1 className="mt-1 font-display text-3xl font-semibold leading-tight text-ink">
-              {tPage("loggedOutTitle")}
-            </h1>
-            <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
-              {tPage("loggedOutBody")}
-            </p>
-            <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-              <FeaturePoint
-                icon={<Sparkle size={14} weight="fill" className="text-warm-500" aria-hidden="true" />}
-                title={tPage("tailoredFeed")}
-                body={tPage("tailoredFeedBody")}
-              />
-              <FeaturePoint
-                icon={<Compass size={14} weight="fill" className="text-warm-500" aria-hidden="true" />}
-                title={tPage("curatedOutings")}
-                body={tPage("curatedOutingsBody")}
-              />
-              <FeaturePoint
-                icon={<ShieldCheck size={14} weight="fill" className="text-warm-500" aria-hidden="true" />}
-                title={tPage("sharedFamilySpace")}
-                body={tPage("sharedFamilySpaceBody")}
-              />
-              <FeaturePoint
-                icon={<Key size={14} weight="fill" className="text-warm-500" aria-hidden="true" />}
-                title={tPage("magicLink")}
-                body={tPage("magicLinkBody")}
-              />
-            </ul>
-            {!supabaseAvailable ? (
-              <p className="mt-4 rounded-lg bg-[#FBF1D9] p-2.5 text-xs text-warning ring-1 ring-[#F0DFB1]">
-                {tPage("supabaseNotice")}
-              </p>
-            ) : null}
-          </section>
-          <LoginForm redirectTo={safeNext ?? "/profile"} />
+      <div className="px-4 pt-20 sm:px-6 lg:px-8 lg:pt-6">
+        <div className="mx-auto max-w-5xl space-y-3">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-32 w-full" />
         </div>
       </div>
     );
@@ -569,22 +548,3 @@ function ProfileNoFamilyCard() {
   );
 }
 
-function FeaturePoint({
-  icon,
-  title,
-  body
-}: {
-  icon: React.ReactNode;
-  title: string;
-  body: string;
-}) {
-  return (
-    <li className="rounded-lg bg-sunken p-2.5 ring-1 ring-hairline">
-      <div className="flex items-center gap-1.5">
-        {icon}
-        <p className="font-display text-sm font-semibold text-ink">{title}</p>
-      </div>
-      <p className="mt-1 text-xs leading-5 text-muted">{body}</p>
-    </li>
-  );
-}

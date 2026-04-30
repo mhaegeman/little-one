@@ -15,7 +15,7 @@ import { neighbourhoods as neighbourhoodList } from "@/lib/data/taxonomy";
 type Row = Record<string, unknown>;
 
 const PROFILE_COLUMNS =
-  "user_id,display_name,pronouns,bio,avatar_url,preferred_role,preferred_locale,interests,neighbourhoods,indoor_preference,child_age_min_months,child_age_max_months,notify_email";
+  "user_id,display_name,pronouns,bio,avatar_url,preferred_role,preferred_locale,interests,neighbourhoods,indoor_preference,child_age_min_months,child_age_max_months,notify_email,onboarding_completed_at";
 
 const validCategories = new Set<string>(categories);
 const validNeighbourhoods = new Set<string>(neighbourhoodList);
@@ -55,7 +55,8 @@ function mapProfile(row: Row | null | undefined): FamilyProfile | null {
       typeof row.child_age_min_months === "number" ? (row.child_age_min_months as number) : null,
     childAgeMaxMonths:
       typeof row.child_age_max_months === "number" ? (row.child_age_max_months as number) : null,
-    notifyEmail: row.notify_email === false ? false : true
+    notifyEmail: row.notify_email === false ? false : true,
+    onboardingCompletedAt: (row.onboarding_completed_at as string | null) ?? null
   };
 }
 
@@ -187,6 +188,14 @@ export async function loadFamilyInvites(supabase: SupabaseClient, familyId: stri
 
   if (error) throw error;
   return (data ?? []).map((row) => mapInvite(row as Row));
+}
+
+export async function markOnboardingComplete(supabase: SupabaseClient, userId: string) {
+  const { error } = await supabase
+    .from("family_profiles")
+    .update({ onboarding_completed_at: new Date().toISOString() })
+    .eq("user_id", userId);
+  if (error) throw error;
 }
 
 export async function updateFamily(

@@ -18,7 +18,8 @@ export const DEFAULT_PROFILE_PATCH: Omit<FamilyProfile, "userId"> = {
   indoorPreference: "any",
   childAgeMinMonths: null,
   childAgeMaxMonths: null,
-  notifyEmail: true
+  notifyEmail: true,
+  onboardingCompletedAt: null
 };
 
 export type ProfileCompletenessField =

@@ -143,6 +143,7 @@ export type FamilyProfile = {
   childAgeMinMonths: number | null;
   childAgeMaxMonths: number | null;
   notifyEmail: boolean;
+  onboardingCompletedAt: string | null;
 };
 
 export type Family = {
