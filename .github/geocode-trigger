@@ -6,4 +6,4 @@
 #   --apply                 write updates within threshold to lib/data/venues.ts
 #   --apply --threshold=400
 #
-# trigger: 2026-04-30T14:30Z
+# trigger: 2026-04-30T15:05Z

@@ -1,13 +1,16 @@
 // Bulk-geocode all venues against Nominatim (OpenStreetMap) and report — or
 // apply — coordinate updates so each pin lands at the address OSM resolves.
 //
-// Defaults to a dry-run that prints every venue with its current vs. Nominatim
-// coordinates and the delta in metres. Pass --apply to write updates back into
-// lib/data/venues.ts (the same file the admin map tool patches).
+// Auto-apply rule: a Nominatim match qualifies when its OSM class/type is a
+// precise feature (place/house, building/*, amenity/*, tourism/*, etc.) AND
+// the delta from the current coord is within --threshold (default 10 km, a
+// sanity cap — most real moves are < 1 km but the original manual coords are
+// sometimes kilometres off). Coarse matches (highway/*, place/suburb,
+// information/board, …) are flagged for manual review in /admin/map-tool.
 //
-//   npm run geocode:venues                       # dry-run, threshold 250m
-//   npm run geocode:venues -- --apply            # apply updates within threshold
-//   npm run geocode:venues -- --threshold=400    # custom threshold (metres)
+//   npm run geocode:venues                       # dry-run
+//   npm run geocode:venues -- --apply            # write qualified updates
+//   npm run geocode:venues -- --threshold=2000   # tighter sanity cap (metres)
 //   npm run geocode:venues -- --only=tivoli-gardens,bakken
 //
 // Nominatim usage policy: max 1 req/sec, identifying User-Agent required.
@@ -32,7 +35,7 @@ function parseArgs(): Args {
   const argv: string[] = process.argv.slice(2);
   const apply = argv.includes("--apply");
   const thresholdArg = argv.find((a: string) => a.startsWith("--threshold="));
-  const threshold = thresholdArg ? Number(thresholdArg.split("=")[1]) : 250;
+  const threshold = thresholdArg ? Number(thresholdArg.split("=")[1]) : 10_000;
   const onlyArg = argv.find((a: string) => a.startsWith("--only="));
   const only: Set<string> | null = onlyArg
     ? new Set<string>(
@@ -155,6 +158,21 @@ function toResult(row: NominatimRow): GeocodeResult {
   };
 }
 
+// Whether a Nominatim match is precise enough to auto-apply. Coarse types
+// (street centroids, neighbourhood polygons, signposts) are flagged so a
+// human can place the pin in /admin/map-tool instead.
+function isApplyable(result: GeocodeResult): boolean {
+  const [cls, typ] = result.classType.split("/");
+  if (cls === "place" && typ === "house") return true;
+  if (["building", "amenity", "tourism", "shop", "office", "historic", "craft"].includes(cls)) {
+    return true;
+  }
+  if (cls === "leisure" && !["park", "garden", "nature_reserve", "common"].includes(typ)) {
+    return true;
+  }
+  return false;
+}
+
 // Same patch logic as app/(app)/admin/map-tool/actions.ts so on-disk formatting
 // stays byte-identical to what the admin tool produces.
 function patchVenueCoords(source: string, venueId: string, lat: number, lng: number) {
@@ -236,17 +254,19 @@ async function main() {
         console.log(`${prefix} ✗ ${venue.id} — no Nominatim match for "${venue.address}"`);
       } else {
         const delta = haversineMeters(venue.lat, venue.lng, result.lat, result.lng);
+        const precise = isApplyable(result);
+        const withinCap = delta <= args.threshold;
         let status: Row["status"];
         let symbol: string;
         if (delta < 1) {
           status = "aligned";
           symbol = "=";
-        } else if (delta > args.threshold) {
-          status = "flagged";
-          symbol = "!";
-        } else {
+        } else if (precise && withinCap) {
           status = "update";
           symbol = "→";
+        } else {
+          status = "flagged";
+          symbol = "!";
         }
         rows.push({
           id: venue.id,
@@ -255,7 +275,12 @@ async function main() {
           current: { lat: venue.lat, lng: venue.lng },
           result,
           delta,
-          status
+          status,
+          reason: !precise
+            ? `coarse match (${result.classType})`
+            : !withinCap
+              ? `delta ${Math.round(delta)}m > cap ${args.threshold}m`
+              : undefined
         });
         console.log(
           `${prefix} ${symbol} ${venue.id.padEnd(28)} Δ${fmtDelta(delta)}  [${result.classType}]  ${venue.name}`
@@ -285,16 +310,16 @@ async function main() {
   const errors = rows.filter((r) => r.status === "error");
 
   console.log("\n=== Summary ===");
-  console.log(`Already aligned (Δ < 1m):   ${aligned.length}`);
-  console.log(`Within threshold (eligible): ${updates.length}`);
-  console.log(`Flagged (Δ > ${args.threshold}m):       ${flagged.length}`);
+  console.log(`Already aligned (Δ < 1m):    ${aligned.length}`);
+  console.log(`Eligible to apply:           ${updates.length}`);
+  console.log(`Flagged (coarse / over cap): ${flagged.length}`);
   console.log(`No Nominatim match:          ${missing.length}`);
   console.log(`Errors:                      ${errors.length}`);
 
   if (flagged.length > 0) {
     console.log(`\nFlagged venues — review manually in /admin/map-tool:`);
     for (const r of flagged) {
-      console.log(`  • ${r.id}  Δ${fmtDelta(r.delta)}  ${r.name}`);
+      console.log(`  • ${r.id}  Δ${fmtDelta(r.delta)}  ${r.name}  — ${r.reason ?? ""}`);
       console.log(`      addr:      ${r.address}`);
       console.log(`      current:   ${r.current.lat}, ${r.current.lng}`);
       if (r.result) {
