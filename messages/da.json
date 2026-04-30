@@ -1,7 +1,8 @@
 {
   "app": {
     "name": "Lille Liv",
-    "tagline": "Familieliv i København, samlet og roligt."
+    "tagline": "Familieliv i København, samlet og roligt.",
+    "languageSwitcherLabel": "Sprog"
   },
   "nav": {
     "discover": "Opdag",
@@ -290,6 +291,7 @@
   },
   "families": {
     "eyebrow": "Familier",
+    "metaTitle": "Familier",
     "title": "Familier i nabolaget",
     "description": "Forbind med andre familier og planlæg fælles ture i jeres bydel.",
     "loginRequiredTitle": "Login påkrævet",
@@ -559,6 +561,7 @@
     "signedOut": "Du er logget ud."
   },
   "profilePage": {
+    "metaTitle": "Profil",
     "loggedOutEyebrow": "Profil",
     "loggedOutTitle": "En personlig plads til familien",
     "loggedOutBody": "Log ind med et magisk link og åbn en privat hub: profil, præferencer, anbefalinger og en delt familieplads.",
@@ -680,6 +683,27 @@
     "readMore": "Læs mere",
     "eventDatePattern": "EEEE 'd.' MMM yyyy 'kl.' HH:mm"
   },
+  "onboarding": {
+    "metaTitle": "Opret familie"
+  },
+  "adminMapTool": {
+    "metaTitle": "Kortredigering"
+  },
+  "invite": {
+    "notFoundTitle": "Invitationen findes ikke",
+    "notFoundBody": "Linket er udløbet eller forkert. Bed afsenderen om at sende et nyt.",
+    "expiredTitle": "Invitationen er ikke aktiv længere",
+    "expiredBodyAccepted": "Den er allerede brugt.",
+    "expiredBodyOther": "Den er udløbet eller trukket tilbage. Bed familien om en ny invitation.",
+    "eyebrow": "Du er inviteret",
+    "headline": "{inviter} har inviteret dig til {family}",
+    "welcomeFamily": "Velkommen til {family}",
+    "welcomeFallback": "Velkommen til familien",
+    "body": "Lille Liv er en privat plads til familiens hverdag — milepæle, små glimt, fotos og udflugter, samlet for jer.",
+    "messageFromInviter": "Hilsen fra {inviter}",
+    "messageFromFamily": "Hilsen fra familien",
+    "privacy": "Vi gemmer dine data i EU-region med strikte adgangsregler. Du kan til enhver tid forlade familien igen."
+  },
   "venuePage": {
     "backLabel": "Opdag",
     "ageLabel": "Alder",
@@ -688,7 +712,9 @@
     "addressLabel": "Adresse",
     "photoCreditsLabel": "Fotokreditering",
     "photoCreditBy": "af {author}",
-    "photoCreditVia": "via {source}"
+    "photoCreditVia": "via {source}",
+    "googleMapsLabel": "Google Maps",
+    "websiteLabel": "Hjemmeside"
   },
   "planVisit": {
     "buttonLabel": "Plan et besyøg",

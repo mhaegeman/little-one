@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { setLocaleAction } from "@/app/actions/locale";
@@ -21,6 +21,7 @@ export function LanguageSwitcher({
   className?: string;
 }) {
   const locale = useLocale();
+  const t = useTranslations("app");
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
@@ -36,7 +37,7 @@ export function LanguageSwitcher({
     return (
       <div
         role="radiogroup"
-        aria-label="Language"
+        aria-label={t("languageSwitcherLabel")}
         className={cn(
           "inline-grid grid-cols-2 gap-2 rounded-lg bg-sunken p-1 ring-1 ring-hairline",
           className
@@ -73,7 +74,7 @@ export function LanguageSwitcher({
   return (
     <div
       role="radiogroup"
-      aria-label="Language"
+      aria-label={t("languageSwitcherLabel")}
       className={cn(
         "inline-flex rounded-pill bg-sunken p-0.5 ring-1 ring-hairline",
         pending && "opacity-60",

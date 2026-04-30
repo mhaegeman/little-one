@@ -1,4 +1,5 @@
 import { HandHeart, ShieldCheck } from "@phosphor-icons/react/dist/ssr";
+import { getTranslations } from "next-intl/server";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { createClient } from "@/lib/db/supabase/server";
 
@@ -59,16 +60,14 @@ async function loadInvite(token: string): Promise<LoadedInvite | null> {
 
 export default async function InvitePage({ params }: InvitePageProps) {
   const { token } = await params;
-  const invite = await loadInvite(token);
+  const [invite, t] = await Promise.all([loadInvite(token), getTranslations("invite")]);
 
   if (!invite) {
     return (
       <div className="px-4 pt-20 sm:px-6 lg:px-8 lg:pt-6">
         <div className="mx-auto max-w-xl rounded-card bg-surface p-5 ring-1 ring-hairline">
-          <h1 className="font-display text-2xl font-semibold text-ink">Invitationen findes ikke</h1>
-          <p className="mt-2 text-sm leading-6 text-muted">
-            Linket er udløbet eller forkert. Bed afsenderen om at sende et nyt.
-          </p>
+          <h1 className="font-display text-2xl font-semibold text-ink">{t("notFoundTitle")}</h1>
+          <p className="mt-2 text-sm leading-6 text-muted">{t("notFoundBody")}</p>
         </div>
       </div>
     );
@@ -80,11 +79,9 @@ export default async function InvitePage({ params }: InvitePageProps) {
     return (
       <div className="px-4 pt-20 sm:px-6 lg:px-8 lg:pt-6">
         <div className="mx-auto max-w-xl rounded-card bg-surface p-5 ring-1 ring-hairline">
-          <h1 className="font-display text-2xl font-semibold text-ink">Invitationen er ikke aktiv længere</h1>
+          <h1 className="font-display text-2xl font-semibold text-ink">{t("expiredTitle")}</h1>
           <p className="mt-2 text-sm leading-6 text-muted">
-            {invite.status === "accepted"
-              ? "Den er allerede brugt."
-              : "Den er udløbet eller trukket tilbage. Bed familien om en ny invitation."}
+            {invite.status === "accepted" ? t("expiredBodyAccepted") : t("expiredBodyOther")}
           </p>
         </div>
       </div>
@@ -96,19 +93,16 @@ export default async function InvitePage({ params }: InvitePageProps) {
       <div className="mx-auto grid max-w-5xl gap-4 lg:grid-cols-[1fr_440px]">
         <section className="rounded-card bg-surface p-5 ring-1 ring-hairline">
           <p className="text-2xs font-bold uppercase tracking-[0.16em] text-peach-300">
-            Du er inviteret
+            {t("eyebrow")}
           </p>
           <h1 className="mt-1 font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">
             {invite.invitedByName && invite.familyName
-              ? `${invite.invitedByName} har inviteret dig til ${invite.familyName}`
+              ? t("headline", { inviter: invite.invitedByName, family: invite.familyName })
               : invite.familyName
-              ? `Velkommen til ${invite.familyName}`
-              : "Velkommen til familien"}
+              ? t("welcomeFamily", { family: invite.familyName })
+              : t("welcomeFallback")}
           </h1>
-          <p className="mt-2 max-w-xl text-sm leading-6 text-muted">
-            Lille Liv er en privat plads til familiens hverdag — milepæle, små glimt, fotos og
-            udflugter, samlet for jer.
-          </p>
+          <p className="mt-2 max-w-xl text-sm leading-6 text-muted">{t("body")}</p>
 
           {invite.message ? (
             <div className="mt-4 flex items-start gap-2.5 rounded-card bg-sunken p-3 ring-1 ring-hairline">
@@ -120,7 +114,9 @@ export default async function InvitePage({ params }: InvitePageProps) {
               />
               <div>
                 <p className="text-2xs font-bold uppercase tracking-[0.14em] text-mint-ink">
-                  Hilsen fra {invite.invitedByName ?? "familien"}
+                  {invite.invitedByName
+                    ? t("messageFromInviter", { inviter: invite.invitedByName })
+                    : t("messageFromFamily")}
                 </p>
                 <p className="mt-0.5 text-sm leading-6 text-ink">{invite.message}</p>
               </div>
@@ -134,10 +130,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
               className="mt-0.5 shrink-0 text-mint-300"
               aria-hidden="true"
             />
-            <p>
-              Vi gemmer dine data i EU-region med strikte adgangsregler. Du kan til enhver tid
-              forlade familien igen.
-            </p>
+            <p>{t("privacy")}</p>
           </div>
         </section>
 

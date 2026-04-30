@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "@phosphor-icons/react/dist/ssr";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, type ReactNode } from "react";
 import { trapFocus } from "@/lib/focus";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,7 @@ export function Dialog({
   className?: string;
   hideCloseButton?: boolean;
 }) {
+  const t = useTranslations("common");
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -54,7 +56,7 @@ export function Dialog({
     >
       <button
         type="button"
-        aria-label="Luk"
+        aria-label={t("close")}
         onClick={onClose}
         className="absolute inset-0 bg-ink/30 backdrop-blur-sm"
         tabIndex={-1}
@@ -81,7 +83,7 @@ export function Dialog({
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Luk"
+                aria-label={t("close")}
                 className="focus-ring grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-sunken hover:text-ink"
               >
                 <X size={16} weight="bold" aria-hidden="true" />

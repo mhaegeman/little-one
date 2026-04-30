@@ -10,11 +10,18 @@ export async function GET(request: Request) {
 }
 
 async function runAulaSync(request: Request) {
+  const expected = process.env.AULA_SYNC_SECRET;
+  if (!expected) {
+    return NextResponse.json(
+      { error: "AULA_SYNC_SECRET is not configured." },
+      { status: 503 }
+    );
+  }
+
   const authHeader = request.headers.get("authorization");
   const vercelCron = request.headers.get("x-vercel-cron");
-  const expected = process.env.AULA_SYNC_SECRET;
 
-  if (expected && authHeader !== `Bearer ${expected}` && vercelCron !== "1") {
+  if (authHeader !== `Bearer ${expected}` && vercelCron !== "1") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
