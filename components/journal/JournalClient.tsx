@@ -34,8 +34,8 @@ import {
   loadReactions,
   reactionKey,
   removeReaction
-} from "@/lib/reactions";
-import { createClient } from "@/lib/supabase/client";
+} from "@/lib/services/reactions";
+import { createClient } from "@/lib/db/supabase/client";
 import type {
   Child,
   Reaction,

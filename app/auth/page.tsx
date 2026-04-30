@@ -8,7 +8,7 @@ import { LoginForm } from "@/components/auth/LoginForm";
 import { Logo } from "@/app/(marketing)/_components/Logo";
 import { Avatar, AvatarStack } from "@/components/ui/Avatar";
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/db/supabase/server";
 
 type SearchParams = Record<string, string | string[] | undefined>;
 

@@ -14,7 +14,8 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 import { categoryBadgeVariant } from "@/lib/data/taxonomy";
-import { type FamilyConnection, type FamilyPublicProfile } from "@/lib/social";
+import { type FamilyConnection } from "@/lib/services/connections";
+import { type FamilyPublicProfile } from "@/lib/services/visibility";
 import type { VenueCategory } from "@/lib/types";
 import { cn } from "@/lib/utils";
 

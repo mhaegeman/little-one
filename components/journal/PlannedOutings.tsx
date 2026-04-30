@@ -15,7 +15,7 @@ import { useToast } from "@/components/ui/Toaster";
 import { usePlannedOutings, type PlannedOuting } from "@/hooks/usePlannedOutings";
 import { categoryBadgeVariant } from "@/lib/data/taxonomy";
 import { venues } from "@/lib/data/venues";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/db/supabase/client";
 import type { TimelineItem, VenueCategory, Venue } from "@/lib/types";
 import { formatLocalizedDate } from "@/lib/utils";
 

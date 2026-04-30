@@ -11,7 +11,7 @@ import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
 import { useToast } from "@/components/ui/Toaster";
 import { milestoneTypes } from "@/lib/data/taxonomy";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/db/supabase/client";
 import type { MilestoneType, TimelineItem } from "@/lib/types";
 
 type MilestoneFormProps = {

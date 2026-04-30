@@ -2,7 +2,7 @@
 
 import type { Session } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/db/supabase/client";
 
 export function useSupabaseSession() {
   const [session, setSession] = useState<Session | null>(null);

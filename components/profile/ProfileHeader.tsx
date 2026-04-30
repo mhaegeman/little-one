@@ -9,7 +9,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
-import { profileCompleteness } from "@/lib/profile";
+import { profileCompleteness } from "@/lib/services/profile";
 import type { FamilyProfile } from "@/lib/types";
 
 type Props = {

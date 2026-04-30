@@ -21,8 +21,8 @@ import {
   upsertOwnPublicProfile,
   type FamilyPublicProfile,
   type FamilyVisibility
-} from "@/lib/social";
-import { createClient } from "@/lib/supabase/client";
+} from "@/lib/services/visibility";
+import { createClient } from "@/lib/db/supabase/client";
 import type { Family, Neighbourhood, VenueCategory } from "@/lib/types";
 import { cn } from "@/lib/utils";
 

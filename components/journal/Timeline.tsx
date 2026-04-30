@@ -17,7 +17,7 @@ import {
   ReactionPicker,
   reactionEmoji
 } from "@/components/journal/ReactionPicker";
-import { initialsFromName } from "@/lib/reactions";
+import { initialsFromName } from "@/lib/services/reactions";
 import type { Reaction, ReactionKind, TimelineItem, TimelineItemType } from "@/lib/types";
 import { cn, formatLocalizedDate } from "@/lib/utils";
 

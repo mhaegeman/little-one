@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import type { ReactionKind } from "@/lib/types";
-import { REACTION_KINDS } from "@/lib/reactions";
+import { REACTION_KINDS } from "@/lib/services/reactions";
 import { cn } from "@/lib/utils";
 
 const emoji: Record<ReactionKind, string> = {

@@ -15,8 +15,8 @@ import { MessagesPanel } from "@/components/families/MessagesPanel";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { Tabs } from "@/components/ui/Tabs";
-import { createClient } from "@/lib/supabase/client";
-import { loadFamiliesForUser } from "@/lib/family";
+import { createClient } from "@/lib/db/supabase/client";
+import { loadFamiliesForUser } from "@/lib/services/family";
 import type { Family } from "@/lib/types";
 
 type SubTab = "discover" | "connections" | "messages";

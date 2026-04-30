@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
-import { ROLE_LABELS_EN, inviteShareUrl } from "@/lib/family";
+import { ROLE_LABELS_EN, inviteShareUrl } from "@/lib/services/family";
 import type { FamilyInvite, FamilyRole } from "@/lib/types";
 
 type Props = {

@@ -15,15 +15,17 @@ import { Textarea } from "@/components/ui/Textarea";
 import { useToast } from "@/components/ui/Toaster";
 import {
   loadMessages,
-  loadPublicProfileForFamily,
   loadThreadsForUser,
   markThreadRead,
   sendMessage,
   type DirectMessage,
-  type DirectThread,
+  type DirectThread
+} from "@/lib/services/messaging";
+import {
+  loadPublicProfileForFamily,
   type FamilyPublicProfile
-} from "@/lib/social";
-import { createClient } from "@/lib/supabase/client";
+} from "@/lib/services/visibility";
+import { createClient } from "@/lib/db/supabase/client";
 import type { Family } from "@/lib/types";
 import { cn, formatLocalizedDate } from "@/lib/utils";
 

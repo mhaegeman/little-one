@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getCloudinary } from "@/lib/cloudinary";
-import { createClient } from "@/lib/supabase/server";
+import { getCloudinary } from "@/lib/integrations/cloudinary";
+import { createClient } from "@/lib/db/supabase/server";
 
 export async function POST() {
   const supabase = await createClient();

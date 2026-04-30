@@ -1,8 +1,8 @@
 import { getLocale } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { FamilyOnboardingWizard } from "@/components/onboarding/FamilyOnboardingWizard";
-import { loadFamiliesForUser, loadOwnProfile } from "@/lib/family";
-import { createClient } from "@/lib/supabase/server";
+import { loadFamiliesForUser, loadOwnProfile } from "@/lib/services/family";
+import { createClient } from "@/lib/db/supabase/server";
 
 type SearchParams = Record<string, string | string[] | undefined>;
 

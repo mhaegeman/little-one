@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import {
   ageMonthsToLabel,
   profileCompleteness
-} from "@/lib/profile";
+} from "@/lib/services/profile";
 import type { FamilyMember, FamilyProfile, VenueCategory } from "@/lib/types";
 
 type Props = {

@@ -19,7 +19,7 @@ import { PhotoUploader } from "@/components/ui/PhotoUploader";
 import { Textarea } from "@/components/ui/Textarea";
 import { useToast } from "@/components/ui/Toaster";
 import { categories, neighbourhoods } from "@/lib/data/taxonomy";
-import { ageMonthsToLabel } from "@/lib/profile";
+import { ageMonthsToLabel } from "@/lib/services/profile";
 import type {
   FamilyProfile,
   FamilyRole,
