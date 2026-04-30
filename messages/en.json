@@ -703,5 +703,148 @@
     "strengthLabel": "Profile strength",
     "percentDone": "{percent}% complete",
     "fieldsDone": "{score} of {total} fields filled in"
+  },
+  "marketing": {
+    "metaTitle": "Lille Liv — Copenhagen family life, gently organized",
+    "metaDescription": "Find places. Save the moments. Together. A family guide and private journal for parents of 0–6 year olds in Copenhagen.",
+    "nav": {
+      "findPlaces": "Find places",
+      "journal": "Journal",
+      "families": "Families",
+      "about": "About",
+      "login": "Log in",
+      "createFamily": "Create family",
+      "openMenu": "Open menu",
+      "closeMenu": "Close menu"
+    },
+    "hero": {
+      "eyebrow": "Family guide for Copenhagen · 0–6 yrs",
+      "headlineLine1": "Find places.",
+      "headlineLine2": "Save the moments.",
+      "headlineLine3": "Together.",
+      "lede": "Lille Liv brings together cafés, playgrounds, libraries and museums across Copenhagen — alongside a private per-child journal where you and grandparents can share everyday glimpses and milestones.",
+      "ctaPrimary": "Create family — free",
+      "ctaSecondary": "Watch 60-sec tour",
+      "socialProof": "1,200+ Copenhagen parents using Lille Liv",
+      "phoneEyebrow": "Discover",
+      "phoneGreeting": "Good morning, Maja",
+      "phoneSearch": "Café, playground, Østerbro…",
+      "phoneToday": "Today · 14°",
+      "phoneTodaySub": "Perfect for Fælledparken",
+      "phoneVenue1Title": "Plantebørnehaven",
+      "phoneVenue1Sub": "Indoor play · Nørrebro",
+      "phoneVenue2Title": "Kaffe og Køkken",
+      "phoneVenue2Sub": "Café · Vesterbro · 0.4 km",
+      "savedTitle": "Just saved",
+      "savedBody": "Mormor sent a heart to Asta's moment 💛"
+    },
+    "trust": {
+      "label": "Featured in",
+      "items": ["Berlingske", "Politiken", "Magasinet KBH", "Børn i Byen", "TV 2 Lorry"]
+    },
+    "pillars": {
+      "eyebrow": "What is Lille Liv?",
+      "title": "Three rooms for family life —",
+      "titleItalic": "calmly together",
+      "items": {
+        "discover": {
+          "title": "Find places",
+          "body": "Hand-picked cafés with room for a stroller, playgrounds with shelter, libraries with read-alouds, and museums that welcome the little ones.",
+          "footer": "Filter by age, neighbourhood and weather"
+        },
+        "journal": {
+          "title": "Save the moments",
+          "body": "A private timeline per child: milestones, small outings, everyday glimpses. No public feeds — just you and the people you choose.",
+          "footer": "RLS-secured · EU-hosted"
+        },
+        "share": {
+          "title": "Share with whom you choose",
+          "body": "Invite grandparents, a caregiver or a co-parent. Everyone sees the same calm feed — and can react with a heart, a clap or a smile.",
+          "footer": "Up to 6 members"
+        }
+      }
+    },
+    "appPreview": {
+      "eyebrow": "What it looks like",
+      "title": "Everyday glimpses — gathered for each child.",
+      "body": "Add a moment from the café, the park or home. Mormor and Morfar see the same calm feed — and can send a heart back.",
+      "timelineHeader": "Asta's timeline",
+      "timelineToday": "Today",
+      "timelineYesterday": "Yesterday · Fælledparken",
+      "moment1Title": "First time on the slide",
+      "moment1Caption": "Asta dared on her own. We both clapped.",
+      "moment2Title": "Buns in Nørrebro",
+      "moment2Caption": "Home for nap with a full belly.",
+      "reactionTitle": "Mormor",
+      "reactionBody": "sent a heart to Asta's moment 💛",
+      "reactionTime": "now"
+    },
+    "grandparents": {
+      "eyebrow": "For grandparents",
+      "title": "Follow along — without asking.",
+      "body": "Lille Liv is built so grandparents who may not live in Copenhagen can follow daily life without joining Facebook or Instagram. No public feeds, no ads — just your kids and grandkids.",
+      "bullet1": "A calm feed of photos and small stories",
+      "bullet2": "React with heart, clap or smile — no comment threads",
+      "bullet3": "Works on phone, tablet and laptop",
+      "cta": "Invite Mormor",
+      "portraitCaption": "Mormor Birgit · Aarhus"
+    },
+    "faq": {
+      "eyebrow": "Questions & answers",
+      "title": "What we get asked the most",
+      "items": [
+        {
+          "q": "Is the journal really private?",
+          "a": "Yes. Each child's journal is private to your family and shared only with people you invite. We use Postgres Row-Level Security so no other family — or Lille Liv itself — can see your moments. Hosting is in the EU."
+        },
+        {
+          "q": "What does it cost?",
+          "a": "Lille Liv is free during beta. We will add a family subscription later — existing families will be told first, and the first 30 days will always remain free."
+        },
+        {
+          "q": "What age range is it for?",
+          "a": "0–6 years. Places are curated for young families — cafés with stroller room, playgrounds with shelter, libraries with read-alouds. When your child turns six you can take the journal with you as an export."
+        },
+        {
+          "q": "Is Lille Liv on iOS and Android?",
+          "a": "We start on the web (works in Safari and Chrome on iOS and Android), with a native app to follow later in the year. Everything you build up now carries over."
+        },
+        {
+          "q": "Can I take my data with me?",
+          "a": "Yes. Exporting the whole journal as JSON plus every photo at original resolution is free and always available from Profile → Account. No lock-in."
+        },
+        {
+          "q": "What about GDPR and children's photos?",
+          "a": "You own the photos. We store them in the EU, encrypted, accessible only to the family members you have invited. We never sell data and we do not train AI models on your content."
+        }
+      ]
+    },
+    "footerCta": {
+      "eyebrow": "Get started",
+      "title": "Lille Liv is waiting — free during beta.",
+      "body": "Create your family in a minute. Invite Mormor, Morfar and a co-parent afterwards.",
+      "ctaPrimary": "Create family — free",
+      "ctaSecondary": "Log in"
+    },
+    "footer": {
+      "tagline": "Copenhagen family life, gently organized. Made by two parents on parental leave in Nordvest.",
+      "columnProduct": "Product",
+      "columnCompany": "Company",
+      "columnLegal": "Legal",
+      "links": {
+        "discover": "Find places",
+        "journal": "Journal",
+        "families": "Families",
+        "about": "About",
+        "contact": "Contact",
+        "blog": "Blog",
+        "privacy": "Privacy",
+        "terms": "Terms",
+        "cookies": "Cookies"
+      },
+      "copyright": "© 2026 Lille Liv ApS · Copenhagen",
+      "madeWith": "Made with care in Copenhagen",
+      "languageLabel": "Language"
+    }
   }
 }
