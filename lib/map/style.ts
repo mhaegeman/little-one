@@ -22,4 +22,4 @@ const osmRasterFallback = {
 };
 
 export const mapStyle =
-  process.env.NEXT_PUBLIC_MAP_STYLE_URL ?? osmRasterFallback;
+  process.env.NEXT_PUBLIC_MAP_STYLE_URL || osmRasterFallback;
