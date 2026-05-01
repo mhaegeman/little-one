@@ -9,12 +9,13 @@ import {
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { PlanVisitButton } from "@/components/discover/PlanVisitButton";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { categoryBadgeVariant } from "@/lib/data/taxonomy";
 import { getPhotoCredit, getVenueById, venues } from "@/lib/data/venues";
+import { resolveVenueCopy } from "@/lib/i18n/venueCopy";
 import { googleMapsUrl, monthRangeLabel } from "@/lib/utils";
 
 type VenuePageProps = {
@@ -44,11 +45,13 @@ export default async function VenuePage({ params }: VenuePageProps) {
     notFound();
   }
 
-  const [t, tTaxonomy, locale] = await Promise.all([
+  const [t, tTaxonomy, locale, messages] = await Promise.all([
     getTranslations("venuePage"),
     getTranslations("taxonomy"),
-    getLocale()
+    getLocale(),
+    getMessages()
   ]);
+  const copy = resolveVenueCopy(venue, locale, messages);
 
   const photoCredits = venue.photos
     .map((url) => {
@@ -121,7 +124,7 @@ export default async function VenuePage({ params }: VenuePageProps) {
               <h1 className="mt-3 font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">
                 {venue.name}
               </h1>
-              <p className="mt-3 text-sm leading-6 text-muted">{venue.description}</p>
+              <p className="mt-3 text-sm leading-6 text-muted">{copy.description}</p>
 
               <div className="mt-5 grid gap-2 sm:grid-cols-2">
                 <InfoTile icon={<Baby size={14} weight="duotone" aria-hidden="true" />} label={t("ageLabel")}>
@@ -131,7 +134,7 @@ export default async function VenuePage({ params }: VenuePageProps) {
                   {venue.neighbourhood}
                 </InfoTile>
                 <InfoTile icon={<CalendarBlank size={14} weight="fill" aria-hidden="true" />} label={t("openingLabel")}>
-                  {venue.openingHours.summary}
+                  {copy.openingHoursSummary}
                 </InfoTile>
                 <InfoTile
                   icon={<NavigationArrow size={14} weight="fill" aria-hidden="true" />}
@@ -142,7 +145,7 @@ export default async function VenuePage({ params }: VenuePageProps) {
               </div>
 
               <div className="mt-4 flex flex-wrap gap-1">
-                {venue.tags.map((tag) => (
+                {copy.tags.map((tag) => (
                   <Badge key={tag} variant="neutral">
                     {tag}
                   </Badge>

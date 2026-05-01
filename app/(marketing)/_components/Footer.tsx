@@ -3,19 +3,10 @@ import Link from "next/link";
 import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import { Logo } from "./Logo";
 
-type LinkKey =
-  | "discover"
-  | "journal"
-  | "families"
-  | "about"
-  | "contact"
-  | "blog"
-  | "privacy"
-  | "terms"
-  | "cookies";
+type LinkKey = "discover" | "journal" | "families" | "contact";
 
 const columns: {
-  titleKey: "columnProduct" | "columnCompany" | "columnLegal";
+  titleKey: "columnProduct" | "columnCompany";
   links: { key: LinkKey; href: string }[];
 }[] = [
   {
@@ -28,19 +19,7 @@ const columns: {
   },
   {
     titleKey: "columnCompany",
-    links: [
-      { key: "about", href: "#" },
-      { key: "contact", href: "mailto:hej@lilleliv.dk" },
-      { key: "blog", href: "#" }
-    ]
-  },
-  {
-    titleKey: "columnLegal",
-    links: [
-      { key: "privacy", href: "#" },
-      { key: "terms", href: "#" },
-      { key: "cookies", href: "#" }
-    ]
+    links: [{ key: "contact", href: "mailto:hej@lilleliv.dk" }]
   }
 ];
 
@@ -49,7 +28,7 @@ export function MarketingFooter() {
   return (
     <footer className="bg-ink px-5 py-14 text-canvas md:px-10 md:py-16">
       <div className="mx-auto max-w-[1240px]">
-        <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
+        <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr]">
           <div>
             <Logo tone="canvas" />
             <p className="mt-4 max-w-[320px] text-sm leading-relaxed text-canvas/70">

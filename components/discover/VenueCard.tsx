@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/Badge";
 import { useToast } from "@/components/ui/Toaster";
 import { useFavorites } from "@/hooks/useFavorites";
+import { useVenueCopy } from "@/hooks/useVenueCopy";
 import { categoryBadgeVariant } from "@/lib/data/taxonomy";
 import type { Venue, VenueCategory } from "@/lib/types";
 import { cn, formatDistance, monthRangeLabel } from "@/lib/utils";
@@ -79,6 +80,7 @@ export function VenueCard({
   const tTaxonomy = useTranslations("taxonomy");
   const tDiscover = useTranslations("discover");
   const locale = useLocale();
+  const copy = useVenueCopy(venue);
 
   if (layout === "compact") {
     return (
@@ -215,13 +217,13 @@ export function VenueCard({
             <span className="text-subtle"> · {formatDistance(distanceKm)}</span>
           ) : null}
         </p>
-        <p className="mt-2 line-clamp-2 text-sm text-muted">{venue.description}</p>
+        <p className="mt-2 line-clamp-2 text-sm text-muted">{copy.description}</p>
         <div className="mt-2.5 flex flex-wrap items-center gap-1">
           <Badge variant="sky">
             <Baby size={11} weight="fill" aria-hidden="true" />
             {monthRangeLabel(venue.ageMinMonths, venue.ageMaxMonths, locale)}
           </Badge>
-          {venue.tags.slice(0, 2).map((tag) => (
+          {copy.tags.slice(0, 2).map((tag) => (
             <Badge key={tag} variant="neutral">
               {tag}
             </Badge>

@@ -927,17 +927,11 @@
       "tagline": "Familieliv i København, samlet og roligt. Lavet af to forældre på orlov i Nordvest.",
       "columnProduct": "Produkt",
       "columnCompany": "Selskab",
-      "columnLegal": "Juridisk",
       "links": {
         "discover": "Find steder",
         "journal": "Journal",
         "families": "Familier",
-        "about": "Om os",
-        "contact": "Kontakt",
-        "blog": "Blog",
-        "privacy": "Privatliv",
-        "terms": "Vilkår",
-        "cookies": "Cookies"
+        "contact": "Kontakt"
       },
       "copyright": "© 2026 Lille Liv ApS · København",
       "madeWith": "Lavet med omtanke i København",
