@@ -927,21 +927,400 @@
       "tagline": "Copenhagen family life, gently organized. Made by two parents on parental leave in Nordvest.",
       "columnProduct": "Product",
       "columnCompany": "Company",
-      "columnLegal": "Legal",
       "links": {
         "discover": "Find places",
         "journal": "Journal",
         "families": "Families",
-        "about": "About",
-        "contact": "Contact",
-        "blog": "Blog",
-        "privacy": "Privacy",
-        "terms": "Terms",
-        "cookies": "Cookies"
+        "contact": "Contact"
       },
       "copyright": "© 2026 Lille Liv ApS · Copenhagen",
       "madeWith": "Made with care in Copenhagen",
       "languageLabel": "Language"
     }
+  },
+  "venues": {
+    "the-living-room": {
+      "description": "Cozy café in the city centre with sofas, hot drinks and a quiet pace for parental-leave meetups outside rush hour.",
+      "openingHoursSummary": "Typically daily from late morning to evening; check hours before visiting."
+    },
+    "granola": {
+      "description": "Classic breakfast café on Værnedamsvej with brunch, ice cream and a nostalgic vibe that suits short family breaks.",
+      "openingHoursSummary": "Mon-Fri from morning, Sat and Sun from 9; the kitchen closes earlier on Sundays."
+    },
+    "absalon": {
+      "description": "Community house on Sønder Boulevard with shared dinners, open activities and informal space for families.",
+      "openingHoursSummary": "Daily activities with a rotating calendar."
+    },
+    "bar50-danhostel": {
+      "description": "Baby-friendly café near the harbour with high chairs, changing facilities, ramps and indoor stroller space.",
+      "openingHoursSummary": "Open daily 07:00-00:00 according to the venue."
+    },
+    "mad-og-kaffe-vesterbro": {
+      "description": "Popular brunch spot where kids are welcome — best for planned, short stops without a large stroller indoors.",
+      "openingHoursSummary": "Check the current branch and hours before visiting."
+    },
+    "superkilen": {
+      "description": "Colourful urban space in Nørrebro with swings, movement, room for balance bikes and lots to look at.",
+      "openingHoursSummary": "Outdoor urban space, open around the clock."
+    },
+    "taarnlegepladsen": {
+      "description": "Playground built around Copenhagen's towers with interactive play, sand, climbing and a staffed building during the day.",
+      "openingHoursSummary": "Outdoors all day; staffed building typically 10:00-15:30."
+    },
+    "trafiklegepladsen": {
+      "description": "Bike-themed playground in Fælledparken with small roads, signs and free loaner bikes for kids practising traffic and balance.",
+      "openingHoursSummary": "Summer Mon-Fri 09-17; winter Mon-Fri 09-16; selected weekends."
+    },
+    "kongens-have-legeplads": {
+      "description": "Storybook playground in the middle of Kongens Have with a dragon, golden eggs, toilets nearby and a café close at hand.",
+      "openingHoursSummary": "Follows the park's seasonal hours; check park info."
+    },
+    "valbyparken-naturlegeplads": {
+      "description": "Large nature playground with wood, hills and green spaces — good for kids who want to balance, build and explore senses.",
+      "openingHoursSummary": "Outdoors, open around the clock."
+    },
+    "konditaget-luders": {
+      "description": "Activity playground on top of a parking garage in Nordhavn with a view, trampolines and movement for older toddlers.",
+      "openingHoursSummary": "Outdoors; mind the weather and wind."
+    },
+    "havnegade-trampoliner": {
+      "description": "Small trampolines by the water — perfect for a quick energy break while passing through town.",
+      "openingHoursSummary": "Outdoor urban space."
+    },
+    "skydebanehaven": {
+      "description": "Local Vesterbro playground behind the big wall with sand, swings and a green pause close to Sønder Boulevard.",
+      "openingHoursSummary": "Park playground with seasonal hours."
+    },
+    "amager-strandpark": {
+      "description": "Beach, paths and gentle breaks by the water with plenty of stroller room and sand play in mild weather.",
+      "openingHoursSummary": "Outdoors, open around the clock."
+    },
+    "experimentarium": {
+      "description": "Hands-on science centre with sensory exhibits, water, bubbles and Miniverse for the youngest kids.",
+      "openingHoursSummary": "Often 09:30-17:00; check the calendar for holidays."
+    },
+    "dinos-legeland": {
+      "description": "Large indoor play land in Ishøj with climbing structures, slides and a café for active rainy days.",
+      "openingHoursSummary": "Hours vary; check the calendar before heading out."
+    },
+    "remisen": {
+      "description": "Free indoor playground in Østerbro with a large hall, motor-skills equipment, climbing and room for small and bigger kids.",
+      "openingHoursSummary": "Municipal playground with varying hours; check the current schedule."
+    },
+    "ku-be": {
+      "description": "Culture and movement house on Frederiksberg with rooms for motor skills, events and playful everyday culture.",
+      "openingHoursSummary": "Check today's programme and hours."
+    },
+    "den-blaa-planet": {
+      "description": "The national aquarium in Kastrup with fish, sharks and calm dark rooms that can feel magical to small kids.",
+      "openingHoursSummary": "Check the seasonal calendar and ticket window."
+    },
+    "boernenes-museum": {
+      "description": "The National Museum's kids' world with historical role play, dress-up and sensory rooms in the city centre.",
+      "openingHoursSummary": "Follows the National Museum's hours."
+    },
+    "cinemateket": {
+      "description": "The film house on Gothersgade with kids' films, family screenings and a café in the same building.",
+      "openingHoursSummary": "Follows the day's programme."
+    },
+    "hovedbiblioteket-laes": {
+      "description": "Copenhagen Main Library's kids' floor with reading, language play and free events for small children.",
+      "openingHoursSummary": "Follows the Main Library's hours."
+    },
+    "biblioteket-rentemestervej": {
+      "description": "Cultural house and library in Nordvest with a kids' library, café and creative activities.",
+      "openingHoursSummary": "Check the library's current hours."
+    },
+    "oesterbro-bibliotek": {
+      "description": "Local library near Fælledparken with kids' books, quiet corners and family events.",
+      "openingHoursSummary": "Check the library's current hours."
+    },
+    "frederiksberg-hovedbibliotek": {
+      "description": "Kids' library with regular story-time sessions and room for picture books, language and slow afternoons.",
+      "openingHoursSummary": "Check the library's current hours."
+    },
+    "valby-bibliotek": {
+      "description": "Nearby library at Valby Station with kids' books, events and easy stroller access.",
+      "openingHoursSummary": "Check the library's current hours."
+    },
+    "bibliotekshuset": {
+      "description": "Small local library on Amager with kids' and youth books, reading corners and a green rooftop terrace in summer.",
+      "openingHoursSummary": "Open daily 08:00-20:00 according to the library's English page."
+    },
+    "dgi-byen-svoemning": {
+      "description": "Central swim centre with a kids' pool, warm baby pool and family-friendly movement classes.",
+      "openingHoursSummary": "Typically weekdays 07-21 and weekends 08-18; check today's hours."
+    },
+    "valby-vandkulturhus": {
+      "description": "Warm-water swimming and baby swim classes via Hovedstadens Svømmeklub — especially good for the very youngest in the morning.",
+      "openingHoursSummary": "Baby swimming Wednesday morning via HSK; check class start dates."
+    },
+    "oebro-hallen": {
+      "description": "Classic swimming hall by Fælledparken — good to know for families in Østerbro and inner Nørrebro.",
+      "openingHoursSummary": "Municipal hours vary; check SvømKBH."
+    },
+    "bellahoej-svoemmestadion": {
+      "description": "Large municipal swimming hall in the Brønshøj area with room for family swims and swim classes.",
+      "openingHoursSummary": "Municipal hours vary; check SvømKBH."
+    },
+    "det-lille-teater": {
+      "description": "Copenhagen's kids' theatre for the youngest, with shows often recommended from age 2.",
+      "openingHoursSummary": "Follows the show schedule."
+    },
+    "marionet-teatret": {
+      "description": "Free summer theatre in Kongens Have run by Det Lille Teater, often with short shows for small kids.",
+      "openingHoursSummary": "Summer programme; typically daily shows except Monday."
+    },
+    "eventyrteatret-tivoli": {
+      "description": "Family shows in Glassalen at Tivoli, best for the oldest preschoolers in the MVP age range.",
+      "openingHoursSummary": "Follows the show schedule and Tivoli's season."
+    },
+    "kongelige-teater-de-smaa-synger": {
+      "description": "Large-scale family productions, including musical kids' shows like De små synger.",
+      "openingHoursSummary": "Follows the show schedule."
+    },
+    "copenhagen-zoo": {
+      "description": "Classic family day on Frederiksberg with animals, a playground, kid-friendly breaks and stroller-friendly paths.",
+      "openingHoursSummary": "Seasonal hours vary; check the Zoo calendar."
+    },
+    "tivoli-gardens": {
+      "description": "Seasonal garden park with small rides, garden breaks and family shows in the middle of Copenhagen.",
+      "openingHoursSummary": "Seasonal opening; check Tivoli's calendar."
+    },
+    "little-house-oesterbro": {
+      "description": "Small family café near Fælledparken with play mats, a baby corner and quiet mornings that suit the parental-leave rhythm.",
+      "openingHoursSummary": "Typically weekdays and weekends from late morning to early evening."
+    },
+    "little-house-noerrebro": {
+      "description": "Kid-friendly café with a soft motor-skills track, picture books and a song collection — great for crawling and curious babies.",
+      "openingHoursSummary": "Mornings are quietest; check the day's activities on arrival."
+    },
+    "little-house-amager": {
+      "description": "Bright café near Amagerbro with small creative tables, sensory baskets and mini-dance for the toddler age.",
+      "openingHoursSummary": "Open daily with short activity blocks around morning and afternoon."
+    },
+    "little-house-valby": {
+      "description": "Little House location in Valby with a café, an indoor play area and classes like baby rhythm, baby motor skills and toddler dance.",
+      "openingHoursSummary": "Monday-Friday 09:00-18:00, Saturday 09:00-13:00, Sunday 09:00-12:00."
+    },
+    "little-house-sydhavn": {
+      "description": "Little House in Sydhavn with a café, a play castle and baby-friendly activities under one roof — ideal for parental-leave meetups and toddler play.",
+      "openingHoursSummary": "Monday-Friday 09:00-18:00, Saturday 09:00-13:00, Sunday 09:00-12:00."
+    },
+    "paludan-bogcafe": {
+      "description": "Large book café in the Latin Quarter with high ceilings, wide aisles and plenty of stroller room during a long brunch.",
+      "openingHoursSummary": "Daily from morning to late evening."
+    },
+    "frederiksberg-have": {
+      "description": "Romantic royal park next to the Zoo with streams, bridges, ducks and a cozy playground in calm surroundings.",
+      "openingHoursSummary": "Seasonally open; check the park's hours."
+    },
+    "soendermarken": {
+      "description": "Hilly forest park behind the Zoo with winding paths, open meadows and a calm alternative to the city's busier parks.",
+      "openingHoursSummary": "Outdoor park, open around the clock."
+    },
+    "karens-minde-kulturhus": {
+      "description": "Local cultural house in Sydhavn with kids' events, creative workshops and family activities throughout the year.",
+      "openingHoursSummary": "Hours vary with the programme; check the calendar."
+    },
+    "bavnehoej-friluftsbad": {
+      "description": "Outdoor swimming pool near Sydhavn with a family pool and room for summer days with kids.",
+      "openingHoursSummary": "Seasonally open in summer; check today's hours."
+    },
+    "sydhavnstippen": {
+      "description": "Wild nature in Sydhavn with wide paths, animal enclosures and plenty of room for stroller walks.",
+      "openingHoursSummary": "Outdoor area, open around the clock."
+    },
+    "utterslev-mose": {
+      "description": "Large nearby nature reserve with lakes, ducks, bird watching and wide gravel paths perfect for a long stroller outing.",
+      "openingHoursSummary": "Outdoor nature reserve, open around the clock."
+    },
+    "botanisk-have": {
+      "description": "Royal botanical gardens with a historic Victorian palm house and quiet lakes — a free break with lots to look at, even on rainy days.",
+      "openingHoursSummary": "Garden open daily; palm house typically opens at 10, closed Mondays."
+    },
+    "assistens-kirkegaard": {
+      "description": "Historic cemetery used as a local park with green lawns, shade and a peaceful atmosphere in the heart of Nørrebro.",
+      "openingHoursSummary": "Open daily from morning to evening."
+    },
+    "oerstedsparken": {
+      "description": "Small lake-and-woods park in central Copenhagen with a good stroller path around the lake, ducks and shade on warm days.",
+      "openingHoursSummary": "Outdoor park, open around the clock."
+    },
+    "ishoj-strandpark": {
+      "description": "Wide sandy beach south of Copenhagen with calm surroundings and lots of room for sand play — easy by S-train to Ishøj Station.",
+      "openingHoursSummary": "Outdoor beach, open around the clock."
+    },
+    "havnebadet-islands-brygge": {
+      "description": "Iconic outdoor harbour bath at Islands Brygge with a separate kids' pool, sunbathing pontoons and lifeguards in the summer season.",
+      "openingHoursSummary": "Summer (approx. June-August) daily 07-20; check the opening season."
+    },
+    "dyrehaven": {
+      "description": "Royal deer park with over 2,000 deer, wide open plains and forest paths — perfect for a long stroller outing north of the city.",
+      "openingHoursSummary": "Outdoor park, open around the clock."
+    },
+    "bellevue-strand": {
+      "description": "Iconic sandy beach north of Copenhagen at Klampenborg with blue water, lifeguard towers and a direct S-train connection.",
+      "openingHoursSummary": "Outdoor beach, open around the clock."
+    },
+    "bakken": {
+      "description": "The world's oldest amusement park, in the woods north of Copenhagen, with free entry, roller coasters and summer nostalgia for the whole family.",
+      "openingHoursSummary": "Open April-August; check the seasonal calendar."
+    },
+    "louisiana-museum": {
+      "description": "World-famous art museum north of the city with a dedicated kids' wing, a sculpture park overlooking Øresund and a family café with a view.",
+      "openingHoursSummary": "Mondays closed; Tuesday-Friday 11-22, weekends 11-18."
+    },
+    "vikingeskibsmuseet": {
+      "description": "Museum with five original Viking ships, a living harbour, boat rides and historical crafts in beautiful surroundings on Roskilde Fjord.",
+      "openingHoursSummary": "Typically daily 10-17; check the seasonal calendar."
+    },
+    "frilandsmuseet": {
+      "description": "Huge open-air museum in Lyngby with historic buildings from across Denmark, farm animals and wide paths for long stroller walks.",
+      "openingHoursSummary": "Open April-October, typically Tuesday-Sunday 10-17; closed Mondays."
+    },
+    "arken-museum": {
+      "description": "Architectural art museum by the beach in Ishøj with kids' workshops, a sculpture park and a café overlooking the bay.",
+      "openingHoursSummary": "Tuesday-Sunday 10-17, Wednesday until 21; closed Mondays."
+    },
+    "copenhagen-contemporary": {
+      "description": "Large art hall on Refshaleøen with family Sundays and sensory exhibitions — best for curious preschoolers.",
+      "openingHoursSummary": "Check the current exhibition and family programme."
+    }
+  },
+  "venueTags": {
+    "akvarium": "aquarium",
+    "amager": "Amager",
+    "amning": "nursing",
+    "andedammen": "duck pond",
+    "babybassin": "baby pool",
+    "babybio": "baby cinema",
+    "babyhjørne": "baby corner",
+    "babymotorik": "baby motor skills",
+    "babyrytmik": "baby rhythm",
+    "babysang": "baby song",
+    "babysvømning": "baby swimming",
+    "barnevogn": "stroller",
+    "barsel": "parental leave",
+    "bassin": "pool",
+    "bemandet": "staffed",
+    "bevægelse": "movement",
+    "billedbøger": "picture books",
+    "billet": "ticket",
+    "bogcafé": "book café",
+    "brunch": "brunch",
+    "brønshøj": "Brønshøj",
+    "bøger": "books",
+    "bådtur": "boat tour",
+    "børnebassin": "kids' pool",
+    "børnebibliotek": "kids' library",
+    "børneteater": "kids' theatre",
+    "børneværksted": "kids' workshop",
+    "børnefløj": "kids' wing",
+    "børn velkomne": "kids welcome",
+    "cafe": "café",
+    "cykler": "bikes",
+    "dyr": "animals",
+    "eventyr": "adventure",
+    "familie": "family",
+    "familiearrangement": "family event",
+    "familiesøndag": "family Sunday",
+    "film": "film",
+    "fjord": "fjord",
+    "folkehus": "community house",
+    "forlystelser": "rides",
+    "forlystelsespark": "amusement park",
+    "formiddag": "morning",
+    "fra 2 år": "from age 2",
+    "fra 5 år": "from age 5",
+    "frederiksberg": "Frederiksberg",
+    "friluftsbad": "open-air pool",
+    "friluftsmuseum": "open-air museum",
+    "fugle": "birds",
+    "fællesspisning": "community dining",
+    "grønt": "greenery",
+    "gratis": "free",
+    "gratis entré": "free entry",
+    "have": "garden",
+    "havnebad": "harbour bath",
+    "havnen": "harbour",
+    "heldag": "full day",
+    "hellerup": "Hellerup",
+    "historiske huse": "historic houses",
+    "hjorte": "deer",
+    "højstole": "high chairs",
+    "højtlæsning": "story time",
+    "indendørs": "indoor",
+    "indendørs leg": "indoor play",
+    "indre by": "city centre",
+    "is": "ice cream",
+    "ishøj": "Ishøj",
+    "kastrup": "Kastrup",
+    "klampenborg": "Klampenborg",
+    "klatring": "climbing",
+    "kort stop": "quick stop",
+    "kreativt": "creative",
+    "kulturhus": "cultural house",
+    "kongens have": "Kongens Have",
+    "kunst": "art",
+    "legeborg": "play castle",
+    "legehjørne": "play corner",
+    "legeland": "play land",
+    "lokal": "local",
+    "lyngby": "Lyngby",
+    "miniverse": "Miniverse",
+    "minidans": "mini dance",
+    "morgenmad": "breakfast",
+    "motorik": "motor skills",
+    "museum": "museum",
+    "musical": "musical",
+    "musik": "music",
+    "natur": "nature",
+    "nordhavn": "Nordhavn",
+    "nordvest": "Nordvest",
+    "nørrebro": "Nørrebro",
+    "palmehus": "palm house",
+    "park": "park",
+    "picnic": "picnic",
+    "plask": "splashing",
+    "pusleplads": "changing area",
+    "regnvejrsdag": "rainy day",
+    "rolig": "calm",
+    "rolleleg": "role play",
+    "roskilde": "Roskilde",
+    "s-tog": "S-train",
+    "sand": "sand",
+    "sanseleg": "sensory play",
+    "sanser": "senses",
+    "science": "science",
+    "skov": "forest",
+    "skulpturpark": "sculpture park",
+    "sofaer": "sofas",
+    "sommer": "summer",
+    "story time": "story time",
+    "strand": "beach",
+    "sydhavn": "Sydhavn",
+    "sø": "lake",
+    "sæson": "seasonal",
+    "svømmehal": "swimming hall",
+    "tagterrasse": "rooftop terrace",
+    "teater": "theatre",
+    "tivoli": "Tivoli",
+    "toiletter": "toilets",
+    "trafik": "traffic",
+    "trampoliner": "trampolines",
+    "travlt": "busy",
+    "tumledans": "toddler dance",
+    "tumling": "toddler",
+    "udendørs": "outdoor",
+    "udsigt": "view",
+    "valby": "Valby",
+    "varme drikke": "hot drinks",
+    "varmt vand": "warm water",
+    "vesterbro": "Vesterbro",
+    "vikinger": "Vikings",
+    "ænder": "ducks",
+    "østerbro": "Østerbro",
+    "Øresund": "Øresund"
   }
 }
