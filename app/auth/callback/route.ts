@@ -10,7 +10,13 @@ export async function GET(request: Request) {
   const supabase = await createClient();
 
   if (code && supabase) {
-    await supabase.auth.exchangeCodeForSession(code);
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (error) {
+      const errorUrl = new URL("/auth", requestUrl.origin);
+      errorUrl.searchParams.set("error", "expired_or_invalid");
+      if (next !== "/journal") errorUrl.searchParams.set("next", next);
+      return NextResponse.redirect(errorUrl);
+    }
   }
 
   if (inviteToken && supabase) {

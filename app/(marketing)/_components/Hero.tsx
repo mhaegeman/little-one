@@ -2,7 +2,7 @@ import { ArrowRight, Play } from "@phosphor-icons/react/dist/ssr";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Avatar, AvatarStack } from "@/components/ui/Avatar";
-import { Button, buttonClass } from "@/components/ui/Button";
+import { buttonClass } from "@/components/ui/Button";
 import { EyebrowBadge } from "@/components/ui/Eyebrow";
 import { BrandReel } from "./BrandReel";
 
@@ -50,10 +50,13 @@ export function Hero() {
               <span>{t("ctaPrimary")}</span>
               <ArrowRight size={18} weight="bold" />
             </Link>
-            <Button variant="ghost" size="xl">
+            <Link
+              href="#preview"
+              className={buttonClass({ variant: "ghost", size: "xl" })}
+            >
               <Play size={14} weight="fill" />
               <span>{t("ctaSecondary")}</span>
-            </Button>
+            </Link>
           </div>
           <div className="mt-7 flex items-center gap-4 text-sm text-subtle">
             <AvatarStack>
