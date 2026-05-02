@@ -270,7 +270,9 @@
     "inviteSubtitle": "Du er inviteret til en familie",
     "inviteAccept": "Tilslut familien",
     "emailPlaceholder": "din@email.dk",
-    "magicLinkExplainer": "Vi sender et engangs-loginlink til din e-mail. Ingen adgangskode."
+    "magicLinkExplainer": "Vi sender et engangs-loginlink til din e-mail. Ingen adgangskode.",
+    "linkExpiredTitle": "Loginlinket er udløbet",
+    "linkExpiredBody": "Loginlinks gælder kun i kort tid. Bed om et nyt nedenfor."
   },
   "language": {
     "title": "Sprog",

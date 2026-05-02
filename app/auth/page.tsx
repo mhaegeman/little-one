@@ -39,6 +39,7 @@ export default async function AuthPage({
   const nextParam = safeRedirect(pickString(params.next), "/journal");
   const initialMode: "signin" | "signup" =
     pickString(params.mode) === "signup" ? "signup" : "signin";
+  const errorCode = pickString(params.error);
 
   const supabase = await createClient();
   if (supabase) {
@@ -143,6 +144,15 @@ export default async function AuthPage({
           </section>
 
           <div>
+            {errorCode === "expired_or_invalid" ? (
+              <div
+                role="alert"
+                className="mb-3 rounded-card bg-peach-50 p-3 text-sm leading-6 text-danger ring-1 ring-peach-100"
+              >
+                <p className="font-semibold">{t("linkExpiredTitle")}</p>
+                <p className="mt-0.5 text-danger/85">{t("linkExpiredBody")}</p>
+              </div>
+            ) : null}
             <LoginForm
               redirectTo={nextParam}
               locale={effectiveLocale}

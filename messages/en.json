@@ -270,7 +270,9 @@
     "inviteSubtitle": "You've been invited to a family",
     "inviteAccept": "Join the family",
     "emailPlaceholder": "you@email.com",
-    "magicLinkExplainer": "We send a one-time sign-in link to your email. No password."
+    "magicLinkExplainer": "We send a one-time sign-in link to your email. No password.",
+    "linkExpiredTitle": "That sign-in link has expired",
+    "linkExpiredBody": "Sign-in links are only valid for a short while. Request a new one below."
   },
   "language": {
     "title": "Language",
@@ -1266,6 +1268,7 @@
     "legeborg": "play castle",
     "legehjørne": "play corner",
     "legeland": "play land",
+    "løbecykel": "balance bike",
     "lokal": "local",
     "lyngby": "Lyngby",
     "miniverse": "Miniverse",
