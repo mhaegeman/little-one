@@ -12,6 +12,14 @@ export async function GET(request: Request) {
   if (code && supabase) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (error) {
+      if (inviteToken) {
+        const inviteUrl = new URL(
+          `/invite/${encodeURIComponent(inviteToken)}`,
+          requestUrl.origin
+        );
+        inviteUrl.searchParams.set("error", "expired_or_invalid");
+        return NextResponse.redirect(inviteUrl);
+      }
       const errorUrl = new URL("/auth", requestUrl.origin);
       errorUrl.searchParams.set("error", "expired_or_invalid");
       if (next !== "/journal") errorUrl.searchParams.set("next", next);

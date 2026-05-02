@@ -5,6 +5,7 @@ import { createClient } from "@/lib/db/supabase/server";
 
 type InvitePageProps = {
   params: Promise<{ token: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
 type LoadedInvite = {
@@ -58,9 +59,16 @@ async function loadInvite(token: string): Promise<LoadedInvite | null> {
   };
 }
 
-export default async function InvitePage({ params }: InvitePageProps) {
+export default async function InvitePage({ params, searchParams }: InvitePageProps) {
   const { token } = await params;
-  const [invite, t] = await Promise.all([loadInvite(token), getTranslations("invite")]);
+  const sp = (await searchParams) ?? {};
+  const errorParam = sp.error;
+  const errorCode = Array.isArray(errorParam) ? errorParam[0] : errorParam;
+  const [invite, t, tAuth] = await Promise.all([
+    loadInvite(token),
+    getTranslations("invite"),
+    getTranslations("auth")
+  ]);
 
   if (!invite) {
     return (
@@ -134,16 +142,27 @@ export default async function InvitePage({ params }: InvitePageProps) {
           </div>
         </section>
 
-        <LoginForm
-          invite={{
-            token,
-            familyName: invite.familyName,
-            invitedByName: invite.invitedByName,
-            suggestedEmail: invite.invitedEmail,
-            message: invite.message
-          }}
-          redirectTo="/journal"
-        />
+        <div>
+          {errorCode === "expired_or_invalid" ? (
+            <div
+              role="alert"
+              className="mb-3 rounded-card bg-peach-50 p-3 text-sm leading-6 text-danger ring-1 ring-peach-100"
+            >
+              <p className="font-semibold">{tAuth("linkExpiredTitle")}</p>
+              <p className="mt-0.5 text-danger/85">{tAuth("linkExpiredBody")}</p>
+            </div>
+          ) : null}
+          <LoginForm
+            invite={{
+              token,
+              familyName: invite.familyName,
+              invitedByName: invite.invitedByName,
+              suggestedEmail: invite.invitedEmail,
+              message: invite.message
+            }}
+            redirectTo="/journal"
+          />
+        </div>
       </div>
     </div>
   );
